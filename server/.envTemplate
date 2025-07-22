@@ -24,7 +24,7 @@ APP_SECRET=
 # .env (or override DATABASE_URL in .env.local to avoid committing your changes)
 
 # customize this line!
-#DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=8.0.37"
+DATABASE_URL="mysql://db_user:db_password@127.0.0.1:3306/db_name?serverVersion=8.0.37"
 
 # to use mariadb:
 # Before doctrine/dbal < 3.7
