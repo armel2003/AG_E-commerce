@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import LoginForm from './LoginForm';
 import RegisterForm from './RegisterForm';
 
 const AuthForm = () => {
@@ -15,11 +14,8 @@ const AuthForm = () => {
 
   return (
     <>
-      {isLogin ? (
-        <LoginForm onSwitchToRegister={switchToRegister} />
-      ) : (
-        <RegisterForm onSwitchToLogin={switchToLogin} />
-      )}
+
+        <RegisterForm onSwitchToLogin={switchToLogin} />  
     </>
   );
 };
