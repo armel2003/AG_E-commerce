@@ -1,38 +1,714 @@
+/* Import des polices */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap');
+
+/* Variables CSS */
+:root {
+  --primary-bg: #0a0a0a;
+  --secondary-bg: #1a1a1a;
+  --accent-purple: #7c3aed;
+  --accent-purple-light: #a855f7;
+  --accent-purple-dark: #5b21b6;
+  --neon-purple: #c084fc;
+  --text-primary: #ffffff;
+  --text-secondary: #d1d5db;
+  --card-gradient: linear-gradient(135deg, #1e1e1e 0%, #2d1b69 50%, #1e1e1e 100%);
+  --glow-purple: 0 0 20px rgba(168, 85, 247, 0.3);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .App {
   text-align: center;
+  background: var(--primary-bg);
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
 }
 
-.App-logo {
-  height: 40vmin;
+/* Effet de scanlines pour un look gaming */
+.App::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    transparent 50%, 
+    rgba(168, 85, 247, 0.03) 50%
+  );
+  background-size: 100% 4px;
   pointer-events: none;
+  z-index: 1000;
+  animation: scanlines 0.1s linear infinite;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+@keyframes scanlines {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(4px);
   }
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #16213e 100%);
+  height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  color: var(--text-primary);
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  padding: 1rem;
 }
 
-.App-link {
-  color: #61dafb;
+/* Effet de grille cyberpunk en arrière-plan */
+.App-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(168, 85, 247, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(168, 85, 247, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+  animation: gridMove 20s linear infinite;
+  z-index: -1;
 }
 
-@keyframes App-logo-spin {
+@keyframes gridMove {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(50px, 50px);
+  }
+}
+
+/* Styles du logo */
+.logo-container {
+  margin-bottom: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.logo-img {
+  width: 120px;
+  height: auto;
+  filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.5));
+  transition: var(--transition);
+  animation: logoGlow 3s ease-in-out infinite alternate;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+  filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.8));
+}
+
+.logo-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin: 0;
+  background: linear-gradient(45deg, var(--neon-purple), var(--accent-purple-light), var(--text-primary));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: textShimmer 4s ease-in-out infinite;
+  text-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+}
+
+@keyframes logoGlow {
+  0% {
+    filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.5));
+  }
+  100% {
+    filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.8));
+  }
+}
+
+@keyframes textShimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Styles du formulaire d'authentification */
+.auth-form-container {
+  perspective: 1000px;
+  position: relative;
+}
+
+.form-background-effect {
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  right: -20px;
+  bottom: -20px;
+  background: radial-gradient(circle at 50% 50%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+  border-radius: 30px;
+  z-index: -1;
+  animation: pulseGlow 4s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.05);
+  }
+}
+
+.auth-form {
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  border-radius: 20px;
+  padding: 1.5rem;
+  width: 520px;
+  max-width: 90vw;
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.5),
+    0 0 50px rgba(168, 85, 247, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  animation: formSlideIn 0.6s ease-out;
+}
+
+@keyframes formSlideIn {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(30px) rotateX(10deg);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0) rotateX(0);
   }
+}
+
+.auth-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.1), transparent);
+  transition: var(--transition);
+}
+
+.auth-form:hover {
+  transform: translateY(-5px);
+  box-shadow: 
+    0 35px 60px rgba(0, 0, 0, 0.6),
+    0 0 60px rgba(168, 85, 247, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.auth-form:hover::before {
+  left: 100%;
+  transition: left 0.8s ease;
+}
+
+.form-header {
+  margin-bottom: 1.2rem;
+  text-align: center;
+}
+
+.auth-form h2 {
+  font-family: 'Orbitron', monospace;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  background: linear-gradient(45deg, var(--accent-purple), var(--neon-purple));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.form-subtitle {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.input-group {
+  margin-bottom: 1.2rem;
+}
+
+.input-wrapper {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: rgba(16, 16, 16, 0.8);
+  border: 2px solid rgba(168, 85, 247, 0.2);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1rem;
+  transition: var(--transition);
+  box-sizing: border-box;
+}
+
+.input-wrapper input:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+  background: rgba(16, 16, 16, 0.9);
+  box-shadow: 
+    0 0 20px rgba(168, 85, 247, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.input-wrapper input::placeholder {
+  color: rgba(209, 213, 219, 0.6);
+  font-weight: 300;
+}
+
+.input-line {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent-purple), var(--neon-purple));
+  transition: var(--transition);
+  transform: translateX(-50%);
+}
+
+.input-wrapper.focused .input-line {
+  width: 100%;
+}
+
+.auth-btn {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-purple-light));
+  border: none;
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.auth-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: var(--transition);
+}
+
+.auth-btn:hover:not(.loading) {
+  background: linear-gradient(135deg, var(--accent-purple-light), var(--neon-purple));
+  transform: translateY(-3px);
+  box-shadow: 
+    0 15px 25px rgba(168, 85, 247, 0.4),
+    0 0 30px rgba(168, 85, 247, 0.3);
+}
+
+.auth-btn:hover:not(.loading)::before {
+  left: 100%;
+  transition: left 0.6s ease;
+}
+
+.auth-btn:active:not(.loading) {
+  transform: translateY(-1px);
+}
+
+.auth-btn.loading {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid var(--text-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.btn-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(168, 85, 247, 0.3) 0%, transparent 50%);
+  opacity: 0;
+  transition: var(--transition);
+  border-radius: 12px;
+}
+
+.auth-btn:hover .btn-glow {
+  opacity: 1;
+}
+
+.form-footer {
+  text-align: center;
+}
+
+.switch-mode {
+  color: var(--text-secondary);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--transition);
+  margin: 0 0 1rem 0;
+  position: relative;
+}
+
+.switch-mode .highlight {
+  color: var(--accent-purple-light);
+  font-weight: 600;
+  position: relative;
+}
+
+.switch-mode .highlight::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--accent-purple), var(--neon-purple));
+  transform: scaleX(0);
+  transition: var(--transition);
+}
+
+.switch-mode:hover .highlight::after {
+  transform: scaleX(1);
+}
+
+.forgot-password {
+  color: var(--text-secondary);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.forgot-password .link {
+  color: var(--accent-purple-light);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.forgot-password .link:hover {
+  color: var(--neon-purple);
+  text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+}
+
+/* Messages d'erreur */
+.error-message {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  font-family: 'Exo 2', sans-serif;
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: errorSlideIn 0.3s ease forwards;
+}
+
+@keyframes errorSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.input-wrapper.error input {
+  border-color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+}
+
+.input-wrapper.error .input-line {
+  background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+}
+
+/* Transitions d'animation pour le changement de mode */
+.auth-form.login-mode {
+  animation: slideInFromLeft 0.5s ease-out;
+}
+
+.auth-form.register-mode {
+  animation: slideInFromRight 0.5s ease-out;
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-50px) scale(0.95);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(0) scale(1.02);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(50px) scale(0.95);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(0) scale(1.02);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .App-header {
+    padding: 1rem;
+  }
+  
+  .auth-form {
+    padding: 1.5rem;
+    width: 420px;
+  }
+  
+  .logo-container {
+    margin-bottom: 0.8rem;
+  }
+  
+  .logo-img {
+    width: 120px;
+  }
+  
+  .card {
+    width: 60px;
+    height: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-form {
+    padding: 1.2rem;
+    width: 350px;
+  }
+  
+  .logo-title {
+    font-size: 1.5rem;
+  }
+  
+  .logo-img {
+    width: 100px;
+  }
+  
+  .logo-container {
+    margin-bottom: 0.6rem;
+  }
+}
+
+@media (max-height: 700px) {
+  .App-header {
+    padding: 1rem;
+  }
+  
+  .logo-container {
+    margin-bottom: 0.5rem;
+  }
+  
+  .logo-img {
+    width: 100px;
+  }
+  
+  .form-header {
+    margin-bottom: 1rem;
+  }
+  
+  .input-group {
+    margin-bottom: 1rem;
+  }
+  
+  .input-wrapper {
+    margin-bottom: 1rem;
+  }
+  
+  .auth-btn {
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+}
+
+
+
+/* Amélioration des effets hover pour les éléments interactifs */
+.auth-form input:hover {
+  border-color: rgba(168, 85, 247, 0.4);
+  background: rgba(16, 16, 16, 0.95);
+}
+
+.auth-form input:focus {
+  animation: inputGlow 0.3s ease forwards;
+}
+
+@keyframes inputGlow {
+  0% {
+    box-shadow: 0 0 5px rgba(168, 85, 247, 0.3);
+  }
+  100% {
+    box-shadow: 
+      0 0 20px rgba(168, 85, 247, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Effet Matrix pour l'arrière-plan */
+.App-header::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="20" font-size="15" fill="%23a855f7" opacity="0.1">01</text><text y="40" font-size="12" fill="%237c3aed" opacity="0.1">10</text><text y="60" font-size="14" fill="%23c084fc" opacity="0.1">11</text><text y="80" font-size="13" fill="%23a855f7" opacity="0.1">00</text></svg>') repeat;
+  background-size: 100px 100px;
+  animation: matrixRain 15s linear infinite;
+  z-index: -1;
+  opacity: 0.3;
+}
+
+@keyframes matrixRain {
+  0% {
+    transform: translateY(-100px);
+  }
+  100% {
+    transform: translateY(100px);
+  }
+}
+
+/* Améliorations des boutons et interactions */
+.auth-btn {
+  width: 100%;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-purple-light));
+  border: none;
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 15px rgba(168, 85, 247, 0.2);
+}
+
+.auth-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.auth-btn:hover::after {
+  transform: translateX(100%);
+}
+
+/* Feedback tactile pour les clics */
+.auth-btn:active {
+  transform: translateY(-1px) scale(0.98);
+  box-shadow: 0 2px 10px rgba(168, 85, 247, 0.4);
+}
+
+/* Effet de glitch occasionnel pour le style gaming */
+@keyframes glitch {
+  0%, 90%, 100% {
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+  10% {
+    transform: translate(-2px, 2px);
+    filter: hue-rotate(90deg);
+  }
+  20% {
+    transform: translate(2px, -2px);
+    filter: hue-rotate(180deg);
+  }
+  30% {
+    transform: translate(-2px, -2px);
+    filter: hue-rotate(270deg);
+  }
+  40% {
+    transform: translate(2px, 2px);
+    filter: hue-rotate(360deg);
+  }
+  50% {
+    transform: translate(-2px, 2px);
+    filter: hue-rotate(0deg);
+  }
+}
+
+.logo-img:hover {
+  animation: glitch 0.3s ease-in-out;
 }
