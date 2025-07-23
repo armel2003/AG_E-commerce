@@ -121,24 +121,60 @@ final class ProductController extends AbstractController
 }
 
     //modifier un produit spécifique
-    #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(ProductType::class, $product);
-        $form->handleRequest($request);
+    #[Route('/{id}', name: 'app_product_patch', methods: ['PATCH'])]
+    // public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    // {
+    //     $form = $this->createForm(ProductType::class, $product);
+    //     $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $entityManager->flush();
 
-            return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
-        }
+    //         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+    //     }
 
-        return $this->render('product/edit.html.twig', [
-            'product' => $product,
-            'form' => $form,
-        ]);
+    //     return $this->render('product/edit.html.twig', [
+    //         'product' => $product,
+    //         'form' => $form,
+    //     ]);
+    // }
+public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): JsonResponse
+{
+    $data = json_decode($request->getContent(), true); 
+
+    if (isset($data['name'])) {
+        $product->setName($data['name']);
+    }
+    if (isset($data['descriptions'])) {
+        $product->setDescriptions($data['descriptions']);
+    }
+    if (isset($data['price'])) {
+        $product->setPrice($data['price']);
+    }
+    if (isset($data['createdAt'])) {
+        $product->setCreatedAt(new \DateTimeImmutable($data['createdAt']));
+    }
+    if (isset($data['category'])) {
+        $category = $entityManager->getRepository(Category::class)->find($data['category']);
+        $product->setCategory($category);
     }
 
+    $entityManager->flush();
+
+    return new JsonResponse([
+        'message' => 'Product updated successfully!',
+        'product' => [
+            'id' => $product->getId(),
+            'name' => $product->getName(),
+            'descriptions' => $product->getDescriptions(),
+            'price' => $product->getPrice(),
+            'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
+            'category' => $product->getCategory() ? $product->getCategory()->getName() : null
+        ]
+    ], JsonResponse::HTTP_OK);
+}
+
+        
     //supprimer un produits
     #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
     public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
