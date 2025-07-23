@@ -86,7 +86,7 @@ final class ProductController extends AbstractController
     $entityManager->flush();
 
     return new JsonResponse([
-        'message' => 'Product created successfully!',
+        'message' => 'Product created ',
         'product' => [
             'id' => $product->getId(),
             'name' => $product->getName(),
@@ -162,7 +162,7 @@ public function edit(Request $request, Product $product, EntityManagerInterface 
     $entityManager->flush();
 
     return new JsonResponse([
-        'message' => 'Product updated successfully!',
+        'message' => 'Product updated',
         'product' => [
             'id' => $product->getId(),
             'name' => $product->getName(),
@@ -176,14 +176,16 @@ public function edit(Request $request, Product $product, EntityManagerInterface 
 
         
     //supprimer un produits
-    #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
-    public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}', name: 'app_product_delete', methods: ['POST','DELETE'])]
+public function delete(Product $product, EntityManagerInterface $entityManager): JsonResponse
     {
-        if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($product);
-            $entityManager->flush();
-        }
+        $entityManager->remove($product);
+        $entityManager->flush();
 
-        return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
+        return new JsonResponse([
+            'message' => 'Product deleted',
+            'id' => $product->getId()
+        ], JsonResponse::HTTP_NO_CONTENT);
+
     }
 }
