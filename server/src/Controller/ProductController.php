@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
@@ -38,7 +39,7 @@ final class ProductController extends AbstractController
                 'name' => $product->getName(),
                 'descriptions' => $product->getDescriptions(),
                 'price' => $product->getPrice(),
-                //'category' => $product->getCategory() ? $product->getCategory()->getName() : null
+                'category' => $product->getCategory() ? $product->getCategory()->getName() : null
             ];
         }
 
@@ -71,17 +72,19 @@ final class ProductController extends AbstractController
 {
     $data = json_decode($request->getContent(), true); 
 
+    // Récup id
+    $category = $entityManager->getRepository(Category::class)->find($data['category']);
+
     $product = new Product();
     $product->setName($data['name']);
     $product->setDescriptions($data['descriptions']);
     $product->setPrice($data['price']);
     $product->setCreatedAt(new \DateTimeImmutable($data['createdAt']));
-    $product->setCategory($data['category']);
+    $product->setCategory($category);
 
     $entityManager->persist($product);
     $entityManager->flush();
 
-    // Retourner la réponse JSON 
     return new JsonResponse([
         'message' => 'Product created successfully!',
         'product' => [
@@ -90,11 +93,10 @@ final class ProductController extends AbstractController
             'descriptions' => $product->getDescriptions(),
             'price' => $product->getPrice(),
             'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
-            //'category' => $product->getCategory() ? $product->getCategory()->getName() : null
+            'category' => $product->getCategory()->getName()
         ]
     ], JsonResponse::HTTP_CREATED);
-}
-    
+}   
 //voir un produit en detail
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
     public function show(Product $product): Response
