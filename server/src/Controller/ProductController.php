@@ -99,12 +99,26 @@ final class ProductController extends AbstractController
 }   
 //voir un produit en detail
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
-    public function show(Product $product): Response
-    {
-        return $this->render('product/show.html.twig', [
-            'product' => $product,
-        ]);
-    }
+    // public function show(Product $product): Response
+    // {
+    //     return $this->render('product/show.html.twig', [
+    //         'product' => $product,
+    //     ]);
+    // }
+
+    public function show(Product $product): JsonResponse
+{
+    $data = [
+        'id' => $product->getId(),
+        'name' => $product->getName(),
+        'descriptions' => $product->getDescriptions(),
+        'price' => $product->getPrice(),
+        'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
+        'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
+    ];
+
+    return new JsonResponse($data);
+}
 
     //modifier un produit spécifique
     #[Route('/{id}/edit', name: 'app_product_edit', methods: ['GET', 'POST'])]
