@@ -28,25 +28,22 @@ class Product
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
-    #[ORM\Column]
-    private ?int $category_id = null;
-
     /**
      * @var Collection<int, Images>
      */
     #[ORM\OneToMany(targetEntity: Images::class, mappedBy: 'product_id')]
     private Collection $images;
 
-    #[ORM\ManyToOne(inversedBy: 'id')]
-    #[ORM\JoinColumn(nullable: false)]
+    
+    #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'products')]
+    #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: false)]
     private ?Category $category = null;
 
     public function __construct()
     {
         $this->images = new ArrayCollection();
+        $this->created_at = new \DateTimeImmutable();
     }
-
-
 
     public function getId(): ?int
     {
@@ -101,18 +98,6 @@ class Product
         return $this;
     }
 
-    public function getCategoryId(): ?int
-    {
-        return $this->category_id;
-    }
-
-    public function setCategoryId(int $category_id): static
-    {
-        $this->category_id = $category_id;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Images>
      */
@@ -134,7 +119,6 @@ class Product
     public function removeImage(Images $image): static
     {
         if ($this->images->removeElement($image)) {
-            // set the owning side to null (unless already changed)
             if ($image->getProductId() === $this) {
                 $image->setProductId(null);
             }
@@ -154,5 +138,4 @@ class Product
 
         return $this;
     }
-
 }

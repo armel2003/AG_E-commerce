@@ -11,20 +11,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\HttpFoundation\JsonResponse; 
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Security\Http\Attribute\IsGranted; 
 
 
 
 #[Route('/product')]
 final class ProductController extends AbstractController
 {
-    #[Route(name: 'app_product_index', methods: ['GET'])]
-    // public function index(ProductRepository $productRepository): Response
-    // {
-    //     return $this->render('product/index.html.twig', [
-    //         'products' => $productRepository->findAll(),
-    //     ]);
-    // }
+#[Route(name: 'app_product_index', methods: ['GET'])]
 
 //afficher tous les produits
     public function index(ProductRepository $productRepository): Response
@@ -46,28 +41,9 @@ final class ProductController extends AbstractController
         return $this->json($data);
     }
 
-// cree un nouveau produit
-    #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
-    // public function new(Request $request, EntityManagerInterface $entityManager): Response
-    // {
-    //     $product = new Product();
-    //     $form = $this->createForm(ProductType::class, $product);
-    //     $form->handleRequest($request);
 
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $entityManager->persist($product);
-    //         $entityManager->flush();
-
-    //         //mettre le react front ici
-    //         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
-    //     }
-
-    //     //mettre le react front ici
-    //     return $this->render('product/new.html.twig', [
-    //         'product' => $product,
-    //         'form' => $form,
-    //     ]);
-    // }
+#[Route('/admin/new', name: 'app_product_new', methods: ['GET', 'POST'])]
+#[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): JsonResponse
 {
     $data = json_decode($request->getContent(), true); 
@@ -79,7 +55,8 @@ final class ProductController extends AbstractController
     $product->setName($data['name']);
     $product->setDescriptions($data['descriptions']);
     $product->setPrice($data['price']);
-    $product->setCreatedAt(new \DateTimeImmutable($data['createdAt']));
+
+    $product->setCreatedAt(new \DateTimeImmutable());
     $product->setCategory($category);
 
     $entityManager->persist($product);
@@ -99,13 +76,6 @@ final class ProductController extends AbstractController
 }   
 //voir un produit en detail
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
-    // public function show(Product $product): Response
-    // {
-    //     return $this->render('product/show.html.twig', [
-    //         'product' => $product,
-    //     ]);
-    // }
-
     public function show(Product $product): JsonResponse
 {
     $data = [
@@ -120,24 +90,10 @@ final class ProductController extends AbstractController
     return new JsonResponse($data);
 }
 
-    //modifier un produit spécifique
-    #[Route('/{id}', name: 'app_product_patch', methods: ['PATCH'])]
-    // public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): Response
-    // {
-    //     $form = $this->createForm(ProductType::class, $product);
-    //     $form->handleRequest($request);
+//modifier un produit spécifique
 
-    //     if ($form->isSubmitted() && $form->isValid()) {
-    //         $entityManager->flush();
-
-    //         return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
-    //     }
-
-    //     return $this->render('product/edit.html.twig', [
-    //         'product' => $product,
-    //         'form' => $form,
-    //     ]);
-    // }
+#[Route('/admin/{id}/edit', name: 'app_product_patch', methods: ['PATCH'])]
+#[IsGranted('ROLE_ADMIN')]
 public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): JsonResponse
 {
     $data = json_decode($request->getContent(), true); 
@@ -173,10 +129,9 @@ public function edit(Request $request, Product $product, EntityManagerInterface 
         ]
     ], JsonResponse::HTTP_OK);
 }
-
-        
     //supprimer un produits
-    #[Route('/{id}', name: 'app_product_delete', methods: ['POST','DELETE'])]
+#[Route('/admin/{id}/delete', name: 'app_product_delete', methods: ['POST','DELETE'])]
+#[IsGranted('ROLE_ADMIN')]
 public function delete(Product $product, EntityManagerInterface $entityManager): JsonResponse
     {
         $entityManager->remove($product);
@@ -186,6 +141,35 @@ public function delete(Product $product, EntityManagerInterface $entityManager):
             'message' => 'Product deleted',
             'id' => $product->getId()
         ], JsonResponse::HTTP_NO_CONTENT);
+    }
+    //filtre 
+    #[Route('/search', name: 'product_search', methods: ['POST'])]
+    public function search(Request $request, ProductRepository $productRepository)
+    {
+        // Récup json
+        $data = json_decode($request->getContent(), true);
 
+        
+        $filtres = [
+            'name' => $data['name'] ?? null,
+            'category' => $data['category'] ?? null,
+        ];
+
+        // grace au reposite chercher 
+        $products = $productRepository->findByFilters($filtres);
+
+        // donne en format json
+        $result = [];
+        foreach ($products as $product) {
+            $result[] = [
+                'id' => $product->getId(),
+                'name' => $product->getName(),
+                'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
+                'price' => $product->getPrice(),
+                'created_at' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
+            ];
+        }
+
+        return new JsonResponse($result);
     }
 }
