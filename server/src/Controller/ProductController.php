@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Images;
 use App\Entity\Product;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
@@ -25,19 +26,23 @@ final class ProductController extends AbstractController
     public function index(ProductRepository $productRepository): Response
     {
         $products = $productRepository->findAll();
-
+        
         $data = [];
-
         foreach ($products as $product) {
+        $images = [];
+        foreach ($product->getImages() as $image) {
+            $images[] = $image->getImagePath();
+        }
             $data[] = [
                 'id' => $product->getId(),
                 'name' => $product->getName(),
                 'descriptions' => $product->getDescriptions(),
                 'price' => $product->getPrice(),
-                'category' => $product->getCategory() ? $product->getCategory()->getName() : null
+                'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
+                'images' => $images
+                
             ];
         }
-
         return $this->json($data);
     }
 
@@ -47,6 +52,10 @@ final class ProductController extends AbstractController
     public function new(Request $request, EntityManagerInterface $entityManager): JsonResponse
 {
     $data = json_decode($request->getContent(), true); 
+
+    if ($data === null) {
+    return new JsonResponse(['error' => 'Invalid JSON'], JsonResponse::HTTP_BAD_REQUEST);
+}
 
     // Récup id
     $category = $entityManager->getRepository(Category::class)->find($data['category']);
@@ -60,7 +69,26 @@ final class ProductController extends AbstractController
     $product->setCategory($category);
 
     $entityManager->persist($product);
+
+if (isset($data['images'])) {
+    foreach ($data['images'] as $imageData) {
+        $image = new Images();
+        $image->setImagePath($imageData['url']); 
+        $image->setProductId($product);          
+        $entityManager->persist($image);
+    }
+}
+
     $entityManager->flush();
+    $images=[];
+    // foreach($product->getImages() as $image){
+    //     $images[] = $image;
+    // }
+   foreach ($product->getImages() as $image) {
+    $images[] = [
+        'url' => $image->getImagePath()
+    ];
+}
 
     return new JsonResponse([
         'message' => 'Product created ',
@@ -70,7 +98,8 @@ final class ProductController extends AbstractController
             'descriptions' => $product->getDescriptions(),
             'price' => $product->getPrice(),
             'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
-            'category' => $product->getCategory()->getName()
+            'category' => $product->getCategory()->getName(),
+            'image'=>$images
         ]
     ], JsonResponse::HTTP_CREATED);
 }   
@@ -78,6 +107,12 @@ final class ProductController extends AbstractController
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
     public function show(Product $product): JsonResponse
 {
+    //recup image
+    $images = [];
+    foreach ($product->getImages() as $image) {
+        $images[] = $image->getImagePath();
+    }
+
     $data = [
         'id' => $product->getId(),
         'name' => $product->getName(),
@@ -85,6 +120,8 @@ final class ProductController extends AbstractController
         'price' => $product->getPrice(),
         'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
         'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
+        'images'=>$images
+        
     ];
 
     return new JsonResponse($data);
@@ -114,8 +151,26 @@ public function edit(Request $request, Product $product, EntityManagerInterface 
         $category = $entityManager->getRepository(Category::class)->find($data['category']);
         $product->setCategory($category);
     }
-
+    if (isset($data['images'])) {
+        // delete
+        foreach ($product->getImages() as $image) {
+            $entityManager->remove($image);
+        }
+        $entityManager->flush();
+        //add
+        foreach ($data['images'] as $imageData) {
+            $image = new Images();
+            $image->setImagePath($imageData['url']); // ou 'imagePath' si tu changes le nom
+            $image->setProductId($product);
+            $entityManager->persist($image);
+        }
+    }
     $entityManager->flush();
+    //recup image pour le renvoyer en json
+    $images = [];
+    foreach ($product->getImages() as $image) {
+        $images[] = $image->getImagePath();
+    }
 
     return new JsonResponse([
         'message' => 'Product updated',
@@ -125,7 +180,8 @@ public function edit(Request $request, Product $product, EntityManagerInterface 
             'descriptions' => $product->getDescriptions(),
             'price' => $product->getPrice(),
             'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
-            'category' => $product->getCategory() ? $product->getCategory()->getName() : null
+            'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
+            'images'=>$images
         ]
     ], JsonResponse::HTTP_OK);
 }
@@ -139,7 +195,8 @@ public function delete(Product $product, EntityManagerInterface $entityManager):
 
         return new JsonResponse([
             'message' => 'Product deleted',
-            'id' => $product->getId()
+            //'id' => $product->getId()
+            'name' => $product->getName(),
         ], JsonResponse::HTTP_NO_CONTENT);
     }
     //filtre 
