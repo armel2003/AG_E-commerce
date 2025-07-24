@@ -40,4 +40,25 @@ class ProductRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+ public function findByFilters(array $filtre)
+{
+    $qb = $this->createQueryBuilder('produit')
+        ->leftJoin('produit.category', 'category');
+
+    // Filtrer par nom
+    if (!empty($filtre['name'])) {
+        $qb->andWhere('produit.name LIKE :name')
+            ->setParameter('name', '%' . $filtre['name'] . '%');
+    }
+
+    // Filtrer par nom de catégorie
+    if (!empty($filtre['category'])) {
+        $qb->andWhere('category.name = :categoryName')
+            ->setParameter('categoryName', $filtre['category']);
+    }
+
+    return $qb->getQuery()->getResult();
 }
+}
+

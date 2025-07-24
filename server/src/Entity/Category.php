@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
@@ -20,9 +21,12 @@ class Category
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $created_at = null;
 
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Product::class)]
+    private Collection $products;
+
     public function __construct()
     {
-        $this->id = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -30,22 +34,29 @@ class Category
         return $this->id;
     }
 
-    public function addId(product $id): static
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
     {
-        if (!$this->id->contains($id)) {
-            $this->id->add($id);
-            $id->setCategory($this);
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): static
+    {
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->setCategory($this);
         }
 
         return $this;
     }
 
-    public function removeId(product $id): static
+    public function removeProduct(Product $product): static
     {
-        if ($this->id->removeElement($id)) {
-            // set the owning side to null (unless already changed)
-            if ($id->getCategory() === $this) {
-                $id->setCategory(null);
+        if ($this->products->removeElement($product)) {
+            if ($product->getCategory() === $this) {
+                $product->setCategory(null);
             }
         }
 
@@ -60,7 +71,6 @@ class Category
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -72,7 +82,6 @@ class Category
     public function setCreatedAt(?\DateTimeImmutable $created_at): static
     {
         $this->created_at = $created_at;
-
         return $this;
     }
 }
