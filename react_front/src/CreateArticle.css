@@ -1,0 +1,501 @@
+/* CreateArticle.css - Styles dédiés pour la page de création d'articles */
+
+/* ============ VARIABLES SPÉCIFIQUES ============ */
+:root {
+  --create-article-accent: #22c55e;
+  --create-article-accent-light: #4ade80;
+  --create-article-bg: linear-gradient(135deg, #1e1e1e 0%, #1b4332 50%, #1e1e1e 100%);
+  --create-article-glow: 0 0 20px rgba(34, 197, 94, 0.3);
+}
+
+/* ============ CONTENEUR PRINCIPAL ============ */
+.create-article-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  animation: slideInUp 0.6s ease-out;
+}
+
+.create-article-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.create-article-title {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--create-article-accent), var(--create-article-accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.create-article-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: var(--create-article-accent);
+  border-radius: 2px;
+  box-shadow: var(--create-article-glow);
+}
+
+.create-article-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ============ FORMULAIRE PRINCIPAL ============ */
+.create-article-form {
+  background: var(--create-article-bg);
+  border: 2px solid rgba(34, 197, 94, 0.2);
+  border-radius: 20px;
+  padding: 3rem;
+  box-shadow: var(--create-article-glow);
+  position: relative;
+  overflow: hidden;
+}
+
+.create-article-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(34, 197, 94, 0.1), transparent);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* ============ SECTIONS DU FORMULAIRE ============ */
+.form-section {
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.form-section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--create-article-accent);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(34, 197, 94, 0.2);
+}
+
+.form-section-icon {
+  font-size: 1.8rem;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
+/* ============ CHAMPS DE FORMULAIRE AMÉLIORÉS ============ */
+.create-article-form-group {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.create-article-form-label {
+  display: block;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1.1rem;
+  position: relative;
+}
+
+.create-article-form-label .required {
+  color: var(--create-article-accent);
+  margin-left: 0.25rem;
+  font-weight: bold;
+}
+
+.create-article-form-input,
+.create-article-form-textarea,
+.create-article-form-select {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(34, 197, 94, 0.3);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.create-article-form-input:focus,
+.create-article-form-textarea:focus,
+.create-article-form-select:focus {
+  outline: none;
+  border-color: var(--create-article-accent);
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.1), var(--create-article-glow);
+  transform: translateY(-2px);
+}
+
+.create-article-form-textarea {
+  min-height: 150px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* ============ GRILLE RESPONSIVE ============ */
+.create-article-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .create-article-form-row {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* ============ CHECKBOX STYLE ============ */
+.create-article-checkbox-group {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: rgba(34, 197, 94, 0.05);
+  border: 2px solid rgba(34, 197, 94, 0.2);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.create-article-checkbox-group:hover {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+.create-article-checkbox {
+  width: 24px;
+  height: 24px;
+  accent-color: var(--create-article-accent);
+  cursor: pointer;
+}
+
+.create-article-checkbox-content {
+  flex: 1;
+}
+
+.create-article-checkbox-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.create-article-checkbox-description {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* ============ BOUTONS D'ACTION ============ */
+.create-article-actions {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.create-article-btn {
+  padding: 1rem 2.5rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  min-width: 180px;
+}
+
+.create-article-btn-primary {
+  background: linear-gradient(135deg, var(--create-article-accent), var(--create-article-accent-light));
+  color: white;
+  box-shadow: var(--create-article-glow);
+}
+
+.create-article-btn-primary:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.5);
+  filter: brightness(1.1);
+}
+
+.create-article-btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.create-article-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.create-article-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+/* ============ APERÇU ARTICLE ============ */
+.create-article-preview {
+  background: var(--card-gradient);
+  border: 2px solid rgba(34, 197, 94, 0.2);
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin-top: 3rem;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.create-article-preview-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--create-article-accent);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.create-article-preview-card {
+  background: var(--secondary-bg);
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.create-article-preview-content {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.create-article-preview-image {
+  width: 100px;
+  height: 100px;
+  background: var(--create-article-accent);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.create-article-preview-image::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.create-article-preview-details {
+  flex: 1;
+}
+
+.create-article-preview-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.create-article-preview-description {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+
+.create-article-preview-meta {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.create-article-preview-price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--create-article-accent);
+}
+
+.create-article-badge {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.create-article-badge-category {
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--create-article-accent);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+.create-article-badge-game {
+  background: rgba(168, 85, 247, 0.2);
+  color: var(--neon-purple);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+}
+
+/* ============ ALERTES PERSONNALISÉES ============ */
+.create-article-alert {
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.create-article-alert::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+}
+
+.create-article-alert-success {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--create-article-accent);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.create-article-alert-success::before {
+  background: var(--create-article-accent);
+}
+
+.create-article-alert-error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.create-article-alert-error::before {
+  background: #ef4444;
+}
+
+/* ============ ANIMATIONS D'ENTRÉE ============ */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ============ RESPONSIVE DESIGN ============ */
+@media (max-width: 768px) {
+  .create-article-container {
+    padding: 1rem;
+  }
+  
+  .create-article-title {
+    font-size: 2.2rem;
+  }
+  
+  .create-article-form {
+    padding: 2rem 1.5rem;
+  }
+  
+  .create-article-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .create-article-btn {
+    width: 100%;
+  }
+  
+  .create-article-preview-content {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .create-article-preview-meta {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .create-article-form-row {
+    gap: 1rem;
+  }
+  
+  .create-article-form-input,
+  .create-article-form-textarea,
+  .create-article-form-select {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+}
