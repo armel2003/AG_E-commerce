@@ -1,4 +1,3 @@
-
 /*  VARIABLES CSS NOUVELLES  */
 :root {
   --primary-bg: #0a0a0a;
@@ -311,9 +310,9 @@ body {
 }
 
 .btn-edit {
-  background: rgba(245, 158, 11, 0.1);
-  color: var(--warning-color);
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  background: rgba(124, 58, 237, 0.1);
+  color: var(--accent-purple-light);
+  border: 1px solid rgba(124, 58, 237, 0.3);
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
   font-size: 0.8rem;
@@ -322,8 +321,8 @@ body {
 }
 
 .btn-edit:hover {
-  background: rgba(245, 158, 11, 0.2);
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+  background: rgba(124, 58, 237, 0.2);
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
   transform: translateY(-1px);
 }
 
