@@ -187,18 +187,17 @@ public function edit(Request $request, Product $product, EntityManagerInterface 
 }
     //supprimer un produits
 #[Route('/admin/{id}/delete', name: 'app_product_delete', methods: ['POST','DELETE'])]
-#[IsGranted('ROLE_ADMIN')]
+//#[IsGranted('ROLE_ADMIN')]
 public function delete(Product $product, EntityManagerInterface $entityManager): JsonResponse
-    {
-        $entityManager->remove($product);
-        $entityManager->flush();
-
-        return new JsonResponse([
-            'message' => 'Product deleted',
-            //'id' => $product->getId()
-            'name' => $product->getName(),
-        ], JsonResponse::HTTP_NO_CONTENT);
+{
+    foreach ($product->getImages() as $image) {
+        $entityManager->remove($image);
     }
+    $entityManager->remove($product);
+    $entityManager->flush();
+    return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+}
+
     //filtre 
     #[Route('/search', name: 'product_search', methods: ['POST'])]
     public function search(Request $request, ProductRepository $productRepository)
