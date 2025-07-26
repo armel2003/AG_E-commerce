@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './detailProduct.css';
+import ProductDetailCard from './ProductDetailCard';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -9,64 +10,43 @@ const ProductDetail = () => {
   const [loading, setLoading] = useState(true);
   const [allproducts, setAllProducts] = useState([]);
 
-useEffect(() => {
+  useEffect(() => {
     fetch(`http://localhost:8000/product/${id}`)
-    .then(response => {
+      .then(response => {
         console.log('Response received:', response);
         if (!response.ok) {
-        throw new Error('Impossible de charger le produit');
+          throw new Error('Impossible de charger le produit');
         }
         return response.json(); 
-    })
-    .then(data => {
+      })
+      .then(data => {
         console.log('Product data:', data);
         setProduct(data); 
         setLoading(false);
-    });
+      });
 
     // autre product
     fetch('http://localhost:8000/product')
-    .then(response => {
+      .then(response => {
         if (!response.ok) {
-        throw new Error('Impossible de charger les produits');
+          throw new Error('Impossible de charger les produits');
         }
         return response.json();
-    })
-    .then(data => {
+      })
+      .then(data => {
         console.log('All products data:', data);
         setAllProducts(data);
         setLoading(false);
-    });
-}, [id]);
+        });
+    }, [id]);
 
 if (loading) return <p>Chargement🎮...</p>;
-if (!product) return <p>Produit non trouvé.</p>;
+
 
 return (
-    <div className="product-detail-container">
+    <div className="product-container">
     <h2>Détails du jeu</h2>
-    
-    <div className="product-card-detail">
-        {product.images && product.images.length > 0 ? (
-        <img 
-            src={product.images[0]} 
-            alt={`Image du produit ${product.name}`} 
-            className="product-image"
-        />
-        ) : (
-        <p>Aucune image disponible.</p>
-        )}
-        <div className="product-info">
-        <h3>{product.name}</h3>
-        <p>{product.descriptions}</p>
-        <p>Catégorie : {product.category}</p>
-        <p>Prix : {product.price} €</p>
-        <p>Date: {product.createdAt}</p>
-        <button onClick={() => alert('Produit ajouté au panier !')} className='button'>
-            Ajouter au panier
-        </button>
-        </div>
-    </div>
+    <ProductDetailCard product={product} />
     <p>Avis</p>
     <p>Produits Similaires</p>
     <div className="similar-products-row">
@@ -81,7 +61,7 @@ return (
             <button onClick={() => navigate(`/product/${prod.id}`)} className='button'>
             Voir plus
             </button>
-            </div>
+        </div>
         ))}
     </div>
     </div> 
