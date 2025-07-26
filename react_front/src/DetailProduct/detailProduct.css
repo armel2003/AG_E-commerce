@@ -110,8 +110,6 @@ body{
   padding: 2rem 2.5rem;
   width: 80%;
   max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
 }
 .product-image {
   display: flex;
@@ -171,4 +169,30 @@ body{
     padding-left: 0;
     width: 100%;
   }
+}
+
+/* Avis section */
+.avis-section {
+  background: #2d1b3a;
+  border-radius: 10px;
+  padding: 1.2rem 1.5rem;
+  margin: 2rem 0;
+  max-width: 700px;
+}
+.avis-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.avis-section li {
+  margin-bottom: 0.7rem;
+  padding: 0.7rem 1rem;
+  background: #3a2350;
+  border-radius: 6px;
+  color: #e0d6f7;
+  font-size: 1.05rem;
+  box-shadow: 0 1px 4px rgba(153,71,235,0.05);
+}
+.avis-section li strong {
+  color: #fff;
 }

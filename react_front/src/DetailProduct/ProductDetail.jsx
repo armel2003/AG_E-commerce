@@ -47,8 +47,15 @@ return (
     <div className="product-container">
     <h2>Détails du jeu</h2>
     <ProductDetailCard product={product} />
-    <p>Avis</p>
-    <p>Produits Similaires</p>
+    <h2>Avis</h2>
+    <div className="avis-section">
+          <ul>
+            <li><strong>Marie</strong> : Super jeu, je recommande ! ⭐⭐⭐⭐⭐</li>
+            <li><strong>Lucas</strong> : Graphismes magnifiques, très fun. ⭐⭐⭐⭐</li>
+            <li><strong>Sophie</strong> : Bon rapport qualité/prix. ⭐⭐⭐⭐</li>
+          </ul>
+        </div>
+    <h2>Produits Similaires</h2>
     <div className="similar-products-row">
         {allproducts.map((prod) => (
         <div key={prod.id} className="product-card">
