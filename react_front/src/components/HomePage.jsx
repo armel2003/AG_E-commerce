@@ -3,6 +3,7 @@ import React from "react";
 import logo from "./lol.jpeg";
 import "./homedacceil.css";
 import Product from './all_product';
+import RecentProducts from './RecentProducts';
 
 
 
@@ -109,6 +110,7 @@ export default function HomePage() {
  <h2>All product</h2>
 <Product />
       <h2>Nouvelles sorties</h2>
+      <RecentProducts count={4} />
       <h2>Top ventes</h2>
       <h2>Nos plateformes Partenaires</h2>
 		</div>

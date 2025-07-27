@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
+import "./homedacceil.css";
 
 const Product = () => {
 const [loading, setLoading] = useState(true);
 const [products, setProducts] = useState([]);
+const navigate = useNavigate();
 
 useEffect(() => {
 fetch('http://localhost:8000/product')
@@ -14,7 +16,8 @@ fetch('http://localhost:8000/product')
     return response.json();
     })
     .then(data => {
-    setProducts(data);
+    const aléatoire = data.sort(() => Math.random() - 0.5);
+    setProducts(aléatoire.slice(0, 4));
     setLoading(false);
     })
     .catch(error => {
@@ -27,22 +30,15 @@ if (loading) return <p>Chargement...</p>;
 
 return (
 <div>
-    <h2>Produits similaires</h2>
-    <div className="similar-products">
+    <div className="homepage-grid">
     {products.map(prod => (
-        <div key={prod.id} className="product-card">
+        <div key={prod.id} className="homepage-card" onClick={() => navigate(`/product/${prod.id}`)} style={{cursor: 'pointer'}}>
         <img
             src={prod.images?.[0] || 'placeholder.jpg'}
             alt={prod.name}
-            className="similar-product-image"
+            className="homepage-card-img"
         />
         <h4>{prod.name}</h4>
-        <button
-            onClick={() => alert(`Produit ${prod.name} ajouté au panier !`)}
-            className="button"
-        >
-        Voir plus
-        </button>
         </div>
     ))}
     </div>
