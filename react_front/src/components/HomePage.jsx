@@ -1,6 +1,8 @@
 import React from "react";
-import logo from "./assets/logo_pentakeys.png";
-
+//import logo from "./assets/logo_pentakeys.png";
+import logo from "./lol.jpeg";
+import "./homedacceil.css";
+import Product from './all_product';
 
 
 
@@ -37,120 +39,6 @@ const games = [
 export default function HomePage() {
 	return (
 		<div className="homepage-root">
-			<style>{`
-        .homepage-root {
-  background: #221112;
-  color: #fff;
-  min-height: 100vh;
-}
-
-        .homepage-header {
-          border-bottom: 1px solid #472426;
-          padding: 1rem 2.5rem;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          background: #221112;
-        }
-        .homepage-header h2 {
-          font-size: 1.25rem;
-          font-weight: bold;
-          letter-spacing: -0.015em;
-        }
-        .homepage-nav {
-          display: flex;
-          align-items: center;
-          gap: 2rem;
-        }
-
-
-        .homepage-nav a {
-          color: #fff;
-          font-size: 1rem;
-          font-weight: 500;
-          text-decoration: none;
-        }
-        .homepage-actions {
-          display: flex;
-          gap: 0.5rem;
-        }
-        .homepage-actions button {
-          background: #9947eb;
-          color: #fff;
-          border: none;
-          border-radius: 0.5rem;
-          font-weight: bold;
-          padding: 0.5rem 1.5rem;
-          cursor: pointer;
-          font-size: 1rem;
-        }
-        .homepage-banner {
-          background: linear-gradient(0deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 25%), url('https://img.freepik.com/photos-premium/salon-jeu-joueur-video-personne-ne-moque-neeon-chill-chambre-jeu-confortable_916191-128316.jpg');
-          background-size: cover;
-          background-position: center;
-          min-height: 220px;
-          display: flex;
-          align-items: flex-end;
-          border-radius: 1rem;
-          margin: 2rem 2rem 1rem 2rem;
-        }
-        .homepage-banner p {
-         font-size: 2rem;
-  font-weight: bold;
-  padding: 1.5rem;
-  margin: 0;
-  color: #fff;
-  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
-        }
-        .homepage-categories {
-          display: flex;
-          border-bottom: 1px solid #1a1221;
-          gap: 2rem;
-          padding: 1rem 2rem 0.5rem 2rem;
-        }
-        .homepage-categories a {
-          color: #c89295;
-          font-weight: bold;
-          font-size: 1rem;
-          padding: 1rem 0;
-          border-bottom: 3px solid transparent;
-          text-decoration: none;
-        }
-        .homepage-categories a.active {
-          color: #fff;
-          border-bottom: 3px solid #1a1221;
-        }
-        .homepage-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
-          gap: 1rem;
-          padding: 1.5rem 2rem;
-        }
-        .homepage-card {
-          background: #2a181a;
-          border-radius: 1rem;
-          overflow: hidden;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-        .homepage-card-img {
-          width: 70%;
-          aspect-ratio: 1/1;
-          background-size: cover;
-          background-position: center;
-          border-radius: 1rem;
-        }
-        .homepage-card p {
-          margin: 0.5rem 0 1rem 0;
-          font-size: 1rem;
-          font-weight: 500;
-        }
-        @media (max-width: 600px) {
-          .homepage-banner { margin: 1rem 0.5rem; }
-          .homepage-categories, .homepage-grid { padding: 1rem 0.5rem; }
-        }
-      `}</style>
 
 			{/* Header */}
 			<header className="homepage-header">
@@ -189,6 +77,7 @@ export default function HomePage() {
 			</section>
 
 			{/* Categories */}
+     
 			<div className="homepage-categories">
 				{categories.map((cat) => (
 					<a
@@ -201,20 +90,27 @@ export default function HomePage() {
 				))}
 			</div>
 
-			{/* Games grid */}
-			<div className="homepage-grid">
-				{games.map((game) => (
-					<div className="homepage-card" key={game.name}>
-						<div
-							className="homepage-card-img"
-							style={{
-								backgroundImage: `url('${game.image}')`,
-							}}
-						></div>
-						<p>{game.name}</p>
-					</div>
-				))}
-			</div>
+			{/* Games grid */} 
+    <h2>Jeux en vedette</h2>
+<div className="homepage-grid">
+  {games.map((game) => (
+    <div className="homepage-card" key={game.name}>
+      <div
+        className="homepage-card-img"
+        style={{
+          backgroundImage: `url('${game.image}')`,
+        }}
+      ></div>
+      <p>{game.name}</p>
+    </div>
+  ))}
+</div>
+{/* Composant pour produits similaires */}
+ <h2>All product</h2>
+<Product />
+      <h2>Nouvelles sorties</h2>
+      <h2>Top ventes</h2>
+      <h2>Nos plateformes Partenaires</h2>
 		</div>
 	);
 }
