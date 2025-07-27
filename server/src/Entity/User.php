@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -19,13 +20,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Groups(['user:read'])]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
-    private array $roles = [];
+    private array $roles = ['ROLE_USER'];
 
     /**
      * @var string The hashed password
@@ -37,28 +39,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isVerified = false;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
     private ?string $adress = null;
 
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private ?int $zipcode = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:read'])]
     private ?string $country = null;
 
     #[ORM\Column]
-    private ?float $fidelity_balance = null;
+    #[Groups(['user:read'])]
+    private ?float $fidelity_balance = 0;
 
     #[ORM\Column]
-    private ?float $balance = null;
+    #[Groups(['user:read'])]
+    private ?float $balance = 0;
 
     public function getId(): ?int
     {
