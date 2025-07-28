@@ -78,6 +78,12 @@ body {
   gap: 0.5rem;
 }
 
+.logo-img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
 .nav-links {
   display: flex;
   gap: 2rem;

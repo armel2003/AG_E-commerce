@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import './EditArticle.css';
 
-function EditArticle({ articleId, onCancel, onUpdate }) {
+function EditArticle() {
+  const { id: articleId } = useParams();
+  const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -40,10 +44,9 @@ function EditArticle({ articleId, onCancel, onUpdate }) {
     'Minecraft'
   ];
 
-  // Simuler le chargement des données de l'article
+  
   useEffect(() => {
     if (articleId) {
-      // Simulation de données d'article existant
       const mockArticleData = {
         1: {
           name: 'Apex Legends - 1000 Coins',
@@ -69,7 +72,7 @@ function EditArticle({ articleId, onCancel, onUpdate }) {
           tags: 'valorant, vp, tactical, fps',
           featured: false
         }
-        // Ajoutez d'autres articles simulés si nécessaire
+        
       };
 
       const articleData = mockArticleData[articleId];
@@ -92,7 +95,7 @@ function EditArticle({ articleId, onCancel, onUpdate }) {
     setIsLoading(true);
     setMessage({ type: '', text: '' });
 
-    // Validation basique
+    
     if (!formData.name || !formData.price || !formData.category || !formData.game) {
       setMessage({ type: 'error', text: 'Veuillez remplir tous les champs obligatoires.' });
       setIsLoading(false);
@@ -107,16 +110,9 @@ function EditArticle({ articleId, onCancel, onUpdate }) {
       
       setMessage({ type: 'success', text: 'Article mis à jour avec succès ! ✅' });
       
-      // Appeler la fonction de callback pour informer le parent
-      if (onUpdate) {
-        onUpdate(articleId, formData);
-      }
       
-      // Retour au dashboard après 2 secondes
       setTimeout(() => {
-        if (onCancel) {
-          onCancel();
-        }
+        navigate('/admin/dashboard');
       }, 2000);
       
     } catch (error) {
@@ -127,30 +123,26 @@ function EditArticle({ articleId, onCancel, onUpdate }) {
   };
 
   const handleCancel = () => {
-    if (onCancel) {
-      onCancel();
-    }
+    navigate('/admin/dashboard');
   };
 
   return (
     <div className="admin-container">
-      {/* En-tête de page */}
       <div className="edit-article-header">
         <h1 className="edit-article-title">Modifier l'article</h1>
         <p className="edit-article-subtitle">Mettez à jour les informations de votre produit gaming</p>
       </div>
 
-      {/* Messages d'alerte */}
+      
       {message.text && (
         <div className={`alert alert-${message.type}`}>
           {message.text}
         </div>
       )}
 
-      {/* Formulaire */}
+      
       <div className="edit-article-form">
         <form onSubmit={handleSubmit}>
-          {/* Informations de base */}
           <h3 className="edit-article-section-title">
             📝 Informations de base
           </h3>
@@ -206,7 +198,7 @@ function EditArticle({ articleId, onCancel, onUpdate }) {
             />
           </div>
 
-          {/* Catégorisation */}
+          
           <h3 className="edit-article-section-title">
             🏷️ Catégorisation
           </h3>
@@ -270,7 +262,7 @@ function EditArticle({ articleId, onCancel, onUpdate }) {
             />
           </div>
 
-          {/* Détails produit */}
+          
           <h3 className="edit-article-section-title">
             🎮 Détails du produit
           </h3>
@@ -323,7 +315,7 @@ function EditArticle({ articleId, onCancel, onUpdate }) {
             />
           </div>
 
-          {/* Options */}
+          
           <h3 className="edit-article-section-title">
             ⚙️ Options
           </h3>
@@ -346,7 +338,7 @@ function EditArticle({ articleId, onCancel, onUpdate }) {
             </p>
           </div>
 
-          {/* Boutons d'action */}
+          
           <div className="btn-group">
             <button 
               type="submit" 
@@ -367,7 +359,7 @@ function EditArticle({ articleId, onCancel, onUpdate }) {
         </form>
       </div>
 
-      {/* Aperçu de l'article */}
+      
       {formData.name && (
         <div className="admin-card" style={{ marginTop: '2rem' }}>
           <h3 style={{ color: 'var(--edit-article-accent)', marginBottom: '1rem' }}>
