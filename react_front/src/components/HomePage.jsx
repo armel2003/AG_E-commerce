@@ -1,6 +1,6 @@
 import React from "react";
 //import logo from "./assets/logo_pentakeys.png";
-import logo from "./lol.jpeg";
+import logo from "../assets/Logo.png";
 import "./homedacceil.css";
 import Product from './all_product';
 import RecentProducts from './RecentProducts';

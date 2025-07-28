@@ -45,6 +45,8 @@
         },
         "files": [
             "config/packages/nelmio_cors.yaml"
+        ]
+    },
     "lexik/jwt-authentication-bundle": {
         "version": "3.1",
         "recipe": {
