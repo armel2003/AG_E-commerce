@@ -5,10 +5,10 @@ const RegisterForm = ({ onSwitchToLogin }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState('');
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState('');
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    // Clear error when user starts typing
     if (errors[e.target.name]) {
       setErrors({ ...errors, [e.target.name]: '' });
     }
@@ -39,18 +39,50 @@ const RegisterForm = ({ onSwitchToLogin }) => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsLoading(true);
-    
-    // Simulation d'une requête API
-    setTimeout(() => {
-      alert('Inscription réussie !');
+    setServerError('');
+
+    try {
+      // Création de FormData au lieu de JSON
+      const formData = new FormData();
+      formData.append('registration_form[email]', form.email);
+      formData.append('registration_form[username]', form.username);
+      formData.append('registration_form[plainPassword][first]', form.password);
+      formData.append('registration_form[plainPassword][second]', form.confirmPassword);
+
+      const response = await fetch('http://localhost:8000/register', {
+        
+        method: 'POST',
+        body: formData,
+      });
+      const rawResponse = await response.text();
+console.log('RAW RESPONSE:', rawResponse);
+
+
+      const contentType = response.headers.get('content-type');
+      let data = {};
+
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        data = { message: 'Réponse inattendue du serveur.' };
+      }
+
+      if (response.ok) {
+        alert('Inscription réussie ! Veuillez vérifier votre email pour la confirmation.');
+      } else {
+        setServerError(data.message || 'Erreur inconnue.');
+      }
+    } catch (error) {
+      setServerError('Une erreur est survenue, veuillez réessayer plus tard.');
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -79,7 +111,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
             <div className="input-line"></div>
             {errors.username && <div className="error-message">{errors.username}</div>}
           </div>
-          
+
           <div className={`input-wrapper ${focusedField === 'email' ? 'focused' : ''} ${errors.email ? 'error' : ''}`}>
             <input
               type="email"
@@ -125,6 +157,8 @@ const RegisterForm = ({ onSwitchToLogin }) => {
             {errors.confirmPassword && <div className="error-message">{errors.confirmPassword}</div>}
           </div>
         </div>
+
+        {serverError && <div className="error-message">{serverError}</div>}
 
         <button 
           type="submit" 
