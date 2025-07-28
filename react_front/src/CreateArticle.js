@@ -19,26 +19,21 @@ function CreateArticle() {
   const [message, setMessage] = useState({ type: '', text: '' });
 
   const categories = [
-    'Monnaies virtuelles',
-    'Pass de bataille',
-    'Skins',
-    'DLC',
-    'Cartes cadeaux',
-    'Abonnements'
+ 2
   ];
 
-  const games = [
-    'Valorant',
-    'League of Legends',
-    'Apex Legends',
-    'Counter-Strike 2',
-    'Fortnite',
-    'Rocket League',
-    'Overwatch 2',
-    'Call of Duty',
-    'FIFA',
-    'Minecraft'
-  ];
+  // const games = [
+  //   'Valorant',
+  //   'League of Legends',
+  //   'Apex Legends',
+  //   'Counter-Strike 2',
+  //   'Fortnite',
+  //   'Rocket League',
+  //   'Overwatch 2',
+  //   'Call of Duty',
+  //   'FIFA',
+  //   'Minecraft'
+  // ];
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -53,37 +48,42 @@ function CreateArticle() {
     setIsLoading(true);
     setMessage({ type: '', text: '' });
 
-    // Validation basique
-    if (!formData.name || !formData.price || !formData.category || !formData.game) {
-      setMessage({ type: 'error', text: 'Veuillez remplir tous les champs obligatoires.' });
-      setIsLoading(false);
-      return;
-    }
+    const productData = {
+      name: formData.name,
+      descriptions: formData.description,
+      price: formData.price,
+      category: formData.category,
+      images: formData.image ? [{ url: formData.image }] : [],
+    };
 
     try {
-      // Simulation d'appel API
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      console.log('Données article:', formData);
-      
-      setMessage({ type: 'success', text: 'Article créé avec succès ! 🎉' });
-      
-      // Reset du formulaire
-      setFormData({
-        name: '',
-        description: '',
-        price: '',
-        category: '',
-        game: '',
-        digitalCode: '',
-        image: '',
-        stock: '',
-        tags: '',
-        featured: false
+      const response = await fetch('http://localhost:8000/product/admin/new', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productData),
       });
-      
-    } catch (error) {
-      setMessage({ type: 'error', text: 'Erreur lors de la création de l\'article. Veuillez réessayer.' });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setMessage({ type: 'success', text: 'Article créé avec succès ! YEAH' });
+        setFormData({
+          name: '',
+          description: '',
+          price: '',
+          category: '',
+          game: '',
+          digitalCode: '',
+          image: '',
+          stock: '',
+          tags: '',
+          featured: false
+        });
+      } else {
+        setMessage({ type: 'error', text: result.error || 'Erreur lors de la création de l\'article.' });
+      }
     } finally {
       setIsLoading(false);
     }
@@ -109,9 +109,9 @@ function CreateArticle() {
         <form onSubmit={handleSubmit}>
           {/* Informations de base */}
           <h3 style={{ color: 'var(--neon-purple)', marginBottom: '1.5rem' }}>
-            📝 Informations de base
+             Informations de base
           </h3>
-          
+
           <div className="form-row">
             <div className="form-group">
               <label className="form-label" htmlFor="name">
@@ -165,7 +165,7 @@ function CreateArticle() {
 
           {/* Catégorisation */}
           <h3 style={{ color: 'var(--neon-purple)', marginBottom: '1.5rem', marginTop: '2rem' }}>
-            🏷️ Catégorisation
+             Catégorisation
           </h3>
 
           <div className="form-row">
@@ -190,7 +190,7 @@ function CreateArticle() {
               </select>
             </div>
 
-            <div className="form-group">
+            {/* <div className="form-group">
               <label className="form-label" htmlFor="game">
                 Jeu *
               </label>
@@ -209,22 +209,7 @@ function CreateArticle() {
                   </option>
                 ))}
               </select>
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label className="form-label" htmlFor="tags">
-              Tags (séparés par des virgules)
-            </label>
-            <input
-              type="text"
-              id="tags"
-              name="tags"
-              className="form-input"
-              placeholder="fps, battle-royale, competitive"
-              value={formData.tags}
-              onChange={handleChange}
-            />
+            </div> */}
           </div>
 
           {/* Détails produit */}
@@ -234,73 +219,19 @@ function CreateArticle() {
 
           <div className="form-row">
             <div className="form-group">
-              <label className="form-label" htmlFor="digitalCode">
-                Code numérique/Clé
+              <label className="form-label" htmlFor="image">
+                URL de l'image
               </label>
               <input
-                type="text"
-                id="digitalCode"
-                name="digitalCode"
+                type="url"
+                id="image"
+                name="image"
                 className="form-input"
-                placeholder="Code ou clé d'activation"
-                value={formData.digitalCode}
+                placeholder="https://example.com/image.jpg"
+                value={formData.image}
                 onChange={handleChange}
               />
             </div>
-
-            <div className="form-group">
-              <label className="form-label" htmlFor="stock">
-                Stock disponible
-              </label>
-              <input
-                type="number"
-                id="stock"
-                name="stock"
-                className="form-input"
-                placeholder="100"
-                min="0"
-                value={formData.stock}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label className="form-label" htmlFor="image">
-              URL de l'image
-            </label>
-            <input
-              type="url"
-              id="image"
-              name="image"
-              className="form-input"
-              placeholder="https://example.com/image.jpg"
-              value={formData.image}
-              onChange={handleChange}
-            />
-          </div>
-
-          {/* Options */}
-          <h3 style={{ color: 'var(--neon-purple)', marginBottom: '1.5rem', marginTop: '2rem' }}>
-            ⚙️ Options
-          </h3>
-
-          <div className="form-group">
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-              <input
-                type="checkbox"
-                name="featured"
-                checked={formData.featured}
-                onChange={handleChange}
-                style={{ transform: 'scale(1.2)' }}
-              />
-              <span className="form-label" style={{ marginBottom: 0 }}>
-                ⭐ Article en vedette
-              </span>
-            </label>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.25rem' }}>
-              Cet article apparaîtra en première position sur la page d'accueil
-            </p>
           </div>
 
           {/* Boutons d'action */}
@@ -310,7 +241,7 @@ function CreateArticle() {
               className={`btn btn-primary ${isLoading ? 'loading' : ''}`}
               disabled={isLoading}
             >
-              {isLoading ? '⏳ Création en cours...' : '✅ Créer l\'article'}
+              Ajouter l'article
             </button>
             <button 
               type="button" 

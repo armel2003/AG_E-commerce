@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
-
-function AdminDashboard() {
-  const navigate = useNavigate();
-  
+import RecentProducts from './components/RecentProductAdmin';
+import { useNavigate } from 'react-router-dom';
+function AdminDashboard({ onEditArticle }) {
+    const navigate = useNavigate();
   const [articles, setArticles] = useState([
     { id: 1, name: 'Apex Legends - 1000 Coins', price: '€9.99', status: 'Actif', sales: 156 },
     { id: 2, name: 'Valorant - VP Bundle', price: '€24.99', status: 'Actif', sales: 89 },
@@ -16,6 +15,14 @@ function AdminDashboard() {
   const [articleToDelete, setArticleToDelete] = useState(null);
   const [message, setMessage] = useState({ type: '', text: '' });
 
+  // Données simulées pour le tableau de bord
+  const stats = {
+    totalUsers: 1247,
+    totalArticles: articles.length,
+    pendingOrders: 23,
+    revenue: '€15,420'
+  };
+
   const recentUsers = [
     { id: 1, name: 'Alexandre Martin', email: 'alex.martin@email.com', role: 'User', joinDate: '2025-01-20' },
     { id: 2, name: 'Sophie Dubois', email: 'sophie.d@email.com', role: 'User', joinDate: '2025-01-19' },
@@ -23,10 +30,15 @@ function AdminDashboard() {
     { id: 4, name: 'Emma Rousseau', email: 'emma.r@email.com', role: 'User', joinDate: '2025-01-17' }
   ];
 
-  
-  const handleEditArticle = (articleId) => {
-    navigate(`/admin/edit-article/${articleId}`);
-  };
+  // Fonctions de gestion des articles
+ const handleEditArticle = (articleId) => {
+    if (onEditArticle) {
+      onEditArticle(articleId);
+    } else {
+      console.log('Modifier l\'article:', articleId);
+      navigate(`/edit-article/${articleId}`); // Redirige vers l'édition de l'article
+    }
+  };;
 
   const handleDeleteArticle = (articleId) => {
     const article = articles.find(a => a.id === articleId);
@@ -41,7 +53,7 @@ function AdminDashboard() {
       setShowDeleteModal(false);
       setArticleToDelete(null);
       
-      
+      // Masquer le message après 3 secondes
       setTimeout(() => {
         setMessage({ type: '', text: '' });
       }, 3000);
@@ -53,7 +65,7 @@ function AdminDashboard() {
     setArticleToDelete(null);
   };
 
-  
+  // Modal de confirmation de suppression
   const DeleteConfirmModal = () => {
     if (!showDeleteModal || !articleToDelete) return null;
 
@@ -82,32 +94,32 @@ function AdminDashboard() {
 
   return (
     <div className="admin-container">
-     
+      {/* Modal de confirmation */}
       <DeleteConfirmModal />
 
-      
+      {/* En-tête de page */}
       <div className="page-header">
         <h1 className="page-title">Tableau de bord</h1>
         <p className="page-subtitle">Vue d'ensemble de votre plateforme e-commerce gaming</p>
       </div>
 
-      
+      {/* Messages d'alerte */}
       {message.text && (
         <div className={`alert alert-${message.type}`}>
           {message.text}
         </div>
       )}
 
-      
+      {/* Actions rapides */}
       <div className="admin-card" style={{ marginBottom: '2rem' }}>
         <h3 style={{ color: 'var(--neon-purple)', marginBottom: '1rem' }}>🚀 Actions rapides</h3>
         <div className="btn-group">
-          <button 
-            className="btn btn-primary"
-            onClick={() => navigate('/admin/create-article')}
-          >
-            ➕ Créer un nouvel article
-          </button>
+          <button
+        className="btn btn-primary"
+        onClick={() => navigate('/admin/create-article')} // Utilisation de navigate ici
+        >
+          ➕ Créer un nouvel article
+        </button>
           <button 
             className="btn btn-secondary"
             onClick={() => navigate('/admin/user-management')}
@@ -122,62 +134,23 @@ function AdminDashboard() {
           </button>
         </div>
       </div>
-
-      
+  {/* Articles récents */}
       <div className="grid grid-2">
         <div className="admin-card">
-          <h3 style={{ color: 'var(--neon-purple)', marginBottom: '1rem' }}>🎮 Articles récents</h3>
-          <div className="table-container">
-            {articles.map(article => (
-              <div key={article.id} style={{ 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                alignItems: 'center',
-                padding: '0.75rem 0',
-                borderBottom: '1px solid rgba(124, 58, 237, 0.1)'
-              }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: '500', marginBottom: '0.25rem' }}>
-                    {article.name}
-                  </div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                    {article.price} • {article.sales} ventes
-                  </div>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                  <span className={`badge ${article.status === 'Actif' ? 'badge-user' : 'badge-pending'}`}>
-                    {article.status}
-                  </span>
-                  <div className="article-actions">
-                    <button 
-                      className="btn-edit"
-                      onClick={() => handleEditArticle(article.id)}
-                      title="Modifier l'article"
-                    >
-                      ✏️ Modifier
-                    </button>
-                    <button 
-                      className="btn-delete"
-                      onClick={() => handleDeleteArticle(article.id)}
-                      title="Supprimer l'article"
-                    >
-                      🗑️ Supprimer
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+ 
+          <div className="">
+            <RecentProducts />
           </div>
-          <button 
-            className="btn btn-secondary btn-small" 
+          <button
+            className="btn btn-secondary btn-small"
             style={{ marginTop: '1rem', width: '100%' }}
-            onClick={() => navigate('/admin/create-article')}
+            onClick={() => navigate('/create-article')}
           >
-            Voir tous les articles
+          Voir tous les articles
           </button>
         </div>
 
-        
+        {/* Utilisateurs récents */}
         <div className="admin-card">
           <h3 style={{ color: 'var(--neon-purple)', marginBottom: '1rem' }}>👥 Nouveaux utilisateurs</h3>
           <div className="table-container">
@@ -209,7 +182,7 @@ function AdminDashboard() {
           <button 
             className="btn btn-secondary btn-small" 
             style={{ marginTop: '1rem', width: '100%' }}
-            onClick={() => navigate('/admin/user-management')}
+            onClick={() => navigate('/user-management')}
           >
             Gérer les utilisateurs
           </button>
