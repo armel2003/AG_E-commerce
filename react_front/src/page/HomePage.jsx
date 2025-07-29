@@ -1,8 +1,9 @@
 import React from "react";
-import "./homedacceil.css";
-import Product from './all_product';
-import RecentProducts from './RecentProducts';
-import logo from "./pentakeys_logo.png";
+import { useNavigate } from "react-router-dom";
+import'../style/homedacceil.css';
+import Product from '../components/all_product';
+import RecentProducts from '../components/RecentProducts';
+import logo from "../asset/logo.png";
 
 
 
@@ -37,6 +38,7 @@ const games = [
 ];
 
 export default function HomePage() {
+	const navigate = useNavigate();
 	return (
 		<div className="homepage-root">
 
@@ -55,8 +57,9 @@ export default function HomePage() {
 					<a href="#">Clés Mystères</a>
 				</nav>
 				<div className="homepage-actions">
-          <button><img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20" height="20" color="white"/>
-</button>
+          <button onClick={() => navigate('/login')}>
+            <img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20" height="20" color="white"/>
+          </button>
 					<button>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

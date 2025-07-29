@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
-const LoginForm = ({ onSwitchToRegister }) => {
+const LoginForm = () => {
+    const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState('');
@@ -9,7 +11,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setError(''); // Réinitialiser l'erreur lors de la modification
+    setError(''); 
   };
 
   const handleSubmit = async e => {
@@ -19,7 +21,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
     
     try {
       const response = await axios.post('http://localhost:8000/api/login', {
-        username: form.email, // Utilisation de l'email comme username
+        username: form.email, 
         password: form.password
       }, {
         headers: {
@@ -27,11 +29,9 @@ const LoginForm = ({ onSwitchToRegister }) => {
         }
       });
 
-      // Si la connexion réussit
+      
       if (response.data.token) {
-        // Stockage du token dans le localStorage
         localStorage.setItem('token', response.data.token);
-        // Ici vous pouvez rediriger l'utilisateur ou effectuer d'autres actions
         console.log('Connexion réussie !');
       }
     } catch (err) {
@@ -103,7 +103,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
         </button>
 
         <div className="form-footer">
-          <p className="switch-mode" onClick={onSwitchToRegister}>
+          <p className="switch-mode" onClick={() => navigate('/register')}>
             Pas encore de compte ? <span className="highlight">S'inscrire</span>
           </p>
           
