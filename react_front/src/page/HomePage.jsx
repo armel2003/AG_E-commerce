@@ -1,8 +1,9 @@
 import React from "react";
-import "./homedacceil.css";
-import Product from './all_product';
-import RecentProducts from './RecentProducts';
-import logo from "./pentakeys_logo.png";
+import { useNavigate } from "react-router-dom";
+import'../style/homedacceil.css';
+import Product from '../components/all_product';
+import RecentProducts from '../components/RecentProducts';
+import logo from "../asset/logo.png";
 
 
 
@@ -37,6 +38,8 @@ const games = [
 ];
 
 export default function HomePage() {
+	const navigate = useNavigate();
+	const user = localStorage.getItem('user'); 
 	return (
 		<div className="homepage-root">
 
@@ -46,6 +49,31 @@ export default function HomePage() {
         <div className="logopentakeys">
   <img src={logo} alt="Logo du site" style={{ width: 90, height: 90 }} />
         </div>
+        {user && (
+          <>
+            <div className="user-welcome" style={{marginLeft: 20, fontWeight: 'bold'}}>
+              Bonjour, {user}
+            </div>
+            <button 
+              className="account-btn" 
+              style={{marginLeft: 20, padding: '6px 16px', borderRadius: '20px', border: 'none', background: '#eee', cursor: 'pointer', fontWeight: 'bold'}}
+              onClick={() => navigate('/account')}
+            >
+              Mon compte
+            </button>
+            <button
+              className="logout-btn"
+              style={{marginLeft: 10, padding: '6px 16px', borderRadius: '20px', border: 'none', background: '#ffdddd', cursor: 'pointer', fontWeight: 'bold', color: '#c00'}}
+              onClick={() => {
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                navigate('/');
+              }}
+            >
+              Déconnexion
+            </button>
+          </>
+        )}
 </div>
 
 				<nav className="homepage-nav">
@@ -55,8 +83,9 @@ export default function HomePage() {
 					<a href="#">Clés Mystères</a>
 				</nav>
 				<div className="homepage-actions">
-          <button><img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20" height="20" color="white"/>
-</button>
+          <button onClick={() => navigate('/login')}>
+            <img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20" height="20" color="white"/>
+          </button>
 					<button>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"

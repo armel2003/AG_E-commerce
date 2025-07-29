@@ -1,5 +1,6 @@
 import React from 'react';
-import './detailProduct.css';
+//import './detailProduct.css';
+import '../style/detailProduct.css'; 
 
 const ProductDetailCard = ({ product }) => {
 if (!product) return null;

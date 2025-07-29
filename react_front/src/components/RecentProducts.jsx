@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import "./homedacceil.css";
+import '../style/homedacceil.css';
 
 const RecentProducts = ({ count = 4 }) => {
 const [loading, setLoading] = useState(true);

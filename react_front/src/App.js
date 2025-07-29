@@ -1,10 +1,11 @@
 import './App.css';
 import React from 'react';
 import {Routes, Route} from 'react-router-dom';
-import LoginForm from "./components/LoginForm";
-import ProductDetail from './DetailProduct/ProductDetail';
-import HomePage from './components/HomePage.jsx';
-import RegisterForm from './RegisterForm.js';
+import LoginForm from "./page/LoginForm.jsx";
+import ProductDetail from './components/ProductDetail.jsx';
+import HomePage from './page/HomePage.jsx';
+import RegisterForm from './page/RegisterForm.jsx';
+import Moncompte from './page/Moncompte.jsx';
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
                 <Route path="/product/:id" element={<ProductDetail/>}/>
                 <Route path="/login" element={<LoginForm/>}/>
                 <Route path="/register" element={<RegisterForm/>}/>
+                <Route path="/account" element={<Moncompte/>}/>
             </Routes>
         </>
     );
