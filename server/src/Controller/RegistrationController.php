@@ -24,11 +24,17 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
+
+
+        if ($request->getContentTypeFormat() === 'json') {
+        $data = json_decode($request->getContent(), true);
+        $request->request->replace($data ?? []);
+    }
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
-//        var_dump($form);
-//        echo $request;
+        var_dump($form);
+        echo $request;
         if ($form->isSubmitted() && $form->isValid()) {
             echo("valid form");
             /** @var string $plainPassword */
@@ -46,7 +52,7 @@ class RegistrationController extends AbstractController
                     ->from(new Address('s.czestkowski@gmail.com', 'Ecommerce mail verification'))
                     ->to((string) $user->getEmail())
                     ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
+                    ->htmlTemplate('Template/confirmation_email.html.twig')
             );
 
             // Return success response
