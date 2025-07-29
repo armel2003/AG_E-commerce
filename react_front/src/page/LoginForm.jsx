@@ -32,7 +32,9 @@ const LoginForm = () => {
       
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', response.data.user); 
         console.log('Connexion réussie !');
+        navigate('/'); 
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Une erreur est survenue lors de la connexion');
