@@ -7,5 +7,5 @@ nelmio_cors:
         expose_headers: ['Link']
         max_age: 3600
     paths:
-        '^/':  
+        '^/':  # Toutes les routes
             allow_origin: ['http://localhost:3000']

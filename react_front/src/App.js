@@ -1,16 +1,14 @@
-import './App.css';
-import Logo from './Logo';
-import AuthForm from './AuthForm';
-// import Particles from './Particles';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import HomePage from './components/HomePage.jsx';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <Logo />
-        <AuthForm />
-      </header>
-    </div>
+    <>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+      </Routes>
+    </>
   );
 }
 

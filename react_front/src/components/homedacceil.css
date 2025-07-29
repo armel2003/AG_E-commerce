@@ -1,0 +1,234 @@
+body {
+margin: 0;
+padding: 0;
+background:#1a1221;}
+.homepage-root {
+background:#1a1221;
+color: #fff;
+margin: 0;
+padding: 0;
+min-height: 100vh;
+}
+
+.homepage-header {
+border-bottom: 1px solid#1a1221;
+padding: 1rem 2.5rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
+background:#1a1221;
+}
+.homepage-header h2 {
+font-size: 1.25rem;
+font-weight: bold;
+letter-spacing: -0.015em;
+}
+.homepage-nav {
+display: flex;
+align-items: center;
+gap: 2rem;
+}
+
+
+.homepage-nav a {
+color: #fff;
+font-size: 1rem;
+font-weight: 500;
+text-decoration: none;
+}
+.homepage-actions {
+display: flex;
+gap: 0.5rem;
+}
+.homepage-actions button {
+background: #9947eb;
+color: #fff;
+border: none;
+border-radius: 0.5rem;
+font-weight: bold;
+padding: 0.5rem 1.5rem;
+cursor: pointer;
+font-size: 1rem;
+}
+.homepage-banner {
+background: linear-gradient(0deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 25%), url('https://img.freepik.com/photos-premium/salon-jeu-joueur-video-personne-ne-moque-neeon-chill-chambre-jeu-confortable_916191-128316.jpg');
+background-size: cover;
+background-position: center;
+width: 100%;
+height: 300px;
+display: flex;
+align-items: flex-end;
+border-radius: 1rem;
+margin: 2rem 2rem 1rem 2rem;
+}
+.homepage-banner p {
+font-size: 2rem;
+font-weight: bold;
+padding: 1.5rem;
+margin: 0;
+color: #fff;
+text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+}
+.homepage-categories {
+display: flex;
+border-bottom: 1px solid #1a1221;
+gap: 2rem;
+padding: 1rem 2rem 0.5rem 2rem;
+}
+.homepage-categories a {
+color:#ffff;
+font-weight: bold;
+font-size: 1rem;
+padding: 1rem 0;
+border-bottom: 3px solid transparent;
+text-decoration: none;
+}
+.homepage-categories a.active {
+color: #fff;
+border-bottom: 3px solid #1a1221;
+}
+.homepage-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+gap: 1rem;
+padding: 1.5rem 2rem;
+}
+.homepage-card {
+background:  #322240;
+border-radius: 1rem;
+overflow: hidden;
+display: flex;
+flex-direction: column;
+align-items: center;
+}
+.homepage-card-img {
+width: 70%;
+aspect-ratio: 1/1;
+background-size: cover;
+background-position: center;
+border-radius: 1rem;
+}
+.homepage-card p {
+margin: 0.5rem 0 1rem 0;
+font-size: 1rem;
+font-weight: 500;
+}
+@media (max-width: 900px) {
+.homepage-banner {
+height: 180px;
+margin: 1rem 0.5rem;
+border-radius: 0.7rem;
+}
+.homepage-banner p {
+font-size: 1.2rem;
+padding: 0.7rem;
+}
+.homepage-categories {
+gap: 1rem;
+padding: 0.7rem 0.5rem 0.3rem 0.5rem;
+}
+.homepage-grid {
+grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+gap: 0.7rem;
+padding: 1rem 0.5rem;
+}
+.homepage-card {
+border-radius: 0.7rem;
+padding: 0.5rem;
+}
+.homepage-card-img {
+width: 100%;
+min-width: 100px;
+max-width: 180px;
+border-radius: 0.7rem;
+}
+.homepage-header {
+padding: 0.7rem 1rem;
+}
+}
+@media (max-width: 600px) {
+.homepage-banner {
+height: 120px;
+margin: 0.5rem 0.2rem;
+border-radius: 0.5rem;
+}
+.homepage-banner p {
+font-size: 1rem;
+padding: 0.4rem;
+}
+.homepage-categories {
+gap: 0.5rem;
+padding: 0.5rem 0.2rem 0.2rem 0.2rem;
+}
+.homepage-grid {
+grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+gap: 0.4rem;
+padding: 0.5rem 0.2rem;
+}
+.homepage-card {
+border-radius: 0.5rem;
+padding: 0.2rem;
+}
+.homepage-card-img {
+width: 100%;
+min-width: 80px;
+max-width: 120px;
+border-radius: 0.5rem;
+}
+.homepage-header {
+padding: 0.4rem 0.5rem;
+}
+}
+@media (max-width: 480px) {
+.homepage-header {
+flex-direction: column;
+align-items: flex-start;
+padding: 0.3rem 0.3rem;
+}
+.homepage-header h2 {
+font-size: 1rem;
+margin-bottom: 0.3rem;
+}
+.homepage-nav {
+gap: 0.5rem;
+font-size: 0.9rem;
+}
+.homepage-actions button {
+font-size: 0.9rem;
+padding: 0.3rem 0.7rem;
+}
+.homepage-banner {
+height: 80px;
+margin: 0.2rem 0.1rem;
+border-radius: 0.3rem;
+}
+.homepage-banner p {
+font-size: 0.7rem;
+padding: 0.2rem;
+}
+.homepage-categories {
+gap: 0.2rem;
+padding: 0.2rem 0.1rem 0.1rem 0.1rem;
+font-size: 0.9rem;
+}
+.homepage-grid {
+grid-template-columns: repeat(2, 1fr);
+gap: 0.2rem;
+padding: 0.2rem 0.1rem;
+}
+.homepage-card {
+border-radius: 0.3rem;
+padding: 0.1rem;
+min-width: 0;
+}
+.homepage-card-img {
+width: 90%;
+min-width: 60px;
+max-width: 80px;
+border-radius: 0.3rem;
+}
+.homepage-card p {
+font-size: 0.8rem;
+margin: 0.2rem 0 0.5rem 0;
+}
+}
