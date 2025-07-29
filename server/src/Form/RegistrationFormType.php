@@ -27,6 +27,20 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('plainPassword', PasswordType::class, [
+                'mapped' => false,
+                'attr' => ['autocomplete' => 'new-password'],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez entrer un mot de passe',
+                    ]),
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
+                        'max' => 4096,
+                    ]),
+                ],
+            ])
             ->add('firstName', TextType::class, [
                 'label' => 'Prénom',
                 'constraints' => [
@@ -75,28 +89,28 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'Vous devez accepter les conditions d\'utilisation.',
-                    ]),
-                ],
-            ])
-            ->add('plainPassword', PasswordType::class, [
-                'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez entrer un mot de passe',
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
-                        'max' => 4096,
-                    ]),
-                ],
-            ])
+            // ->add('agreeTerms', CheckboxType::class, [
+            //     'mapped' => false,
+            //     'constraints' => [
+            //         new IsTrue([
+            //             'message' => 'Vous devez accepter les conditions d\'utilisation.',
+            //         ]),
+            //     ],
+            // ])
+            // ->add('plainPassword', PasswordType::class, [
+            //     'mapped' => false,
+            //     'attr' => ['autocomplete' => 'new-password'],
+            //     'constraints' => [
+            //         new NotBlank([
+            //             'message' => 'Veuillez entrer un mot de passe',
+            //         ]),
+            //         new Length([
+            //             'min' => 6,
+            //             'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères',
+            //             'max' => 4096,
+            //         ]),
+            //     ],
+            // ])
         ;
     }
 

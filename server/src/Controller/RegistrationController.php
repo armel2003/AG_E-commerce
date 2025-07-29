@@ -14,79 +14,58 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(private EmailVerifier $emailVerifier)
-    {
-    }
+public function __construct(private EmailVerifier $emailVerifier)
+{
+}
 
-    #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
-    {
+#[Route('/register', name: 'app_register', methods: ['POST'])]
+public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $em): JsonResponse
+{
+$data = json_decode($request->getContent(), true);
+
+$user = new User();
+$form = $this->createForm(RegistrationFormType::class, $user);
+$form->submit($data); 
+
+if ($form->isSubmitted() && $form->isValid()) {
+    $user->setPassword($passwordHasher->hashPassword($user, $form->get('plainPassword')->getData()));
+    $em->persist($user);
+    $em->flush();
+
+    return $this->json([
+        'message' => 'Registration successful. Please check your email.',
+        'status' => 'success'
+    ]);
+}
 
 
-        if ($request->getContentTypeFormat() === 'json') {
-        $data = json_decode($request->getContent(), true);
-        $request->request->replace($data ?? []);
-    }
-        $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
-        $form->handleRequest($request);
-        var_dump($form);
-        echo $request;
-        if ($form->isSubmitted() && $form->isValid()) {
-            echo("valid form");
-            /** @var string $plainPassword */
-            $plainPassword = $form->get('plainPassword')->getData();
-
-            // encode the plain password
-            $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
-
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('s.czestkowski@gmail.com', 'Ecommerce mail verification'))
-                    ->to((string) $user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('Template/confirmation_email.html.twig')
-            );
-
-            // Return success response
-            return $this->json([
-                'message' => 'Registration successful. Please check your email for verification.',
-                'status' => 'success'
-            ], Response::HTTP_OK);
-        }
-
-        return $this->json([
-            'message' => 'Registration failed.',
-            'status' => 'error'
-        ], Response::HTTP_BAD_REQUEST);
-    }
-
-    #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request): Response
-    {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-
-        // validate email confirmation link, sets User::isVerified=true and persists
-        try {
-            /** @var User $user */
-            $user = $this->getUser();
-            $this->emailVerifier->handleEmailConfirmation($request, $user);
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $exception->getReason());
-
-            return $this->redirectToRoute('app_register');
-        }
-
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Your email address has been verified.');
+return $this->json([
+    'message' => 'Registration failed.',
+    'status' => 'error',
+    
+], Response::HTTP_BAD_REQUEST);
+}
+#[Route('/verify/email', name: 'app_verify_email')]
+public function verifyUserEmail(Request $request): Response
+{
+    $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+    try {
+        /** @var User $user */
+        $user = $this->getUser();
+        $this->emailVerifier->handleEmailConfirmation($request, $user);
+    } catch (VerifyEmailExceptionInterface $exception) {
+        $this->addFlash('verify_email_error', $exception->getReason());
 
         return $this->redirectToRoute('app_register');
     }
+
+    // @TODO Change the redirect on success and handle or remove the flash message in your templates
+    $this->addFlash('success', 'Your email address has been verified.');
+
+    return $this->redirectToRoute('app_register');
+}
 }
