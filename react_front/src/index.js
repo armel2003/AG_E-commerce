@@ -11,5 +11,4 @@ root.render(
     </BrowserRouter>
   </React.StrictMode>
 );
-
 export default root;

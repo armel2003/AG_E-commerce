@@ -1,5 +1,6 @@
 nelmio_cors:
     defaults:
+        allow_credentials: true
         origin_regex: true
         allow_origin: ['%env(CORS_ALLOW_ORIGIN)%']
         allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
@@ -7,4 +8,5 @@ nelmio_cors:
         expose_headers: ['Link']
         max_age: 3600
     paths:
-        '^/': null
+        '^/':  # Toutes les routes
+            allow_origin: ['http://localhost:3000']
