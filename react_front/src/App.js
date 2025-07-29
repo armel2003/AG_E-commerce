@@ -7,6 +7,8 @@ import AdminDashboard from './AdminDashboard';
 import CreateArticle from './CreateArticle';
 import EditArticle from './EditArticle';
 import UserManagement from './UserManagement';
+import ProductDetail from './DetailProduct/ProductDetail';
+
 
 function App() {
   return (
@@ -25,6 +27,7 @@ function App() {
           {/* Rediriger par défaut vers /admin */}
           <Route path="/" element={<Navigate to="/admin" replace />} />
           <Route path="*" element={<Navigate to="/admin" replace />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
       </Routes>
     </>
   );
