@@ -1,23 +1,44 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const LoginForm = ({ onSwitchToRegister }) => {
   const [form, setForm] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState('');
+  const [error, setError] = useState('');
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setError(''); // Réinitialiser l'erreur lors de la modification
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
     
-    // Simulation d'une requête API
-    setTimeout(() => {
-      alert('Connexion réussie !');
+    try {
+      const response = await axios.post('http://localhost:8000/api/login', {
+        username: form.email, // Utilisation de l'email comme username
+        password: form.password
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      // Si la connexion réussit
+      if (response.data.token) {
+        // Stockage du token dans le localStorage
+        localStorage.setItem('token', response.data.token);
+        // Ici vous pouvez rediriger l'utilisateur ou effectuer d'autres actions
+        console.log('Connexion réussie !');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'Une erreur est survenue lors de la connexion');
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
@@ -30,6 +51,8 @@ const LoginForm = ({ onSwitchToRegister }) => {
             Accédez à votre compte PentaKeys
           </div>
         </div>
+
+        {error && <div className="error-message" style={{color: 'red', marginBottom: '10px'}}>{error}</div>}
 
         <div className="input-group">
           <div className={`input-wrapper ${focusedField === 'email' ? 'focused' : ''}`}>
@@ -91,6 +114,6 @@ const LoginForm = ({ onSwitchToRegister }) => {
       </form>
     </div>
   );
-};
+}
 
 export default LoginForm;
