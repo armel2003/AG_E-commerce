@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
-import pentakeysLogo from './pentakeys_logo.png';
+import pentakeysLogo from '../asset/pentakeys_logo.png';
 
 function AdminLayout() {
   const navigate = useNavigate();

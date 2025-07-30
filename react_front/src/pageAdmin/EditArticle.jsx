@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import './EditArticle.css';
+import '../style/EditArticle.css';
 
 function EditArticle() {
   const { id: articleId } = useParams();
