@@ -40,6 +40,7 @@ const games = [
 export default function HomePage() {
 	const navigate = useNavigate();
 	const user = localStorage.getItem('user');
+	const role = localStorage.getItem("role");
 	return (
 		<div className="homepage-root">
 
@@ -56,7 +57,7 @@ export default function HomePage() {
 							</div>
 							<button
 								className="account-btn"
-								onClick={() => navigate('/account')}
+								onClick={() => navigate(`/account/${localStorage.getItem('userId')}`)}
 							>
 								Mon compte
 							</button>
