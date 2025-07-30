@@ -11,7 +11,7 @@
   --card-gradient: linear-gradient(135deg, #1e1e1e 0%, #2d1b69 50%, #1e1e1e 100%);
   --glow-purple: 0 0 20px rgba(124, 58, 237, 0.3);
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  
+
   /* Variables pour toutes mes pages */
   --success-color: #22c55e;
   --danger-color: #ef4444;
@@ -260,8 +260,6 @@ body {
   transition: var(--transition);
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
   justify-content: center;
   position: relative;
   overflow: hidden;
@@ -526,16 +524,16 @@ body {
   .admin-nav {
     padding: 1rem;
   }
-  
+
   .nav-container {
     flex-direction: column;
     gap: 1rem;
   }
-  
+
   .nav-links {
     gap: 1rem;
   }
-  
+
   .admin-container {
     padding: 1rem;
   }
