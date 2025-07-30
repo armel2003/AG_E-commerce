@@ -12,6 +12,7 @@ function EditArticle() {
     price: '',
     category: '',
     images: [],
+    stock: '',
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -53,6 +54,7 @@ function EditArticle() {
             price: data.price || '',
             category: findCategoryIdByName(data.category),
             images: data.images ? data.images.map((url) => ({ url })) : [],
+            stock: data.stock ?? '',
           });
         }
       } finally {
@@ -87,6 +89,7 @@ function EditArticle() {
       price: parseFloat(formData.price),
       category: parseInt(formData.category),
       images: formData.images,
+      stock: parseInt(formData.stock),
     };
 
     try {
@@ -168,6 +171,19 @@ function EditArticle() {
               rows="4"
             />
           </div>
+          <div className="form-group">
+              <label className="form-label" htmlFor="stock">Stock disponible </label>
+              <input
+                type="number"
+                name="stock"
+                id="stock"
+                className="form-input"
+                value={formData.stock}
+                onChange={handleChange}
+                min="0"
+                required
+              />
+            </div>
 
           <h3 className="edit-article-section-title">🏷️ Catégorisation</h3>
 

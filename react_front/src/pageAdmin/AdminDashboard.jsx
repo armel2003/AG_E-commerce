@@ -137,7 +137,7 @@ function AdminDashboard({ onEditArticle }) {
             <div className="grid grid-2">
                 <div className="admin-card">
                     <div className="">
-                        <RecentProducts />
+                        <RecentProducts /> 
                     </div>
                     <button
                         className="btn btn-secondary btn-small"

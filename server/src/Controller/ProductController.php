@@ -40,7 +40,8 @@ final class ProductController extends AbstractController
                 'price' => $product->getPrice(),
                 'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
                 'images' => $images,
-                'stock' => $stock->getQuantite()
+                //'stock' => $stock->getQuantite()
+                'stock' => $stock ? $stock->getQuantite() : 0
 
             ];
         }
@@ -133,7 +134,9 @@ final class ProductController extends AbstractController
             'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
             'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
             'images' => $images,
-            'stock' => $stock->getQuantite()
+            //'stock' => $stock->getQuantite()
+            'stock' => $stock ? $stock->getQuantite() : 0
+            
 
         ];
 
@@ -206,7 +209,8 @@ final class ProductController extends AbstractController
                 'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
                 'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
                 'images' => $images,
-                'stock' => $stock->getQuantite()
+                //'stock' => $stock->getQuantite()
+                'stock' => $stock ? $stock->getQuantite() : 0
             ]
         ], JsonResponse::HTTP_OK);
     }

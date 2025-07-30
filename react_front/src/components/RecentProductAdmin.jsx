@@ -10,6 +10,7 @@ useEffect(() => {
 fetch('http://localhost:8000/product')
 .then(response => response.json())
 .then(data => {
+    console.log('✅ Tous les produits récupérés depuis l\'API :', data);
 const sorted = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 setProducts(sorted.slice(0, count));
 setLoading(false);
@@ -88,7 +89,7 @@ return (
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <span className={`badge ${prod.status === 'Actif' ? 'badge-user' : 'badge-pending'}`}>
-            {prod.status}
+            {prod.stock > 0 ? prod.stock : 'Rupture de stock'}
         </span>
         <div className="article-actions">
                         <button
