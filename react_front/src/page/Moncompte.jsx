@@ -4,7 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 function Moncompte() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("userToken"); 
+  console.log("Token utilisé : ", token); 
 
   const [user, setUser] = useState(null);
   const [form, setForm] = useState({
@@ -18,7 +19,17 @@ function Moncompte() {
   });
 
   useEffect(() => {
-    fetch(`http://localhost:8000/user/${id}`)
+    if (!token) {
+      alert("Vous devez être connecté pour accéder à votre compte.");
+      navigate("/login"); 
+      return;
+    }
+
+    fetch(`http://localhost:8000/user/${id}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
       .then(res => res.json())
       .then(data => {
         setUser(data);
@@ -32,7 +43,11 @@ function Moncompte() {
           country: data.country || ''
         });
       })
-  }, [id]);
+      .catch(error => {
+        console.error('Erreur:', error);
+        alert("Erreur lors de la récupération des informations utilisateur.");
+      });
+  }, [id, token, navigate]); // Assurez-vous de dépendre du token
 
   const handleUpdate = () => {
     fetch(`http://localhost:8000/user/update/${id}`, {
@@ -47,7 +62,7 @@ function Moncompte() {
       }),
     })
       .then(res => {
-        if (!res.ok) throw new Error();
+        if (!res.ok) throw new Error('Erreur lors de la mise à jour');
         return res.json();
       })
       .then(data => {
@@ -63,7 +78,6 @@ function Moncompte() {
   if (!user) return null;
 
   const isAdmin = user.roles?.includes("ROLE_ADMIN");
-
 
   return (
     <div>

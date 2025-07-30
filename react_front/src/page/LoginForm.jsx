@@ -1,47 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 
 const LoginForm = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState('');
   const [error, setError] = useState('');
+  const [token, setToken] = useState(null); // Pour gérer le token
+
+  // useEffect pour récupérer le token stocké à chaque chargement du composant
+  useEffect(() => {
+    const storedToken = localStorage.getItem('userToken');
+    setToken(storedToken);
+  }, []); // Cela ne se déclenche qu'une fois, au chargement du composant
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setError(''); 
+    setError('');
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-    
+
     try {
       const response = await axios.post('http://localhost:8000/api/login', {
-        username: form.email, 
+        username: form.email,
         password: form.password
       }, {
         headers: {
           'Content-Type': 'application/json'
         }
       });
+
       console.log('Réponse de la connexion :', response.data);
+
       if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', response.data.user); 
-        localStorage.setItem('userId', response.data.id); 
+        // Enregistrer le token dans localStorage
+        localStorage.setItem('userToken', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user)); 
+        localStorage.setItem('userId', JSON.stringify(response.data.id)); 
+
         console.log('Connexion réussie !');
-        navigate('/'); 
+        navigate('/'); // Navigue vers la page d'accueil après la connexion
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Une erreur est survenue lors de la connexion');
     } finally {
       setIsLoading(false);
     }
-    
   };
 
   return (
@@ -55,7 +65,7 @@ const LoginForm = () => {
           </div>
         </div>
 
-        {error && <div className="error-message" style={{color: 'red', marginBottom: '10px'}}>{error}</div>}
+        {error && <div className="error-message" style={{ color: 'red', marginBottom: '10px' }}>{error}</div>}
 
         <div className="input-group">
           <div className={`input-wrapper ${focusedField === 'email' ? 'focused' : ''}`}>
@@ -109,7 +119,7 @@ const LoginForm = () => {
           <p className="switch-mode" onClick={() => navigate('/register')}>
             Pas encore de compte ? <span className="highlight">S'inscrire</span>
           </p>
-          
+
           <p className="forgot-password">
             <span className="link">Mot de passe oublié ?</span>
           </p>
