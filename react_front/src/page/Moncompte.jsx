@@ -17,7 +17,6 @@ function Moncompte() {
     country: ''
   });
 
-  // Récupération des données
   useEffect(() => {
     fetch(`http://localhost:8000/user/${id}`)
       .then(res => res.json())
@@ -33,19 +32,14 @@ function Moncompte() {
           country: data.country || ''
         });
       })
-      .catch(err => {
-        console.error(err);
-        alert("Erreur lors du chargement");
-      });
   }, [id]);
 
-  // Mise à jour des données
   const handleUpdate = () => {
     fetch(`http://localhost:8000/user/update/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify({
         ...form,
@@ -70,7 +64,7 @@ function Moncompte() {
 
   const isAdmin = user.roles?.includes("ROLE_ADMIN");
 
-  // Affichage
+
   return (
     <div>
       <h2>Mon compte</h2>
