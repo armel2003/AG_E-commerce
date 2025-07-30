@@ -28,8 +28,7 @@ const LoginForm = () => {
           'Content-Type': 'application/json'
         }
       });
-
-      console.log('Réponse de la connexion :', response);
+      console.log('Réponse de la connexion :', response.data);
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', response.data.user); 
@@ -42,6 +41,7 @@ const LoginForm = () => {
     } finally {
       setIsLoading(false);
     }
+    
   };
 
   return (
