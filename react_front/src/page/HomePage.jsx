@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import'../style/homedacceil.css';
+import '../style/homedacceil.css';
 import Product from '../components/all_product';
 import RecentProducts from '../components/RecentProducts';
 import logo from "../asset/logo.png";
@@ -39,53 +39,52 @@ const games = [
 
 export default function HomePage() {
 	const navigate = useNavigate();
-	const user = localStorage.getItem('user'); 
+	const user = localStorage.getItem('user');
 	return (
 		<div className="homepage-root">
 
 			{/* Header */}
 			<header className="homepage-header">
-			<div className="flex items-center gap-2">
-        <div className="logopentakeys">
-  <img src={logo} alt="Logo du site" style={{ width: 90, height: 90 }} />
-        </div>
-        {user && (
-          <>
-            <div className="user-welcome" style={{marginLeft: 20, fontWeight: 'bold'}}>
-              Bonjour, {user}
-            </div>
-            <button 
-              className="account-btn" 
-              style={{marginLeft: 20, padding: '6px 16px', borderRadius: '20px', border: 'none', background: '#eee', cursor: 'pointer', fontWeight: 'bold'}}
-              onClick={() => navigate('/account')}
-            >
-              Mon compte
-            </button>
-            <button
-              className="logout-btn"
-              style={{marginLeft: 10, padding: '6px 16px', borderRadius: '20px', border: 'none', background: '#ffdddd', cursor: 'pointer', fontWeight: 'bold', color: '#c00'}}
-              onClick={() => {
-                localStorage.removeItem('user');
-                localStorage.removeItem('token');
-                navigate('/');
-              }}
-            >
-              Déconnexion
-            </button>
-          </>
-        )}
-</div>
+				<div className="flex items-center gap-2">
+					<div className="logopentakeys">
+						<img src={logo} alt="Logo PentaKeys" style={{ width: 90, height: 90 }} />
+					</div>
+					{user && (
+						<>
+							<div className="user-welcome" style={{ marginLeft: 20, fontWeight: 'bold' }}>
+								Bonjour, {user} 🎮
+							</div>
+							<button
+								className="account-btn"
+								onClick={() => navigate('/account')}
+							>
+								Mon compte
+							</button>
+							<button
+								className="logout-btn"
+								onClick={() => {
+									localStorage.removeItem('user');
+									localStorage.removeItem('token');
+									navigate('/');
+								}}
+							>
+								Déconnexion
+							</button>
+						</>
+					)}
+				</div>
 
 				<nav className="homepage-nav">
-					<a href="#">Accueil</a>
-					<a href="#">Boutique</a>
-					<a href="#">Kits</a>
-					<a href="#">Clés Mystères</a>
+					<a href="#" className="nav-link">🏠 Accueil</a>
+					<a href="#" className="nav-link">🛒 Boutique</a>
+					<a href="#" className="nav-link">🎮 Kits</a>
+					<a href="#" className="nav-link">🎁 Clés Mystères</a>
 				</nav>
 				<div className="homepage-actions">
-          <button onClick={() => navigate('/login')}>
-            <img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20" height="20" color="white"/>
-          </button>
+					<button onClick={() => navigate('/login')}>
+						<img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20" height="20" />
+						Connexion
+					</button>
 					<button>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -96,17 +95,17 @@ export default function HomePage() {
 						>
 							<path d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z" />
 						</svg>
+						Panier
 					</button>
 				</div>
 			</header>
 
 			{/* Banner */}
 			<section className="homepage-banner">
-				<p>Paie Moins, Joue Plus</p>
+				<p>🎮 Paie Moins, Joue Plus 🎮</p>
 			</section>
 
 			{/* Categories */}
-     
 			<div className="homepage-categories">
 				{categories.map((cat) => (
 					<a
@@ -119,28 +118,32 @@ export default function HomePage() {
 				))}
 			</div>
 
-			{/* Games grid */} 
-    <h2>Jeux en vedette</h2>
-<div className="homepage-grid">
-  {games.map((game) => (
-    <div className="homepage-card" key={game.name}>
-      <div
-        className="homepage-card-img"
-        style={{
-          backgroundImage: `url('${game.image}')`,
-        }}
-      ></div>
-      <p>{game.name}</p>
-    </div>
-  ))}
-</div>
-{/* Composant pour produits similaires */}
- <h2>All product</h2>
-<Product />
-      <h2>Nouvelles sorties</h2>
-      <RecentProducts count={4} />
-      <h2>Top ventes</h2>
-      <h2>Nos plateformes Partenaires</h2>
+			{/* Games grid */}
+			<h2>🔥 Jeux en vedette</h2>
+			<div className="homepage-grid">
+				{games.map((game) => (
+					<div className="homepage-card" key={game.name}>
+						<div
+							className="homepage-card-img"
+							style={{
+								backgroundImage: `url('${game.image}')`,
+							}}
+						></div>
+						<p>{game.name}</p>
+					</div>
+				))}
+			</div>
+
+			{/* Composant pour produits similaires */}
+			<h2>🎯 Tous nos produits</h2>
+			<Product />
+
+			<h2>⚡ Nouvelles sorties</h2>
+			<RecentProducts count={4} />
+
+			<h2>🏆 Top ventes</h2>
+
+			<h2>🤝 Nos plateformes Partenaires</h2>
 		</div>
 	);
 }
