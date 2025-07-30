@@ -77,6 +77,7 @@ return (
 			style={{marginLeft: 10, padding: '6px 16px', borderRadius: '20px', border: 'none', background: '#ffdddd', cursor: 'pointer', fontWeight: 'bold', color: '#c00'}}
 			onClick={() => {
 			localStorage.removeItem('user');
+			localStorage.re
 			localStorage.removeItem('token');
 			navigate('/');
 			}}
