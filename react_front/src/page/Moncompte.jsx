@@ -15,8 +15,11 @@ function Moncompte() {
     adress: '',
     zipcode: '',
     city: '',
-    country: ''
+    country: '',
+    category: ''  // Ajout du champ catégorie
   });
+
+  const [categories, setCategories] = useState([]); // Pour stocker les catégories
 
   useEffect(() => {
     if (!token) {
@@ -40,14 +43,24 @@ function Moncompte() {
           adress: data.adress || '',
           zipcode: data.zipcode || '',
           city: data.city || '',
-          country: data.country || ''
+          country: data.country || '',
+          category: data.category || ''  // Assurez-vous de récupérer la catégorie si elle existe
         });
       })
       .catch(error => {
         console.error('Erreur:', error);
         alert("Erreur lors de la récupération des informations utilisateur.");
       });
-  }, [id, token, navigate]); // Assurez-vous de dépendre du token
+
+    // Récupérer les catégories (remplacez cette API par votre propre source)
+    fetch('http://localhost:8000/categories')
+      .then(res => res.json())
+      .then(data => setCategories(data))
+      .catch(error => {
+        console.error('Erreur lors de la récupération des catégories:', error);
+        alert("Erreur lors de la récupération des catégories.");
+      });
+  }, [id, token, navigate]);
 
   const handleUpdate = () => {
     fetch(`http://localhost:8000/user/update/${id}`, {
@@ -109,6 +122,23 @@ function Moncompte() {
             />
           </div>
         ))}
+
+        {/* Dropdown des catégories */}
+        <div style={{ marginBottom: '10px' }}>
+          <label><strong>Catégorie :</strong></label><br />
+          <select
+            value={form.category}
+            onChange={e => setForm({ ...form, category: e.target.value })}
+            style={{ width: '300px' }}
+          >
+            <option value="">Sélectionner une catégorie</option>
+            {categories.map(category => (
+              <option key={category.id} value={category.name}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <button type="button" onClick={handleUpdate}>
           Enregistrer les modifications
