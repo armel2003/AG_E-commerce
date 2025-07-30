@@ -46,7 +46,7 @@ final class ProductController extends AbstractController
 
 
     #[Route('/admin/new', name: 'app_product_new', methods: ['GET', 'POST'])]
-    #[IsGranted('ROLE_ADMIN')]
+    //#[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
@@ -130,7 +130,7 @@ final class ProductController extends AbstractController
 //modifier un produit spécifique
 
     #[Route('/admin/{id}/edit', name: 'app_product_patch', methods: ['PATCH'])]
-    #[IsGranted('ROLE_ADMIN')]
+    //#[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Product $product, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
