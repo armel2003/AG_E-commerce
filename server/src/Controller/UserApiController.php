@@ -8,9 +8,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Log\DebugLoggerInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface; 
 
 #[Route('/user')]
 class UserApiController extends AbstractController
@@ -18,23 +20,24 @@ class UserApiController extends AbstractController
     public function __construct(
         private EntityManagerInterface $entityManager,
         private SerializerInterface $serializer,
-        private UserPasswordHasherInterface $passwordHasher
+        private UserPasswordHasherInterface $passwordHasher,
+        private LoggerInterface $logger
     ) {
     }
-
+//all users
     #[Route('', methods: ['GET'])]
     public function index(): JsonResponse
     {
         $users = $this->entityManager->getRepository(User::class)->findAll();
         return $this->json($users, Response::HTTP_OK, [], ['groups' => 'user:read']);
     }
-
+// Specific user by ID
     #[Route('/{id}', methods: ['GET'])]
     public function show(User $user): JsonResponse
     {
         return $this->json($user, Response::HTTP_OK, [], ['groups' => 'user:read']);
     }
-
+// Create a new user
     #[Route('', methods: ['POST'])]
     public function create(Request $request): JsonResponse
     {
@@ -58,12 +61,32 @@ class UserApiController extends AbstractController
 
         return $this->json($user, Response::HTTP_CREATED, [], ['groups' => 'user:read']);
     }
-
-    #[Route('/{id}', methods: ['PUT'])]
+// Update an existing user
+    #[Route('/update/{id}', methods: ['PATCH'])]
     public function update(Request $request, User $user): JsonResponse
     {
-        // Récupère l'utilisateur connecté
+
+        
+/** @var User $currentUser */
         $currentUser = $this->getUser();
+        if (!$currentUser) {
+            $this->logger->error('User not authenticated'); // Log d'erreur si l'utilisateur n'est pas authentifié
+            return $this->json(
+                ['error' => 'Vous devez être connecté pour effectuer cette action.'],
+                Response::HTTP_UNAUTHORIZED
+            );
+        }
+        $this->logger->info('Test getUser: ', ['user' => $currentUser]);
+
+if (!$currentUser) {
+    $this->logger->error('User not authenticated - getUser returned null');
+
+    return $this->json(
+        ['error' => 'Vous devez être connecté pour effectuer cette action.'],
+        Response::HTTP_UNAUTHORIZED
+    );
+}
+        $this->logger->info('Current user ID: ' . $currentUser->getId());
 
         // Vérifie si l'utilisateur est soit admin soit le propriétaire du compte
         if (!$this->isGranted('ROLE_ADMIN') && $currentUser->getId() !== $user->getId()) {
@@ -71,6 +94,7 @@ class UserApiController extends AbstractController
         }
 
         $data = json_decode($request->getContent(), true);
+
 
         // Seul l'admin peut modifier certains champs sensibles
         if ($this->isGranted('ROLE_ADMIN')) {
@@ -126,11 +150,12 @@ class UserApiController extends AbstractController
             );
         }
     }
-
+// Delete a user
     #[Route('/{id}', methods: ['DELETE'])]
     public function delete(User $user): JsonResponse
     {
-        // Récupère l'utilisateur connecté
+        
+         /** @var User $currentUser */
         $currentUser = $this->getUser();
 
         // Vérifie si l'utilisateur est soit admin soit le propriétaire du compte

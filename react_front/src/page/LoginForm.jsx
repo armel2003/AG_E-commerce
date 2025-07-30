@@ -29,10 +29,11 @@ const LoginForm = () => {
         }
       });
 
-      
+      console.log('Réponse de la connexion :', response);
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', response.data.user); 
+        localStorage.setItem('userId', response.data.id); 
         console.log('Connexion réussie !');
         navigate('/'); 
       }
