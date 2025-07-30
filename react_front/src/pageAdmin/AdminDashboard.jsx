@@ -3,6 +3,7 @@ import '../style/AdminDashboard.css';
 import RecentProducts from '../components/RecentProductAdmin';
 import AllProducts from '../components/all_category';  
 import { useNavigate } from 'react-router-dom';
+import RecentUsers from '../components/all_user';
 
 function AdminDashboard({ onEditArticle }) {
     const navigate = useNavigate();
@@ -150,32 +151,8 @@ function AdminDashboard({ onEditArticle }) {
 
                 {/* Utilisateurs récents */}
                 <div className="admin-card">
-                    <h3 style={{ color: 'var(--neon-purple)', marginBottom: '1rem' }}>👥 Nouveaux utilisateurs</h3>
-                    <div className="table-container">
-                        {recentUsers.map(user => (
-                            <div key={user.id} style={{ 
-                                display: 'flex', 
-                                justifyContent: 'space-between', 
-                                alignItems: 'center',
-                                padding: '0.75rem 0',
-                                borderBottom: '1px solid rgba(124, 58, 237, 0.1)'
-                            }}>
-                                <div>
-                                    <div style={{ fontWeight: '500', marginBottom: '0.25rem' }}>
-                                        {user.name}
-                                    </div>
-                                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                                        {user.email}
-                                    </div>
-                                </div>
-                                <div style={{ textAlign: 'right' }}>
-                                    <span className="badge badge-user">{user.role}</span>
-                                    <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
-                                        {new Date(user.joinDate).toLocaleDateString('fr-FR')}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                    <div className="">
+                        <RecentUsers /> 
                     </div>
                     <button 
                         className="btn btn-secondary btn-small" 
@@ -185,6 +162,7 @@ function AdminDashboard({ onEditArticle }) {
                         Gérer les utilisateurs
                     </button>
                 </div>
+                    
             </div>
 
             {/* Section des produits */}
