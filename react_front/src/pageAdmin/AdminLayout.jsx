@@ -5,7 +5,7 @@ import pentakeysLogo from '../asset/pentakeys_logo.png';
 function AdminLayout() {
   const navigate = useNavigate();
 
-  // Simuler les données utilisateur admin
+
   const adminUser = {
     name: 'Admin',
     email: 'admin@pentakeys.com',
@@ -14,7 +14,7 @@ function AdminLayout() {
 
   const handleLogout = () => {
     // Rediriger vers la page de connexion
-    navigate('/login');
+    navigate('/');
     console.log('Déconnexion...');
   };
 

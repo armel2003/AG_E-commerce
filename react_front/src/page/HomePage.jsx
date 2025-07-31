@@ -77,9 +77,8 @@ export default function HomePage() {
 
 				<nav className="homepage-nav">
 
-					<a href="#" className="nav-link">🏠 Accueil</a>
-					<a href="#" className="nav-link">🛒 Boutique</a>
-
+					<Link to="/" className="nav-link">Acceuil</Link>
+					<Link to="/boutique" className="nav-link">🛒 Boutique</Link>
 					<a href="#" className="nav-link">🎮 Kits</a>
 					<a href="#" className="nav-link">🎁 Clés Mystères</a>
 				</nav>
