@@ -4,7 +4,7 @@ import '../style/homedacceil.css';
 import Product from '../components/all_product';
 import RecentProducts from '../components/RecentProducts';
 import logo from "../asset/logo.png";
-
+import { Link } from 'react-router-dom';
 
 
 const categories = [
@@ -76,8 +76,8 @@ export default function HomePage() {
 				</div>
 
 				<nav className="homepage-nav">
-					<a href="#" className="nav-link">🏠 Accueil</a>
-					<a href="#" className="nav-link">🛒 Boutique</a>
+					<Link to="/" className="nav-link">Acceuil</Link>
+					<Link to="/boutique" className="nav-link">🛒 Boutique</Link>
 					<a href="#" className="nav-link">🎮 Kits</a>
 					<a href="#" className="nav-link">🎁 Clés Mystères</a>
 				</nav>
