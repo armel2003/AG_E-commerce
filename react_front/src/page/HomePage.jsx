@@ -76,8 +76,10 @@ export default function HomePage() {
 				</div>
 
 				<nav className="homepage-nav">
-					<Link to="/" className="nav-link">Acceuil</Link>
-					<Link to="/boutique" className="nav-link">🛒 Boutique</Link>
+
+					<a href="#" className="nav-link">🏠 Accueil</a>
+					<a href="#" className="nav-link">🛒 Boutique</a>
+
 					<a href="#" className="nav-link">🎮 Kits</a>
 					<a href="#" className="nav-link">🎁 Clés Mystères</a>
 				</nav>
@@ -148,3 +150,5 @@ export default function HomePage() {
 		</div>
 	);
 }
+
+

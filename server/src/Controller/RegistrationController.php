@@ -46,6 +46,7 @@ if ($form->isSubmitted() && $form->isValid()) {
 return $this->json([
     'message' => 'Registration failed.',
     'status' => 'error',
+    'debug' => $form->getErrors(true, false)
     
 ], Response::HTTP_BAD_REQUEST);
 }

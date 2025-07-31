@@ -40,37 +40,58 @@ const ProductDetail = () => {
         });
     }, [id]);
 
-if (loading) return <p>Chargement🎮...</p>;
+if (loading) return (
+  <div className="product-page">
+    <div className="loading">
+      <div className="spinner"></div>
+      <span>Chargement du jeu 🎮...</span>
+    </div>
+  </div>
+);
 
 
 return (
-    <div className="product-container">
-    <h2>Détails du jeu</h2>
-    <ProductDetailCard product={product} />
-    <h2>Avis</h2>
-    <div className="avis-section">
+    <div className="product-page">
+      <div className="product-container">
+        <div className="breadcrumb">
+          <span onClick={() => navigate('/')} style={{cursor: 'pointer'}}>Accueil</span>
+          <span>›</span>
+          <span>{product?.category}</span>
+          <span>›</span>
+          <span>{product?.name}</span>
+        </div>
+
+        <h2 className="section-title">Détails du jeu</h2>
+        <ProductDetailCard product={product} />
+        
+        <h2 className="section-title">Avis des joueurs</h2>
+        <div className="avis-section">
           <ul>
             <li><strong>Marie</strong> : Super jeu, je recommande ! ⭐⭐⭐⭐⭐</li>
             <li><strong>Lucas</strong> : Graphismes magnifiques, très fun. ⭐⭐⭐⭐</li>
             <li><strong>Sophie</strong> : Bon rapport qualité/prix. ⭐⭐⭐⭐</li>
           </ul>
         </div>
-    <h2>Produits Similaires</h2>
-    <div className="similar-products-row">
-        {allproducts.map((prod) => (
-        <div key={prod.id} className="product-card">
-            <img 
-            src={prod.images && prod.images.length > 0 ? prod.images[0] : 'placeholder.jpg'} 
-            alt={prod.name} 
-            className="similar-product-image"
-            />
-            <h4>{prod.name}</h4>
-            <button onClick={() => navigate(`/product/${prod.id}`)} className='button'>
-            Voir plus
-            </button>
+        
+        <div className="similar-products-section">
+          <h2 className="section-title">Produits Similaires</h2>
+          <div className="similar-products-row">
+            {allproducts.map((prod) => (
+              <div key={prod.id} className="product-card" onClick={() => navigate(`/product/${prod.id}`)}>
+                <img 
+                  src={prod.images && prod.images.length > 0 ? prod.images[0] : 'placeholder.jpg'} 
+                  alt={prod.name} 
+                  className="similar-product-image"
+                />
+                <h4>{prod.name}</h4>
+                <button className='button'>
+                  Voir plus
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
-        ))}
-    </div>
+      </div>
     </div> 
     );
 };
