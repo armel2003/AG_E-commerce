@@ -221,6 +221,28 @@ body {
   box-shadow: 0 10px 20px rgba(168, 85, 247, 0.3);
 }
 
+
+.cart-header-button {
+  position: relative;
+}
+
+.cart-badge-header {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--accent-orange);
+  color: var(--text-primary);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: bold;
+  animation: pulse 2s infinite;
+}
+
 /* Banner */
 .homepage-banner {
   position: relative;

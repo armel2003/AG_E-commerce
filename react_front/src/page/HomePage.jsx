@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { createPortal } from "react-dom";
 import '../style/homedacceil.css';
 import Product from '../components/all_product';
 import RecentProducts from '../components/RecentProducts';
+import Cart from '../components/Cart';
 import logo from "../asset/logo.png";
 import { Link } from 'react-router-dom';
 
@@ -39,8 +42,17 @@ const games = [
 
 export default function HomePage() {
 	const navigate = useNavigate();
+	const [showCartModal, setShowCartModal] = useState(false);
+	const cart = useSelector((state) => state.cart);
 	const user = localStorage.getItem('user');
 	const role = localStorage.getItem("role");
+
+	const handleCartClose = () => {
+		setShowCartModal(false);
+	};
+
+	// Calculer le nombre total d'articles (avec quantités)
+	const totalItems = cart.items.reduce((total, item) => total + (item.quantity || 1), 0);
 	return (
 		<div className="homepage-root">
 
@@ -86,17 +98,11 @@ export default function HomePage() {
 						<img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20" height="20" />
 						Connexion
 					</button>
-					<button>
-						<svg
-							xmlns="http://www.w3.org/2000/svg"
-							width="20px"
-							height="20px"
-							fill="currentColor"
-							viewBox="0 0 256 256"
-						>
-							<path d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z" />
-						</svg>
-						Panier
+					<button onClick={() => setShowCartModal(true)} className="cart-header-button">
+						🛒 Panier
+						{totalItems > 0 && (
+							<span className="cart-badge-header">{totalItems}</span>
+						)}
 					</button>
 				</div>
 			</header>
@@ -145,6 +151,10 @@ export default function HomePage() {
 			<h2>🏆 Top ventes</h2>
 
 			<h2>🤝 Nos plateformes Partenaires</h2>
+			
+			{/* Modal du panier */}
+			{showCartModal &&
+				createPortal(<Cart onClose={handleCartClose} />, document.body)}
 		</div>
 	);
 }

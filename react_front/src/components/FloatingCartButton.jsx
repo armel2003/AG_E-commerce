@@ -6,28 +6,31 @@ import "../style/cartmodal.css";
 
 //Le bouton qui ouvre ton panier.
 function FloatingCartButton() {
-const [showModal, setShowModal] = useState(false);
-const cart = useSelector((state) => state.cart);
+    const [showModal, setShowModal] = useState(false);
+    const cart = useSelector((state) => state.cart);
 
-const handleClose = () => {
-setShowModal(false);
-};
+    const handleClose = () => {
+        setShowModal(false);
+    };
 
-console.log("📦 Cart items :", cart.items);
+    // Calculer le nombre total d'articles (avec quantités)
+    const totalItems = cart.items.reduce((total, item) => total + (item.quantity || 1), 0);
 
-return (
-<>
-    <button onClick={() => setShowModal(true)} className="floating-cart-button">
-    🛒
-    {cart.items.length > 0 && (
-        <span className="cart-badge">{cart.items.length}</span>
-    )}
-    </button>
+    console.log("📦 Cart items :", cart.items);
 
-    {showModal &&
-    createPortal(<Cart onClose={handleClose} />, document.body)}
-</>
-);
+    return (
+        <>
+            <button onClick={() => setShowModal(true)} className="floating-cart-button">
+                🛒 Panier
+                {totalItems > 0 && (
+                    <span className="cart-badge">{totalItems}</span>
+                )}
+            </button>
+
+            {showModal &&
+                createPortal(<Cart onClose={handleClose} />, document.body)}
+        </>
+    );
 }
 
 export default FloatingCartButton;
