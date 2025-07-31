@@ -7,6 +7,7 @@ import HomePage from './page/HomePage.jsx';
 import RegisterForm from './page/RegisterForm.jsx';
 import Moncompte from './page/Moncompte.jsx';
 import Boutique from './page/Boutique.jsx';
+import Commande from './page/commande.jsx';
 
 function App() {
     return (
@@ -18,6 +19,7 @@ function App() {
                 <Route path="/register" element={<RegisterForm/>}/>
                 <Route path="/account/:id" element={<Moncompte/>}/>
                 <Route path="/boutique" element={<Boutique/>}/>
+                <Route path="/commande" element={<Commande/>} />
             </Routes>
         </>
     );
