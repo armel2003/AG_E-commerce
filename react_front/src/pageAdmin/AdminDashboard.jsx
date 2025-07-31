@@ -167,7 +167,7 @@ function AdminDashboard({ onEditArticle }) {
 
             {/* Section des produits */}
             <div className="admin-card" >
-                <h3 style={{ color: 'var(--neon-purple)', marginBottom: '1rem' }}>📦 Tous les produits</h3>
+                <h3 style={{ color: 'var(--neon-purple)', marginBottom: '1rem' }}>📦 Tous les category</h3>
                 <AllProducts />
             </div>
 
