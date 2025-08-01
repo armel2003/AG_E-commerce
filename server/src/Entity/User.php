@@ -27,6 +27,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var list<string> The user roles
      */
     #[ORM\Column]
+    #[Groups(['user:read'])]
     private array $roles = ['ROLE_USER'];
 
     /**
@@ -70,6 +71,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read'])]
     private ?float $balance = 0;
 
+    
     public function getId(): ?int
     {
         return $this->id;

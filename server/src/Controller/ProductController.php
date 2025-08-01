@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Entity\Images;
 use App\Entity\Product;
+use App\Entity\Stock;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,7 +22,7 @@ final class ProductController extends AbstractController
 {
     #[Route(name: 'app_product_index', methods: ['GET'])]
 //afficher tous les produits
-    public function index(ProductRepository $productRepository): Response
+    public function index(ProductRepository $productRepository, EntityManagerInterface $entityManager): Response
     {
         $products = $productRepository->findAll();
 
@@ -31,13 +32,16 @@ final class ProductController extends AbstractController
             foreach ($product->getImages() as $image) {
                 $images[] = $image->getImagePath();
             }
+            $stock = $entityManager->getRepository(Stock::class)->findOneBy(['product' => $product]);
             $data[] = [
                 'id' => $product->getId(),
                 'name' => $product->getName(),
                 'descriptions' => $product->getDescriptions(),
                 'price' => $product->getPrice(),
                 'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
-                'images' => $images
+                'images' => $images,
+                //'stock' => $stock->getQuantite()
+                'stock' => $stock ? $stock->getQuantite() : 0
 
             ];
         }
@@ -78,6 +82,13 @@ final class ProductController extends AbstractController
             }
         }
 
+        $stock = new stock();
+        if (isset($data['stock'])) {
+            $stock->setQuantite($data['stock']);
+        }
+        $stock->setProductId($product);
+        $entityManager->persist($stock);
+
         $entityManager->flush();
         $images = [];
         // foreach($product->getImages() as $image){
@@ -98,20 +109,22 @@ final class ProductController extends AbstractController
                 'price' => $product->getPrice(),
                 'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
                 'category' => $product->getCategory()->getName(),
-                'image' => $images
+                'image' => $images,
+                'stock' => $stock->getQuantite()
             ]
         ], JsonResponse::HTTP_CREATED);
     }
 
 //voir un produit en detail
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
-    public function show(Product $product): JsonResponse
+    public function show(Product $product, EntityManagerInterface $entityManager): JsonResponse
     {
         //recup image
         $images = [];
         foreach ($product->getImages() as $image) {
             $images[] = $image->getImagePath();
         }
+        $stock = $entityManager->getRepository(Stock::class)->findOneBy(['product' => $product]);
 
         $data = [
             'id' => $product->getId(),
@@ -120,7 +133,10 @@ final class ProductController extends AbstractController
             'price' => $product->getPrice(),
             'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
             'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
-            'images' => $images
+            'images' => $images,
+            //'stock' => $stock->getQuantite()
+            'stock' => $stock ? $stock->getQuantite() : 0
+
 
         ];
 
@@ -150,6 +166,17 @@ final class ProductController extends AbstractController
         if (isset($data['category'])) {
             $category = $entityManager->getRepository(Category::class)->find($data['category']);
             $product->setCategory($category);
+        }
+        $stock = $entityManager->getRepository(Stock::class)->findOneBy(['product' => $product]);
+        if (isset($data['stock'])) {
+            if ($stock) {
+                $stock->setQuantite($data['stock']);
+            } else {
+                $stock = new Stock();
+                $stock->setQuantite($data['stock']);
+                $stock->setProductId($product);
+                $entityManager->persist($stock);
+            }
         }
         if (isset($data['images'])) {
             // delete
@@ -181,19 +208,27 @@ final class ProductController extends AbstractController
                 'price' => $product->getPrice(),
                 'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
                 'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
-                'images' => $images
+                'images' => $images,
+                //'stock' => $stock->getQuantite()
+                'stock' => $stock ? $stock->getQuantite() : 0
             ]
         ], JsonResponse::HTTP_OK);
     }
 
     //supprimer un produits
     #[Route('/admin/{id}/delete', name: 'app_product_delete', methods: ['POST', 'DELETE'])]
-//#[IsGranted('ROLE_ADMIN')]
+    #[IsGranted('ROLE_ADMIN')]
     public function delete(Product $product, EntityManagerInterface $entityManager): JsonResponse
     {
         foreach ($product->getImages() as $image) {
             $entityManager->remove($image);
         }
+
+        $stock = $entityManager->getRepository(Stock::class)->findOneBy(['product' => $product]);
+        if ($stock) {
+            $entityManager->remove($stock);
+        }
+
         $entityManager->remove($product);
         $entityManager->flush();
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);

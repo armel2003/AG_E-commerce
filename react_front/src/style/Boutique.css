@@ -11,7 +11,7 @@ margin-bottom: 2rem;
 
 .product-grid {
 display: grid;
-grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
 gap: 1rem;
 padding: 1.5rem 2rem;
 }
@@ -183,3 +183,46 @@ color: white;
 padding: 0;
 min-height: 100vh;
 }
+search-bar-container {
+  margin-left: auto;
+  margin-right: 2rem;
+  position: relative;
+  width: 220px;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  right: 0;
+  background-color: #2b1a3f;
+  border: 1px solid #5e3c80;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  max-height: 180px;
+  overflow-y: auto;
+  z-index: 20;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-size: 0.9rem;
+  color: white;
+}
+
+.dropdown-item:hover {
+  background-color: #3a2457;
+}
+
+.dropdown-thumb {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
