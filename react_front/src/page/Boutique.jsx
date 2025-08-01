@@ -58,7 +58,7 @@ return (
         <Link to="/mystere" className="nav-btn">Clés Mystères</Link>
     </nav>
 
-    <div className="search-bar-container">
+    {/* <div className="search-bar-container">
         <input
         type="text"
         placeholder="Rechercher un jeu..."
@@ -66,8 +66,37 @@ return (
         onChange={(e) => setSearchTerm(e.target.value)}
         className="search-input"
         />
+    </div> */}
+    <div className="search-bar-container" style={{ position: "relative" }}>
+        <input
+        type="text"
+        placeholder="Rechercher un jeu..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
+        />
+        {searchTerm && filtered.length > 0 && (
+        <div className="search-dropdown">
+            {filtered.slice(0, 5).map((product) => (
+            <div
+                key={product.id}
+                className="dropdown-item"
+                onClick={() => {
+                navigate(`/product/${product.id}`);
+                setSearchTerm("");
+                }}
+            >
+                <img
+                src={product.images?.[0]}
+                alt={product.name}
+                className="dropdown-thumb"
+                />
+                <span>{product.name}</span>
+            </div>
+            ))}
+        </div>
+        )}
     </div>
-
     <div className="homepage-actions">
     <Link to="/login">
 <img
