@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import '../style/CreateArticle.css';
 
 function CreateArticle() {
@@ -18,9 +19,24 @@ const [formData, setFormData] = useState({
 const [isLoading, setIsLoading] = useState(false);
 const [message, setMessage] = useState({ type: '', text: '' });
 
-const categories = [
-2
-];
+// const categories = [
+// 2
+// ];
+const [categories, setCategories] = useState([]);
+
+useEffect(() => {
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/category'); 
+      const data = await response.json();
+      setCategories(data);
+    } catch (error) {
+      console.error('Erreur lors du chargement des catégories :', error);
+    }
+  };
+
+  fetchCategories();
+}, []);
 
 // const games = [
 //   'Valorant',
@@ -192,20 +208,21 @@ return (
               Catégorie *
             </label>
             <select
-              id="category"
-              name="category"
-              className="form-select"
-              value={formData.category}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Sélectionner une catégorie</option>
-              {categories.map(category => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
+  id="category"
+  name="category"
+  className="form-select"
+  value={formData.category}
+  onChange={handleChange}
+  required
+>
+  <option value="">Sélectionner une catégorie</option>
+  {categories.map(cat => (
+    <option key={cat.id} value={cat.id}>
+      {cat.name}
+    </option>
+  ))}
+</select>
+
           </div>
 
 
