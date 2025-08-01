@@ -5,8 +5,8 @@ import '../style/LoginForm.css';
 function Moncompte() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const token = localStorage.getItem("userToken"); 
-  console.log("Token utilisé : ", token); 
+  const token = localStorage.getItem("userToken");
+  console.log("Token utilisé : ", token);
 
   const [user, setUser] = useState(null);
   const [form, setForm] = useState({
@@ -24,7 +24,7 @@ function Moncompte() {
   useEffect(() => {
     if (!token) {
       alert("Vous devez être connecté pour accéder à votre compte.");
-      navigate("/login"); 
+      navigate("/login");
       return;
     }
 
@@ -122,4 +122,4 @@ function Moncompte() {
   );
 }
 
-export default Moncompte;
+export default Moncompte

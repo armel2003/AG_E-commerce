@@ -27,7 +27,7 @@ function App() {
       <Route path="/login" element={<LoginForm />} />
       <Route path="/register" element={<RegisterForm />} />
       <Route path="/account/:id" element={<Moncompte />} />
-      <Route path="/boutique" element={<Boutique />} /> 
+      <Route path="/boutique" element={<Boutique />} />
       <Route path="/product/:id" element={<ProductDetail />} />
 
       {/* s admin */}
