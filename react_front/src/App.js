@@ -1,7 +1,6 @@
 import './App.css';
 import React from 'react';
 import {Routes, Route, Navigate} from 'react-router-dom';
-import LoginForm from "./page/LoginForm.jsx";
 import ProductDetail from './components/ProductDetail.jsx';
 import HomePage from './page/HomePage.jsx';
 import LoginForm from './page/LoginForm.jsx';
@@ -9,8 +8,6 @@ import RegisterForm from './page/RegisterForm.jsx';
 import Moncompte from './page/Moncompte.jsx';
 import Boutique from './page/Boutique.jsx';
 import Commande from './page/commande.jsx';
-import ProductDetail from './components/ProductDetail.jsx';
-
 // admin
 import AdminLayout from './pageAdmin/AdminLayout.jsx';
 import AdminDashboard from './pageAdmin/AdminDashboard.jsx';
