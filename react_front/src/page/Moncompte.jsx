@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import '../style/LoginForm.css';
 
 function Moncompte() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const token = localStorage.getItem("userToken"); 
-  console.log("Token utilisé : ", token); 
+  const token = localStorage.getItem("userToken");
+  console.log("Token utilisé : ", token);
 
   const [user, setUser] = useState(null);
   const [form, setForm] = useState({
@@ -16,15 +17,14 @@ function Moncompte() {
     zipcode: '',
     city: '',
     country: '',
-    category: ''  // Ajout du champ catégorie
+
   });
 
-  const [categories, setCategories] = useState([]); // Pour stocker les catégories
 
   useEffect(() => {
     if (!token) {
       alert("Vous devez être connecté pour accéder à votre compte.");
-      navigate("/login"); 
+      navigate("/login");
       return;
     }
 
@@ -44,23 +44,13 @@ function Moncompte() {
           zipcode: data.zipcode || '',
           city: data.city || '',
           country: data.country || '',
-          category: data.category || ''  // Assurez-vous de récupérer la catégorie si elle existe
         });
       })
       .catch(error => {
         console.error('Erreur:', error);
         alert("Erreur lors de la récupération des informations utilisateur.");
       });
-
-    // Récupérer les catégories (remplacez cette API par votre propre source)
-    fetch('http://localhost:8000/categories')
-      .then(res => res.json())
-      .then(data => setCategories(data))
-      .catch(error => {
-        console.error('Erreur lors de la récupération des catégories:', error);
-        alert("Erreur lors de la récupération des catégories.");
-      });
-  }, [id, token, navigate]);
+  })
 
   const handleUpdate = () => {
     fetch(`http://localhost:8000/user/update/${id}`, {
@@ -93,7 +83,7 @@ function Moncompte() {
   const isAdmin = user.roles?.includes("ROLE_ADMIN");
 
   return (
-    <div>
+    <div className='auth-form login-mode'>
       <h2>Mon compte</h2>
 
       {isAdmin && (
@@ -102,7 +92,7 @@ function Moncompte() {
         </button>
       )}
 
-      <form>
+      <form className=''>
         {[
           { label: 'Email', name: 'email', type: 'email' },
           { label: 'Nom', name: 'lastName' },
@@ -123,22 +113,6 @@ function Moncompte() {
           </div>
         ))}
 
-        {/* Dropdown des catégories */}
-        <div style={{ marginBottom: '10px' }}>
-          <label><strong>Catégorie :</strong></label><br />
-          <select
-            value={form.category}
-            onChange={e => setForm({ ...form, category: e.target.value })}
-            style={{ width: '300px' }}
-          >
-            <option value="">Sélectionner une catégorie</option>
-            {categories.map(category => (
-              <option key={category.id} value={category.name}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-        </div>
 
         <button type="button" onClick={handleUpdate}>
           Enregistrer les modifications
@@ -148,4 +122,4 @@ function Moncompte() {
   );
 }
 
-export default Moncompte;
+export default Moncompte

@@ -9,14 +9,12 @@ const navigate = useNavigate();
 
 useEffect(() => {
 fetch('http://localhost:8000/product')
-    .then(response => {
-    return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
     const sorted = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     setProducts(sorted.slice(0, count));
     setLoading(false);
-    })
+    });
 }, [count]);
 
 if (loading) return <p>Chargement...</p>;
@@ -24,7 +22,13 @@ if (loading) return <p>Chargement...</p>;
 return (
 <div className="homepage-grid">
     {products.map(prod => (
-    <div key={prod.id} className="homepage-card" onClick={() => navigate(`/product/${prod.id}`)} style={{cursor: 'pointer'}}>
+        
+    <div
+        key={prod.id}
+        className="homepage-card"
+        onClick={() => navigate(`/product/${prod.id}`)}
+        style={{ cursor: 'pointer' }}
+    >
         <img
         src={prod.images?.[0] || 'placeholder.jpg'}
         alt={prod.name}

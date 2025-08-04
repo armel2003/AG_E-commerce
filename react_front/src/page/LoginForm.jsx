@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import '../style/LoginForm.css';
@@ -10,20 +10,27 @@ const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState('');
   const [error, setError] = useState('');
+  const [token, setToken] = useState(null); // Pour gérer le token
+
+  // useEffect pour récupérer le token stocké à chaque chargement du composant
+  useEffect(() => {
+    const storedToken = localStorage.getItem('userToken');
+    setToken(storedToken);
+  }, []); // Cela ne se déclenche qu'une fois, au chargement du composant
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setError(''); 
+    setError('');
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
     setIsLoading(true);
     setError('');
-    
+
     try {
       const response = await axios.post('http://localhost:8000/api/login', {
-        username: form.email, 
+        username: form.email,
         password: form.password
       }, {
         headers: {
@@ -31,11 +38,15 @@ const LoginForm = () => {
         }
       });
 
-      
+      console.log('Réponse de la connexion :', response.data);
+
       if (response.data.token) {
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('user', response.data.user); 
-        console.log('Connexion réussie !');
+        // Enregistrer le token dans localStorage
+        localStorage.setItem('userToken', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user)); 
+        localStorage.setItem('userId', JSON.stringify(response.data.id)); 
+
+       console.log('Connexion réussie !');
         navigate('/'); 
       }
     } catch (err) {

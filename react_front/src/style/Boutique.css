@@ -11,7 +11,7 @@ margin-bottom: 2rem;
 
 .product-grid {
 display: grid;
-grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+grid-template-columns: repeat(auto-fill, minmax(158px, 1fr));
 gap: 1rem;
 padding: 1.5rem 2rem;
 }
@@ -181,7 +181,7 @@ color: white;
 padding: 0;
 min-height: 100vh;
 }
-.search-bar-container {
+search-bar-container {
   margin-left: auto;
   margin-right: 2rem;
   position: relative;
@@ -223,3 +223,4 @@ min-height: 100vh;
   margin-right: 10px;
   border-radius: 4px;
 }
+

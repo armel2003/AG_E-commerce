@@ -26,6 +26,7 @@
 
 /* Effet de scanlines pour un look gaming */
 .login-page::before {
+
   content: '';
   position: fixed;
   top: 0;
@@ -63,10 +64,12 @@
   z-index: 2;
   overflow: hidden;
   padding: 1rem;
+
 }
 
 /* Effet de grille cyberpunk en arrière-plan */
 .login-header::before {
+
   content: '';
   position: absolute;
   top: 0;
@@ -111,6 +114,7 @@
   transform: scale(1.05);
   filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.8));
   animation: glitch 0.3s ease-in-out;
+
 }
 
 
@@ -453,10 +457,11 @@
 .forgot-password .link:hover {
   color: var(--neon-purple);
   text-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
-}
+
 
 /* Messages d'erreur */
 .error-message {
+
   color: #ff6b6b;
   font-size: 0.85rem;
   margin-bottom: 1rem;
@@ -485,10 +490,12 @@
 
 .input-wrapper.error .input-line {
   background: linear-gradient(90deg, #ff6b6b, #ff8e8e);
+
 }
 
 /* Transitions d'animation pour le changement de mode */
 .auth-form.login-mode {
+
   animation: slideInFromLeft 0.5s ease-out;
 }
 
@@ -505,10 +512,12 @@
     transform: translateX(0) scale(1);
     opacity: 1;
   }
+
 }
 
 /* Effet Matrix pour l'arrière-plan */
 .login-header::after {
+
   content: '';
   position: absolute;
   top: 0;
@@ -529,10 +538,12 @@
   100% {
     transform: translateY(100px);
   }
+
 }
 
 /* Effet de glitch occasionnel pour le style gaming */
 @keyframes glitch {
+
   0%, 90%, 100% {
     transform: translate(0);
     filter: hue-rotate(0deg);
@@ -627,4 +638,5 @@
     margin-bottom: 1rem;
     padding: 1rem;
   }
+}
 }
