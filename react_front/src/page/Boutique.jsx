@@ -166,12 +166,15 @@ style={{
               <div
                 className="product-card"
                 key={product.id}
-                onClick={() => navigate(`/product/${product.id}`)}
+                
                 style={{ cursor: "pointer" }}
               >
                 <img src={product.images?.[0]} alt={product.name} />
-                <p>{product.name}</p>
+                <p onClick={() => navigate(`/product/${product.id}`)}>{product.name}</p>
                 <span>{product.price} €</span>
+                <button onClick={() => dispatch(createCartItem(product))}>
+                Ajouter au panier
+                </button>
               </div>
             ))}
           </div>
