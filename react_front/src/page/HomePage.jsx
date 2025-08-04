@@ -55,22 +55,6 @@ export default function HomePage() {
 							<div className="user-welcome" style={{ marginLeft: 20, fontWeight: 'bold' }}>
 								Bonjour, {user} 🎮
 							</div>
-							<button
-								className="account-btn"
-								onClick={() => navigate(`/account/${localStorage.getItem('userId')}`)}
-							>
-								Mon compte
-							</button>
-							<button
-								className="logout-btn"
-								onClick={() => {
-									localStorage.removeItem('user');
-									localStorage.removeItem('token');
-									navigate('/');
-								}}
-							>
-								Déconnexion
-							</button>
 						</>
 					)}
 				</div>
@@ -83,9 +67,17 @@ export default function HomePage() {
 					<a href="#" className="nav-link">🎁 Clés Mystères</a>
 				</nav>
 				<div className="homepage-actions">
-					<button onClick={() => navigate('/login')}>
-						<img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20" height="20" />
-						Connexion
+					{!user && (
+						<button onClick={() => navigate('/login')}>
+							<img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20" height="20" />
+							Connexion
+						</button>
+					)}
+					<button
+						className="account-btn"
+						onClick={() => navigate(`/account/${localStorage.getItem('userId')}`)}
+					>
+						Mon compte
 					</button>
 					<button>
 						<svg
