@@ -2,12 +2,19 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../asset/pentakeys_logo.png";
 import "../style/Boutique.css";
+import { useDispatch } from "react-redux"
+import { createCartItem } from "../redux/cart"
+import FloatingCartButton from "../components/FloatingCartButton";
+
+
 
 export default function Boutique() {
-  const [products, setProducts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [sortOption, setSortOption] = useState("price-asc");
-  const navigate = useNavigate();
+const [products, setProducts] = useState([]);
+const [searchTerm, setSearchTerm] = useState("");
+const [sortOption, setSortOption] = useState("price-asc");
+const navigate = useNavigate();
+const dispatch = useDispatch()
+
 
   useEffect(() => {
     fetch("http://localhost:8000/product")
@@ -87,19 +94,20 @@ export default function Boutique() {
           )}
         </div>
 
-        <div className="homepage-actions">
-          <Link to="/login">
-            <img
-              alt="Account Icon"
-              width="24"
-              height="24"
-              src="https://www.svgrepo.com/show/453660/account.svg"
-              style={{
-                cursor: "pointer",
-                filter: "invert(100%)",
-              }}
-            />
-          </Link>
+    <div className="homepage-actions">
+    <Link to="/login">
+<img
+alt="Account Icon"
+width="24"
+height="24"
+src="https://www.svgrepo.com/show/453660/account.svg"
+style={{
+    cursor: "pointer",
+    filter: "invert(100%)",
+}}
+/>
+</Link>
+<FloatingCartButton />
 
           <button>
             <svg
