@@ -88,6 +88,7 @@ export default function HomePage() {
 				</div>
 
 				<nav className="homepage-nav">
+
 					<Link to="/" className="nav-link">Acceuil</Link>
 					<Link to="/boutique" className="nav-link">🛒 Boutique</Link>
 					<a href="#" className="nav-link">🎮 Kits</a>
