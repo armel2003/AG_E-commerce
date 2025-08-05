@@ -1,28 +1,28 @@
-import { useSelector, useDispatch } from "react-redux";
-import { deleteFromCart, increaseQuantity, decreaseQuantity } from "../redux/cart";
+import {useSelector, useDispatch} from "react-redux";
+import {deleteFromCart, increaseQuantity, decreaseQuantity} from "../redux/cart";
 import "../style/cartmodal.css"
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 // MODAL DU PANIER
-export default function Cart({ onClose }) {
+export default function Cart({onClose}) {
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const handleCheckout = () => {
         navigate("/commande");
-        onClose(); 
+        onClose();
     };
 
     return (
         <div className="cart-overlay" onClick={onClose}>
             <div className="cart-modal" onClick={(e) => e.stopPropagation()}>
-               
+
                 <button onClick={onClose} className="cart-close-btn">
                     ✕
                 </button>
 
-                
+
                 <h2 className="cart-title">🛒 Ton Panier</h2>
 
                 {/* Contenu du panier */}
@@ -69,7 +69,7 @@ export default function Cart({ onClose }) {
                             ))}
                         </ul>
 
-                        
+
                         <div className="cart-total">
                             <p className="cart-total-price">
                                 Total : <strong>{cart.totalPrice.toFixed(2)} €</strong>

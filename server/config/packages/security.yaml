@@ -26,6 +26,7 @@ security:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }  # Ajoutez cette ligne
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }  # Ajoutez cette ligne
         - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/product/admin, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
 
 
