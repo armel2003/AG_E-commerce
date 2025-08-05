@@ -1,9 +1,14 @@
 import React from 'react';
 //import './detailProduct.css';
 import '../style/detailProduct.css'; 
+import { createCartItem } from "../redux/cart";
+import { useDispatch } from "react-redux";
 
 const ProductDetailCard = ({ product }) => {
+const dispatch = useDispatch()  
 if (!product) return null;
+
+
 
 return (
     <div className="container_card">
@@ -46,11 +51,11 @@ return (
             <div className="info-value" style={{color: '#10b981'}}>En stock</div>
           </div>
         </div>
-        
-        <button 
-          onClick={() => alert('Produit ajouté au panier !')} 
+          <button
           className='button'
-        >
+          disabled={product.stock <= 0}
+          onClick={() => dispatch(createCartItem(product))}
+          >
           🛒 Ajouter au panier
         </button>
       </div>

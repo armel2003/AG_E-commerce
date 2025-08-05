@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { createPortal } from "react-dom";
 import logo from "../asset/pentakeys_logo.png";
 import "../style/Boutique.css";
-import { useDispatch } from "react-redux"
-import { createCartItem } from "../redux/cart"
-import FloatingCartButton from "../components/FloatingCartButton";
+import "../style/homedacceil.css";
+import { createCartItem } from "../redux/cart";
+import Cart from "../components/Cart";
 
 
 
@@ -12,8 +14,19 @@ export default function Boutique() {
 const [products, setProducts] = useState([]);
 const [searchTerm, setSearchTerm] = useState("");
 const [sortOption, setSortOption] = useState("price-asc");
+const [showCartModal, setShowCartModal] = useState(false);
 const navigate = useNavigate();
-const dispatch = useDispatch()
+const dispatch = useDispatch();
+const cart = useSelector((state) => state.cart);
+const user = localStorage.getItem('user');
+const role = localStorage.getItem("role");
+
+const handleCartClose = () => {
+  setShowCartModal(false);
+};
+
+// Calculer le nombre total d'articles (avec quantités)
+const totalItems = cart.items.reduce((total, item) => total + (item.quantity || 1), 0);
 
 
   useEffect(() => {
@@ -55,12 +68,20 @@ const dispatch = useDispatch()
               style={{ width: 90, height: 90 }}
             />
           </div>
+          {user && (
+            <>
+              <div className="user-welcome" style={{ marginLeft: 20, fontWeight: 'bold' }}>
+                Bonjour, {user} 🎮
+              </div>
+            </>
+          )}
         </div>
+
         <nav className="homepage-nav">
-          <Link to="/" className="nav-btn">Accueil</Link>
-          <Link to="/boutique" className="nav-btn">Boutique</Link>
-          <Link to="/kits" className="nav-btn">Kits</Link>
-          <Link to="/mystere" className="nav-btn">Clés Mystères</Link>
+          <Link to="/" className="nav-link">Accueil</Link>
+          <Link to="/boutique" className="nav-link">🛒 Boutique</Link>
+          <a href="#" className="nav-link">🎮 Kits</a>
+          <a href="#" className="nav-link">🎁 Clés Mystères</a>
         </nav>
 
         <div className="search-bar-container" style={{ position: "relative" }}>
@@ -94,31 +115,26 @@ const dispatch = useDispatch()
           )}
         </div>
 
-    <div className="homepage-actions">
-    <Link to="/login">
-<img
-alt="Account Icon"
-width="24"
-height="24"
-src="https://www.svgrepo.com/show/453660/account.svg"
-style={{
-    cursor: "pointer",
-    filter: "invert(100%)",
-}}
-/>
-</Link>
-<FloatingCartButton />
-
-          <button>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20px"
-              height="20px"
-              fill="currentColor"
-              viewBox="0 0 256 256"
+        <div className="homepage-actions">
+          {!user && (
+            <button onClick={() => navigate('/login')}>
+              <img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20" height="20" />
+              Connexion
+            </button>
+          )}
+          {user && (
+            <button
+              className="account-btn"
+              onClick={() => navigate(`/account/${localStorage.getItem('userId')}`)}
             >
-              <path d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z" />
-            </svg>
+              Mon compte
+            </button>
+          )}
+          <button onClick={() => setShowCartModal(true)} className="cart-header-button">
+            🛒 Panier
+            {totalItems > 0 && (
+              <span className="cart-badge-header">{totalItems}</span>
+            )}
           </button>
         </div>
       </header>
@@ -166,12 +182,15 @@ style={{
               <div
                 className="product-card"
                 key={product.id}
-                onClick={() => navigate(`/product/${product.id}`)}
+                
                 style={{ cursor: "pointer" }}
               >
                 <img src={product.images?.[0]} alt={product.name} />
-                <p>{product.name}</p>
+                <p onClick={() => navigate(`/product/${product.id}`)}>{product.name}</p>
                 <span>{product.price} €</span>
+                <button onClick={() => dispatch(createCartItem(product))} className="add-product">
+                Ajouter au panier
+                </button>
               </div>
             ))}
           </div>
@@ -179,6 +198,10 @@ style={{
           <p>Aucun produit trouvé.</p>
         )}
       </section>
+      
+      {/* Modal du panier */}
+      {showCartModal &&
+        createPortal(<Cart onClose={handleCartClose} />, document.body)}
     </div>
   );
 }

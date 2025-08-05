@@ -43,11 +43,11 @@ export default function HomePage() {
 
 			{/* Header */}
 			<header className="homepage-header">
-			<div className="flex items-center gap-2">
-        <div className="logopentakeys">
-  <img src={logo} alt="Logo du site" style={{ width: 90, height: 90 }} />
-        </div>
-</div>
+				<div className="flex items-center gap-2">
+					<div className="logopentakeys">
+						<img src={logo} alt="Logo du site" style={{ width: 90, height: 90 }} />
+					</div>
+				</div>
 
 				<nav className="homepage-nav">
 					<a href="#">Accueil</a>
@@ -56,8 +56,8 @@ export default function HomePage() {
 					<a href="#">Clés Mystères</a>
 				</nav>
 				<div className="homepage-actions">
-          <button><img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20" height="20" color="white"/>
-</button>
+					<button><img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20" height="20" color="white" />
+					</button>
 					<button>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -78,7 +78,7 @@ export default function HomePage() {
 			</section>
 
 			{/* Categories */}
-     
+
 			<div className="homepage-categories">
 				{categories.map((cat) => (
 					<a
@@ -91,28 +91,28 @@ export default function HomePage() {
 				))}
 			</div>
 
-			{/* Games grid */} 
-    <h2>Jeux en vedette</h2>
-<div className="homepage-grid">
-  {games.map((game) => (
-    <div className="homepage-card" key={game.name}>
-      <div
-        className="homepage-card-img"
-        style={{
-          backgroundImage: `url('${game.image}')`,
-        }}
-      ></div>
-      <p>{game.name}</p>
-    </div>
-  ))}
-</div>
-{/* Composant pour produits similaires */}
- <h2>All product</h2>
-<Product />
-      <h2>Nouvelles sorties</h2>
-      <RecentProducts count={4} />
-      <h2>Top ventes</h2>
-      <h2>Nos plateformes Partenaires</h2>
+			{/* Games grid */}
+			<h2>Jeux en vedette</h2>
+			<div className="homepage-grid">
+				{games.map((game) => (
+					<div className="homepage-card" key={game.name}>
+						<div
+							className="homepage-card-img"
+							style={{
+								backgroundImage: `url('${game.image}')`,
+							}}
+						></div>
+						<p>{game.name}</p>
+					</div>
+				))}
+			</div>
+			{/* Composant pour produits similaires */}
+			<h2>All product</h2>
+			<Product />
+			<h2>Nouvelles sorties</h2>
+			<RecentProducts count={4} />
+			<h2>Top ventes</h2>
+			<h2>Nos plateformes Partenaires</h2>
 		</div>
 	);
 }
