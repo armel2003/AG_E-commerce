@@ -84,7 +84,7 @@ return (
                   className="similar-product-image"
                 />
                 <h4>{prod.name}</h4>
-                <button className='button'>
+                <button className='button' onClick={() => navigate(`/product/${prod.id}`)}>
                   Voir plus
                 </button>
               </div>
