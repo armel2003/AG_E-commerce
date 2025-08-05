@@ -9,9 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class CartController extends AbstractController
 {
+    //ajout article 
     #[Route('/cart/{id}', name: 'app_cart', methods: ['POST'])]
     public function index(EntityManagerInterface $entityManager, Product $product): JsonResponse
     {
@@ -37,6 +39,7 @@ final class CartController extends AbstractController
         }
     }
 
+    //supprimer artcile 
     #[Route('/cart/{id}', name: 'app_cart_delete', methods: ['DELETE'])]
     public function delete(EntityManagerInterface $entityManager, Product $product): JsonResponse
     {
@@ -60,14 +63,17 @@ final class CartController extends AbstractController
         }
     }
 
+    //affiche panier 
     #[Route('/cart', name: 'app_cart_show', methods: ['GET'])]
     public function show(EntityManagerInterface $entityManager): JsonResponse
     {
         $currentUser = $this->getUser();
+        //var_dump($currentUser);
         if (!$currentUser) {
-            return $this->json(['error' => 'User not authenticated'], Response::HTTP_UNAUTHORIZED);
+            return $this->json(['error' => 'User not authenticated'], 401);
         }
         $cart = $currentUser->getCart();
+        //$cart = $entityManager->getRepository(Cart::class)->findOneBy(['user' => $currentUser]);
         if (!$cart) {
             return $this->json(['error' => 'Cart not found'], Response::HTTP_NOT_FOUND);
         }
@@ -81,6 +87,7 @@ final class CartController extends AbstractController
         }
         return $this->json($products);
     }
+    //vide le panie
     #[Route('/cart/empty', name: 'app_cart_clear', methods: ['DELETE'])]
     public function clear(EntityManagerInterface $entityManager): JsonResponse
     {

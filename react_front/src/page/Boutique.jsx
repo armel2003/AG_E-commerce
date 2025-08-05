@@ -54,7 +54,8 @@ export default function Boutique() {
         p.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const sorted = handleSort([...filtered]);
+  const sorted = handleSort([...filtered]);
+
 
     return (
         <div className="boutique-root">
