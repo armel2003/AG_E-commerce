@@ -30,15 +30,18 @@ if (loading) return <p>Chargement...</p>;
 
 return (
 <div>
-    <div className="homepage-grid">
+    <div className="product-grid">
     {products.map(prod => (
-        <div key={prod.id} className="homepage-card" onClick={() => navigate(`/product/${prod.id}`)} style={{cursor: 'pointer'}}>
+        <div key={prod.id} className="product-card" onClick={() => navigate(`/product/${prod.id}`)} style={{cursor: 'pointer'}}>
         <img
             src={prod.images?.[0] || 'placeholder.jpg'}
             alt={prod.name}
-            className="homepage-card-img"
+            className="product-card-img"
         />
-        <h4>{prod.name}</h4>
+        <div className="product-card-content">
+            <p className="product-title">{prod.name}</p>
+            <span className="product-price">{prod.price} €</span>
+        </div>
         </div>
     ))}
     </div>

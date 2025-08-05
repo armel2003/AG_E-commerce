@@ -1,7 +1,7 @@
 /* Import des polices */
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600;700&display=swap');
 
-/* Variables CSS */
+
 :root {
   --primary-bg: #0a0a0a;
   --secondary-bg: #1a1a1a;
@@ -20,7 +20,7 @@
   --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Reset et base */
+
 * {
   margin: 0;
   padding: 0;
@@ -43,7 +43,7 @@ body {
   position: relative;
 }
 
-/* Effet de grille cyberpunk en arrière-plan */
+
 .homepage-root::before {
   content: '';
   position: fixed;
@@ -83,14 +83,14 @@ body {
   transition: var(--transition);
 }
 
-/* Page racine - Amélioration du gradient et des effets visuels */
+
 .homepage-root {
   background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 50%, #16213e 100%);
   color: var(--text-primary);
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-  padding-top: 100px; /* Padding pour compenser le header fixe */
+  padding-top: 100px; 
 }
 
 .homepage-root::before {
@@ -375,11 +375,84 @@ h2::after {
 /* Games grid */
 .homepage-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  padding: 1.5rem 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.2rem;
+  padding: 1.2rem 2rem;
   position: relative;
   z-index: 1;
+}
+
+/* Product grid pour le style boutique */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.2rem;
+  padding: 1.2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.product-card {
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: 15px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: var(--transition);
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+  border-color: var(--accent-purple);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.5),
+    0 0 30px rgba(168, 85, 247, 0.3);
+}
+
+.product-card-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  position: relative;
+}
+
+.product-card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.75rem;
+  flex-grow: 1;
+}
+
+.product-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.product-title:hover {
+  color: var(--accent-purple-light);
+}
+
+.product-price {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent-green);
+  background: linear-gradient(45deg, var(--accent-green), #34d399);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
 }
 
 .homepage-card {
@@ -423,7 +496,7 @@ h2::after {
 
 .homepage-card-img {
   width: 100%;
-  height: 200px;
+  height: 180px;
   background-size: cover;
   background-position: center;
   position: relative;
@@ -440,10 +513,10 @@ h2::after {
 }
 
 .homepage-card p {
-  padding: 1.5rem;
+  padding: 0.75rem;
   margin: 0;
   font-family: 'Exo 2', sans-serif;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text-primary);
   position: relative;
@@ -461,8 +534,8 @@ h2::after {
     font-size: 2.5rem;
   }
   
-  .homepage-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  .homepage-grid, .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1rem;
     padding: 1rem;
   }
@@ -498,8 +571,8 @@ h2::after {
     font-size: 0.9rem;
   }
   
-  .homepage-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  .homepage-grid, .product-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
   
   h2 {
@@ -541,15 +614,28 @@ h2::after {
     font-size: 0.8rem;
   }
   
-  .homepage-grid {
+  .homepage-grid, .product-grid {
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: 0.5rem;
     padding: 0.5rem;
   }
   
-  .homepage-card p {
+  .homepage-card p, .product-card-content {
     padding: 1rem;
     font-size: 1rem;
+  }
+  
+  .product-title {
+    font-size: 1rem;
+  }
+  
+  .product-price {
+    font-size: 1.1rem;
+  }
+  
+  .add-product {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
   }
   
   h2 {
@@ -563,7 +649,7 @@ h2::after {
   }
 }
 
-/* Animations d'entrée */
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
