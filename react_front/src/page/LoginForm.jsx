@@ -190,8 +190,7 @@ import { useNavigate } from "react-router-dom";
 import axios from 'axios';
 import '../style/LoginForm.css';
 import logo from '../asset/pentakeys_logo.png';
-import { useDispatch } from "react-redux";
-import { clearCart, createCartItem } from "../redux/cart";
+
 
 const LoginForm = () => {
     const navigate = useNavigate();
@@ -236,8 +235,8 @@ const LoginForm = () => {
         localStorage.setItem('userId', JSON.stringify(response.data.id)); 
         console.log('Connexion réussie !');
         
-        await syncServerCart(); // Synchroniser le panier
-        navigate('/'); // Redirection vers la page d'accueil
+
+        navigate('/'); 
       }
     } catch (err) {
       const errorMessage = err.response?.data?.message || 'Une erreur est survenue lors de la connexion';
@@ -248,47 +247,7 @@ const LoginForm = () => {
     }
   };
 
-  const syncServerCart = async () => {
-    try {
-      const token = localStorage.getItem('userToken');
-      console.log('Token:', token);
-      if (!token) {
-        console.error('Token manquant');
-        setError('Token manquant');
-        return;
-      }
 
-      const response = await fetch('http://localhost:8000/cart', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Accept': 'application/json', 
-        },
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Erreur HTTP:", errorData);
-        setError("Erreur de synchronisation du panier.");
-        return;
-      }
-
-      const products = await response.json();
-      if (Array.isArray(products)) {
-        dispatch(clearCart());
-        products.forEach((product) => {
-          dispatch(createCartItem(product));
-        });
-        console.log("Panier synchronisé depuis le serveur.");
-      } else {
-        console.error("Le panier n'est pas un tableau.");
-        setError("Le panier n'a pas pu être récupéré correctement.");
-      }
-    } catch (error) {
-      console.error('Erreur lors de la récupération du panier :', error);
-      setError('Une erreur est survenue lors de la récupération du panier.');
-    }
-  };
 
     return (
         <div className="login-page">
