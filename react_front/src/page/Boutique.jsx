@@ -66,23 +66,68 @@ useEffect(() => {
             },
         })
             .then((res) => res.json())
-            .then((data) => {
-                console.log(data)
-                dispatch(setCartItems(data)); 
-            })
-            .catch((err) => console.error("Erreur lors de la récupération du panier", err));
-    }
-}, [token, dispatch]);
 
-return (
-    <div className="boutique-root">
-        <header className="homepage-header">
-            <div className="flex items-center gap-2">
-                <div className="logopentakeys">
-                    <img
-                        src={logo}
-                        alt="Logo PentaKeys"
-                        style={{ width: 90, height: 90 }}
+            .then((data) => setProducts(data))
+            .catch((err) => console.error(err));
+    }, []);
+
+    const handleSort = (prods) => {
+        switch (sortOption) {
+            case "price-asc":
+                return prods.sort((a, b) => a.price - b.price);
+            case "price-desc":
+                return prods.sort((a, b) => b.price - a.price);
+            case "date":
+                return prods.sort((a, b) => new Date(b.date) - new Date(a.date));
+            case "popular":
+                return prods.sort((a, b) => b.sales - a.sales);
+            default:
+                return prods;
+        }
+    };
+
+    const filtered = products.filter((p) =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+  const sorted = handleSort([...filtered]);
+
+
+    return (
+        <div className="boutique-root">
+            <header className="homepage-header">
+                <div className="flex items-center gap-2">
+                    <div className="logopentakeys">
+                        <img
+                            src={logo}
+                            alt="Logo PentaKeys"
+                            style={{width: 90, height: 90}}
+                        />
+                    </div>
+                    {user && (
+                        <>
+                            <div className="user-welcome" style={{marginLeft: 20, fontWeight: 'bold'}}>
+                                Bonjour, {user} 🎮
+                            </div>
+                        </>
+                    )}
+                </div>
+
+                <nav className="homepage-nav">
+                    <Link to="/" className="nav-link">Accueil</Link>
+                    <Link to="/boutique" className="nav-link">🛒 Boutique</Link>
+                    <a href="#" className="nav-link">🎮 Kits</a>
+                    <a href="#" className="nav-link">🎁 Clés Mystères</a>
+                </nav>
+
+                <div className="search-bar-container" style={{position: "relative"}}>
+                    <input
+                        type="text"
+                        placeholder="Rechercher un jeu..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="search-input"
+
                     />
                 </div>
                 {user && (

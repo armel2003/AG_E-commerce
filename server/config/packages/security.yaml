@@ -28,8 +28,7 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/product/admin, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
-
-
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
 when@test:
     security:
         password_hashers:
@@ -42,3 +41,40 @@ when@test:
                 cost: 4 # Lowest possible value for bcrypt
                 time_cost: 3 # Lowest possible value for argon
                 memory_cost: 10 # Lowest possible value for argon
+
+#config/packages/security.yaml
+# security:
+#     password_hashers:
+#         App\Entity\User:
+#             algorithm: auto
+
+#     providers:
+#         app_user_provider:
+#             entity:
+#                 class: App\Entity\User
+#                 property: email
+
+#     firewalls:
+#         login:
+#             pattern: ^/api/login
+#             stateless: true
+#             json_login:
+#                 check_path: /api/login
+#                 username_path: email
+#                 password_path: password
+#                 success_handler: lexik_jwt_authentication.handler.authentication_success
+#                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+#         api:
+#             pattern: ^/api
+#             stateless: true
+#             jwt: ~  # ← très important
+
+#     access_control:
+#         - { path: ^/api/login, roles: PUBLIC_ACCESS }
+#         - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
+        # - { path: ^/cart, roles: IS_AUTHENTICATED_FULLY }
+        # - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        # - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+
+        
