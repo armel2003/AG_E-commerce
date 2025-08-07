@@ -21,6 +21,7 @@ security:
             stateless: true  # Ajoutez cette ligne
             jwt: ~          # Ajoutez cette ligne
             entry_point: jwt  # Ajoutez cette ligne
+   
 
     access_control:
         - { path: ^/api/login, roles: PUBLIC_ACCESS }  # Ajoutez cette ligne

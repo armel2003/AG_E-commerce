@@ -1,20 +1,19 @@
-import React, {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {useSelector} from "react-redux";
-import {createPortal} from "react-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { createPortal } from "react-dom";
 import '../style/homedacceil.css';
 import Product from '../components/all_product';
 import RecentProducts from '../components/RecentProducts';
 import Cart from '../components/Cart';
 import logo from "../asset/logo.png";
-import {Link} from 'react-router-dom';
-
+import { Link } from 'react-router-dom';
 
 const categories = [
-    {name: "Clés de jeux", active: true},
-    {name: "Cartes", active: false},
-    {name: "Gamer Kits", active: false},
-    {name: "Offres Mystère", active: false},
+    { name: "Clés de jeux", active: true },
+    { name: "Cartes", active: false },
+    { name: "Gamer Kits", active: false },
+    { name: "Offres Mystère", active: false },
 ];
 
 const games = [
@@ -51,20 +50,20 @@ export default function HomePage() {
         setShowCartModal(false);
     };
 
-    // Calculer le nombre total d'articles (avec quantités)
-    const totalItems = cart.items.reduce((total, item) => total + (item.quantity || 1), 0);
+
+    const totalItems = (cart.items || []).reduce((total, item) => total + (item.quantity || 1), 0);
+
     return (
         <div className="homepage-root">
-
             {/* Header */}
             <header className="homepage-header">
                 <div className="flex items-center gap-2">
                     <div className="logopentakeys">
-                        <img src={logo} alt="Logo PentaKeys" style={{width: 90, height: 90}}/>
+                        <img src={logo} alt="Logo PentaKeys" style={{ width: 90, height: 90 }} />
                     </div>
                     {user && (
                         <>
-                            <div className="user-welcome" style={{marginLeft: 20, fontWeight: 'bold'}}>
+                            <div className="user-welcome" style={{ marginLeft: 20, fontWeight: 'bold' }}>
                                 Bonjour, {user} 🎮
                             </div>
                         </>
@@ -72,7 +71,6 @@ export default function HomePage() {
                 </div>
 
                 <nav className="homepage-nav">
-
                     <Link to="/" className="nav-link">Acceuil</Link>
                     <Link to="/boutique" className="nav-link">🛒 Boutique</Link>
                     <a href="#" className="nav-link">🎮 Kits</a>
@@ -81,8 +79,7 @@ export default function HomePage() {
                 <div className="homepage-actions">
                     {!user && (
                         <button onClick={() => navigate('/login')}>
-                            <img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20"
-                                 height="20"/>
+                            <img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20" height="20" />
                             Connexion
                         </button>
                     )}
@@ -137,10 +134,10 @@ export default function HomePage() {
 
             {/* Composant pour produits similaires */}
             <h2>🎯 Tous nos produits</h2>
-            <Product/>
+            <Product />
 
             <h2>⚡ Nouvelles sorties</h2>
-            <RecentProducts count={4}/>
+            <RecentProducts count={4} />
 
             <h2>🏆 Top ventes</h2>
 
@@ -148,8 +145,7 @@ export default function HomePage() {
 
             {/* Modal du panier */}
             {showCartModal &&
-                createPortal(<Cart onClose={handleCartClose}/>, document.body)}
+                createPortal(<Cart onClose={handleCartClose} />, document.body)}
         </div>
     );
 }
-

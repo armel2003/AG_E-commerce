@@ -1,73 +1,84 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// FICHIER POUR STOCKER NOS PRODUCT
-
 const initialState = {
     items: [],
     totalPrice: 0,
 };
 
 export const cartSlice = createSlice({
-
-name: "cart",
-initialState,
-reducers: {
-createCartItem: (state, action) => {
-    const product = action.payload;
-    const exists = state.items.find(item => item.id === product.id);
-    if (!exists) {
-    // Ajouter le produit avec une quantité de 1
-    state.items.push({ ...product, quantity: 1 });
-    state.totalPrice += Number(product.price); 
-    } else {
-    // Si le produit existe déjà, augmenter la quantité
-    exists.quantity += 1;
-    state.totalPrice += Number(product.price);
-    }
-},
-deleteFromCart: (state, action) => {
-    const productId = action.payload;
-    const removedItem = state.items.find(item => item.id === productId);
-    if (removedItem) {
-    state.items = state.items.filter(item => item.id !== productId);
-    state.totalPrice -= Number(removedItem.price) * removedItem.quantity; 
-    }
-},
-increaseQuantity: (state, action) => {
-    const productId = action.payload;
-    const item = state.items.find(item => item.id === productId);
-    if (item) {
-    item.quantity += 1;
-    state.totalPrice += Number(item.price);
-    }
-},
-decreaseQuantity: (state, action) => {
-    const productId = action.payload;
-    const item = state.items.find(item => item.id === productId);
-    if (item && item.quantity > 1) {
-    item.quantity -= 1;
-    state.totalPrice -= Number(item.price);
-    } else if (item && item.quantity === 1) {
-    // Si la quantité est 1, supprimer complètement l'item
-    state.items = state.items.filter(i => i.id !== productId);
-    state.totalPrice -= Number(item.price);
-    }
-},
-clearCart: (state) => {
-    state.items = [];
-    state.totalPrice = 0;
-},
-},
-
+    name: "cart",
+    initialState,
+    reducers: {
+        createCartItem: (state, action) => {
+            if (!state.items) state.items = [];
+            const product = action.payload;
+            const exists = state.items.find(item => item.id === product.id);
+            if (!exists) {
+                state.items.push({ ...product, quantity: 1 });
+                state.totalPrice += Number(product.price) || 0;
+            } else {
+                exists.quantity += 1;
+                state.totalPrice += Number(product.price) || 0;
+            }
+        },
+        setCartItems: (state, action) => {
+            const payload = action.payload;
+            const items = Array.isArray(payload) ? payload : payload.items ?? [];
+            const cartItems = items.map(item => ({
+                ...item,
+                quantity: item.quantity ?? 1
+            }));
+            const totalPrice =
+                cartItems.reduce(
+                    (sum, item) => sum + (Number(item.price) || 0) * item.quantity,
+                    0
+                );
+            state.items = cartItems;
+            state.totalPrice = totalPrice;
+        },
+        deleteFromCart: (state, action) => {
+            const pid = action.payload;
+            const removed = state.items.find(it => it.id === pid);
+            if (removed) {
+                state.items = state.items.filter(it => it.id !== pid);
+                state.totalPrice -= (Number(removed.price) || 0) * removed.quantity;
+            }
+        },
+        increaseQuantity: (state, action) => {
+            const pid = action.payload;
+            const it = state.items.find(i => i.id === pid);
+            if (it) {
+                it.quantity += 1;
+                state.totalPrice += Number(it.price) || 0;
+            }
+        },
+        decreaseQuantity: (state, action) => {
+            const pid = action.payload;
+            const it = state.items.find(i => i.id === pid);
+            if (it) {
+                if (it.quantity > 1) {
+                    it.quantity -= 1;
+                    state.totalPrice -= Number(it.price) || 0;
+                } else {
+                    state.items = state.items.filter(i => i.id !== pid);
+                    state.totalPrice -= Number(it.price) || 0;
+                }
+            }
+        },
+        clearCart: state => {
+            state.items = [];
+            state.totalPrice = 0;
+        },
+    },
 });
 
 export const {
     createCartItem,
+    setCartItems,
     deleteFromCart,
     increaseQuantity,
     decreaseQuantity,
     clearCart,
-    setCartItems,
 } = cartSlice.actions;
 
 export default cartSlice.reducer;
