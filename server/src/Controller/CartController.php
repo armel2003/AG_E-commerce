@@ -13,7 +13,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class CartController extends AbstractController
 {
-    //ajout article 
+    //ajout article
     #[Route('/cart/{id}', name: 'app_cart', methods: ['POST'])]
     public function index(EntityManagerInterface $entityManager, Product $product): JsonResponse
     {
@@ -39,7 +39,7 @@ final class CartController extends AbstractController
         }
     }
 
-    //supprimer artcile 
+    //supprimer artcile
     #[Route('/cart/{id}', name: 'app_cart_delete', methods: ['DELETE'])]
     public function delete(EntityManagerInterface $entityManager, Product $product): JsonResponse
     {
@@ -63,7 +63,7 @@ final class CartController extends AbstractController
         }
     }
 
-    //affiche panier 
+    //affiche panier
     #[Route('/cart', name: 'app_cart_show', methods: ['GET'])]
     public function show(EntityManagerInterface $entityManager): JsonResponse
     {
@@ -82,7 +82,8 @@ final class CartController extends AbstractController
             $products[] = [
                 'id' => $product->getId(),
                 'name' => $product->getName(),
-                'descriptions' => $product->getDescriptions()
+                'descriptions' => $product->getDescriptions(),
+                'price' => $product->getPrice(),
             ];
         }
         return $this->json($products);
