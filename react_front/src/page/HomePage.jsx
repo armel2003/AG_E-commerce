@@ -83,12 +83,26 @@ export default function HomePage() {
                             Connexion
                         </button>
                     )}
-                    <button
-                        className="account-btn"
-                        onClick={() => navigate(`/account/${localStorage.getItem('userId')}`)}
-                    >
-                        Mon compte
-                    </button>
+                    {user && (
+                        <>
+                            <button
+                                className="account-btn"
+                                onClick={() => navigate(`/account/${localStorage.getItem('userId')}`)}
+                            >
+                                Mon compte
+                            </button>
+                            <button
+                                className="logout-btn"
+                                style={{ marginLeft: 10 }}
+                                onClick={() => {
+                                    localStorage.clear();
+                                    navigate('/');
+                                }}
+                            >
+                                Déconnexion
+                            </button>
+                        </>
+                    )}
                     <button onClick={() => setShowCartModal(true)} className="cart-header-button">
                         🛒 Panier
                         {totalItems > 0 && (

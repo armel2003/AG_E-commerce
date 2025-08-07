@@ -32,7 +32,7 @@ useEffect(() => {
         .then((data) => setProducts(data))
         .catch((err) => console.error(err));
 }, []);
-console.log(token);
+// console.log(token);
 useEffect(() => {
     if (token) {
         fetch("http://localhost:8000/cart", {
@@ -219,7 +219,7 @@ return (
 
         {/* Modal du panier */}
         {showCartModal &&
-            createPortal(<Cart onClose={handleCartClose} />, document.body)}
+            createPortal(<Cart onClose={handleCartClose} products={products} />, document.body)}
     </div>
 );
 }

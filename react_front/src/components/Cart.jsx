@@ -4,15 +4,56 @@ import "../style/cartmodal.css"
 import {useNavigate} from "react-router-dom";
 
 // MODAL DU PANIER
-export default function Cart({onClose}) {
+export default function Cart({onClose, products = []}) {
     const cart = useSelector((state) => state.cart);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    // Fonction pour récupérer l'image du produit
+    const getProductImage = (item) => {
+        if (item.images && item.images.length > 0) {
+            return item.images[0];
+        }
+        const prod = products.find(p => p.id === item.id);
+        return prod?.images?.[0] || 'placeholder.jpg';
+    };
 
     const handleCheckout = () => {
         navigate("/commande");
         onClose();
     };
+
+const token = localStorage.getItem("userToken");
+
+// Supprimer un article du panier côté backend + redux
+const handleRemoveFromCart = async (productId) => {
+    try {
+        await fetch(`http://localhost:8000/cart/${productId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        dispatch(deleteFromCart(productId));
+    } catch (error) {
+        console.error("Erreur suppression article :", error);
+    }
+};
+
+const handleClearCart = async () => {
+    try {
+        await fetch(`http://localhost:8000/cart/empty`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        // Tu peux dispatch(setCartItems([])) ou recréer une action "clearCart"
+        dispatch({ type: "CLEAR_CART" });
+    } catch (error) {
+        console.error("Erreur vidage panier :", error);
+    }
+};
 
     return (
         <div className="cart-overlay" onClick={onClose}>
@@ -32,7 +73,7 @@ export default function Cart({onClose}) {
                             {cart.items.map((item) => (
                                 <li key={item.id} className="cart-item">
                                     <img
-                                        src={item.images?.[0] || 'placeholder.jpg'}
+                                        src={getProductImage(item)}
                                         alt={item.name}
                                         className="cart-item-image"
                                     />
@@ -59,12 +100,19 @@ export default function Cart({onClose}) {
                                         </button>
                                     </div>
 
-                                    <button
+                                    {/* <button
                                         onClick={() => dispatch(deleteFromCart(item.id))}
                                         className="cart-remove-btn"
                                     >
                                         🗑️
+                                            </button> */}
+                                    <button
+                                    onClick={() => handleRemoveFromCart(item.id)}
+                                    className="cart-remove-btn"
+                                    >
+                                    🗑️
                                     </button>
+
                                 </li>
                             ))}
                         </ul>
