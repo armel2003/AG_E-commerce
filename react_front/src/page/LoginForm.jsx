@@ -4,19 +4,19 @@ import axios from 'axios';
 import '../style/LoginForm.css';
 import logo from '../asset/pentakeys_logo.png';
 
-const LoginForm = () => {
+const LoginForm = ({ onLoginSuccess, onClose }) => {
     const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState('');
   const [error, setError] = useState('');
-  const [token, setToken] = useState(null); // Pour gérer le token
+  const [token, setToken] = useState(null); 
 
-  // useEffect pour récupérer le token stocké à chaque chargement du composant
+  
   useEffect(() => {
     const storedToken = localStorage.getItem('userToken');
     setToken(storedToken);
-  }, []); // Cela ne se déclenche qu'une fois, au chargement du composant
+  }, []); 
 
   const handleChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -41,13 +41,20 @@ const LoginForm = () => {
       console.log('Réponse de la connexion :', response.data);
 
       if (response.data.token) {
-        // Enregistrer le token dans localStorage
+     
         localStorage.setItem('userToken', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user)); 
         localStorage.setItem('userId', JSON.stringify(response.data.id)); 
 
-       console.log('Connexion réussie !');
-        navigate('/'); 
+        console.log('Connexion réussie !');
+        
+       
+        if (onLoginSuccess) {
+          onLoginSuccess(response.data.user);
+        } else {
+          
+          navigate('/'); 
+        }
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Une erreur est survenue lors de la connexion');
