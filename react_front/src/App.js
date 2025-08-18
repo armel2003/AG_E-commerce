@@ -16,6 +16,8 @@ import EditArticle from './pageAdmin/EditArticle.jsx';
 import UserManagement from './pageAdmin/UserManagement.jsx';
 import EditCategory from './pageAdmin/EditCategorie.jsx';
 import CreatCategory from './pageAdmin/CreatCategory.jsx';
+import CartePrepayées from './page/Boutique2.jsx';
+
 
 function App() {
     return (
@@ -26,6 +28,7 @@ function App() {
             <Route path="/register" element={<RegisterForm/>}/>
             <Route path="/account/:id" element={<Moncompte/>}/>
             <Route path="/boutique" element={<Boutique/>}/>
+            <Route path="/prepayes" element={<CartePrepayées/>}/>
             <Route path="/product/:id" element={<ProductDetail/>}/>
             <Route path="/commande" element={<Commande/>}/>
 

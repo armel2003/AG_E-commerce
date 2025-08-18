@@ -8,7 +8,7 @@ import "../style/homedacceil.css";
 import { createCartItem, setCartItems } from "../redux/cart";
 import Cart from "../components/Cart";
 
-export default function Boutique() {
+export default function CartePrepayées() {
 const [products, setProducts] = useState([]);
 const [searchTerm, setSearchTerm] = useState("");
 const [sortOption, setSortOption] = useState("price-asc");
@@ -26,12 +26,26 @@ const handleCartClose = () => {
 const totalItems = (cart.items ?? []).reduce((total, item) => total + (item.quantity || 1), 0);
 
 
+useEffect(() => {
+    fetch("http://localhost:8000/product")
+        .then((res) => res.json())
+        .then((data) => setProducts(data))
+        .catch((err) => console.error(err));
+}, []);
+// console.log(token);
 // useEffect(() => {
-//     fetch("http://localhost:8000/product")
-//         .then((res) => res.json())
-//         .then((data) => setProducts(data))
-//         .catch((err) => console.error(err));
-// }, []);
+//     if (token) {
+//         fetch("http://localhost:8000/cart", {
+//             headers: {
+//                 'Authorization': `Bearer ${token}`,
+//             },
+//         })
+//             .then((res) => res.json())
+//             .then((data) => dispatch(setCartItems(data)))
+//             .catch((err) => console.error(err));
+//     }
+// }, [token, dispatch]);
+
 useEffect(() => {
     fetch("http://localhost:8000/product")
         .then((res) => {
@@ -42,26 +56,15 @@ useEffect(() => {
             console.log("Tous les produits récupérés :", data);
             console.log("Premier produit :", data[0]);
 
-            const filtered = data.filter(p => p.category !== "Cartes prépayées");
-            console.log("Produits filtrés (hors catégorie 'Cartes prépayées') :", filtered);
+            const filtered = data.filter(p => p.category === "Cartes prépayées");
+            console.log("Produits filtrés (catégorie 'Cartes prépayées') :", filtered);
 
             setProducts(filtered);
         })
         .catch((err) => console.error("Erreur lors du fetch ou du filtrage :", err));
 }, []);
-// console.log(token);
-useEffect(() => {
-    if (token) {
-        fetch("http://localhost:8000/cart", {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-            },
-        })
-            .then((res) => res.json())
-            .then((data) => dispatch(setCartItems(data)))
-            .catch((err) => console.error(err));
-    }
-}, [token, dispatch]);
+
+
 
 const handleAddToCart = async (product) => {
     try {
@@ -116,9 +119,9 @@ return (
             </div>
 
             <nav className="homepage-nav">
-            <Link to="/" className="nav-link">Acceuil</Link>
-            <Link to="/boutique" className="nav-link">🛒 Clés de jeux</Link>
-            <Link to="/prepayes" className="nav-link">🎁 Cartes prépayées</Link>
+                        <Link to="/" className="nav-link">Acceuil</Link>
+                        <Link to="/boutique" className="nav-link">🛒 Clés de jeux</Link>
+                        <Link to="/prepayes" className="nav-link">🎁 Cartes prépayées</Link>
             </nav>
 
             <div className="search-bar-container" style={{ position: "relative" }}>

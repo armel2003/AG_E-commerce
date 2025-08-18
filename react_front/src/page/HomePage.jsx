@@ -12,8 +12,8 @@ import { Link } from 'react-router-dom';
 const categories = [
     { name: "Clés de jeux", active: true },
     { name: "Cartes", active: false },
-    { name: "Gamer Kits", active: false },
-    { name: "Offres Mystère", active: false },
+    // { name: "Gamer Kits", active: false },
+    // { name: "Offres Mystère", active: false },
 ];
 
 const games = [
@@ -72,9 +72,8 @@ export default function HomePage() {
 
                 <nav className="homepage-nav">
                     <Link to="/" className="nav-link">Acceuil</Link>
-                    <Link to="/boutique" className="nav-link">🛒 Boutique</Link>
-                    <a href="#" className="nav-link">🎮 Kits</a>
-                    <a href="#" className="nav-link">🎁 Clés Mystères</a>
+                    <Link to="/boutique" className="nav-link">🛒 Clés de jeux</Link>
+                    <Link to="/prepayes" className="nav-link">🎁 Cartes prépayées</Link>
                 </nav>
                 <div className="homepage-actions">
                     {!user && (
