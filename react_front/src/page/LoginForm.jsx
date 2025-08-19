@@ -1,253 +1,67 @@
-// import React, { useState, useEffect } from 'react';
-// import { useNavigate } from "react-router-dom";
-// import axios from 'axios';
-// import '../style/LoginForm.css';
-// import logo from '../asset/pentakeys_logo.png';
-// import { ShowCart } from "../service/API_panier";
-// import { useDispatch } from "react-redux";
-// import { clearCart, createCartItem } from "../redux/cart";
-
-
-// const LoginForm = () => {
-//     const navigate = useNavigate();
-//   const [form, setForm] = useState({ email: '', password: '' });
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [focusedField, setFocusedField] = useState('');
-//   const [error, setError] = useState('');
-//   const [token, setToken] = useState(null); // Pour gérer le token
-// //panier 
-// const dispatch = useDispatch();
-
-
-//   // useEffect pour récupérer le token stocké à chaque chargement du composant
-//   useEffect(() => {
-//     const storedToken = localStorage.getItem('userToken');
-//     setToken(storedToken); 
-//   }, []); // Cela ne se déclenche qu'une fois, au chargement du composant
-// ;
-//   const handleChange = e => {
-//     setForm({ ...form, [e.target.name]: e.target.value });
-//     setError('');
-//   };
-
-//   const handleSubmit = async e => {
-//     e.preventDefault();
-//     setIsLoading(true);
-//     setError('');
-
-//     try {
-//       const response = await axios.post('http://localhost:8000/api/login', {
-//         username: form.email,
-//         password: form.password
-//       }, {
-//         headers: {
-//           'Content-Type': 'application/json'
-//         }
-//       });
-
-//       console.log('Réponse de la connexion :', response.data);
-
-//       if (response.data.token) {
-//         // Enregistrer le token dans localStorage
-//         localStorage.setItem('userToken', response.data.token);
-//         console.log(response.data.token);
-//         localStorage.setItem('user', JSON.stringify(response.data.user)); 
-//         localStorage.setItem('userId', JSON.stringify(response.data.id)); 
-//         console.log('Connexion réussie !');
-//         await syncServerCart();
-//         navigate('/'); 
-//       }
-//     } catch (err) {
-//       setError(err.response?.data?.message || 'Une erreur est survenue lors de la connexion');
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-// const syncServerCart = async () => {
-//   try {
-//     const token = localStorage.getItem('userToken');
-//     if (!token) {
-//       console.error('Token manquant');
-//       return;
-//     }
-
-//     const response = await fetch('http://localhost:8000/cart', {
-//       headers: {
-//         'Authorization': `Bearer ${token}`,
-//         'Accept': 'application/json', 
-//       },
-//     });
-
-//     if (!response.ok) {
-//       const errorData = await response.json();
-//       console.error("Erreur HTTP:", errorData);
-//       return;
-//     }
-
-//     const products = await response.json(); 
-//     if (Array.isArray(products)) {
-//       dispatch(clearCart());
-//       products.forEach((product) => {
-//         dispatch(createCartItem(product));
-//       });
-//       console.log("Panier synchronisé depuis le serveur.");
-//     } else {
-//       console.error("Le panier n'est pas un tableau.");
-//     }
-//   } catch (error) {
-//     console.error('Erreur lors de la récupération du panier :', error);
-//   }
-// };
-
-
-//   return (
-//     <div className="login-page">
-//       <div className="login-header">
-//         <div className="logo-container">
-//           <img src={logo} alt="PentaKeys Logo" className="logo-img" />
-//         </div>
-        
-//         <div className="auth-form-container">
-//           <div className="form-background-effect"></div>
-//           <form className="auth-form login-mode" onSubmit={handleSubmit}>
-//             <div className="form-header">
-//               <h2>Connexion</h2>
-//               <div className="form-subtitle">
-//                 Accédez à votre compte PentaKeys
-//               </div>
-//             </div>
-
-//             {error && <div className="error-message">{error}</div>}
-
-//             <div className="input-group">
-//               <div className={`input-wrapper ${focusedField === 'email' ? 'focused' : ''}`}>
-//                 <input
-//                   type="email"
-//                   name="email"
-//                   placeholder="Adresse email"
-//                   value={form.email}
-//                   onChange={handleChange}
-//                   onFocus={() => setFocusedField('email')}
-//                   onBlur={() => setFocusedField('')}
-//                   required
-//                 />
-//                 <div className="input-line"></div>
-//               </div>
-
-//               <div className={`input-wrapper ${focusedField === 'password' ? 'focused' : ''}`}>
-//                 <input
-//                   type="password"
-//                   name="password"
-//                   placeholder="Mot de passe"
-//                   value={form.password}
-//                   onChange={handleChange}
-//                   onFocus={() => setFocusedField('password')}
-//                   onBlur={() => setFocusedField('')}
-//                   required
-//                 />
-//                 <div className="input-line"></div>
-//               </div>
-//             </div>
-
-//             <button 
-//               type="submit" 
-//               className={`auth-btn ${isLoading ? 'loading' : ''}`}
-//               disabled={isLoading}
-//             >
-//               {isLoading ? (
-//                 <div className="loading-spinner">
-//                   <div className="spinner"></div>
-//                   <span>Connexion...</span>
-//                 </div>
-//               ) : (
-//                 <>
-//                   <span>Se connecter</span>
-//                   <div className="btn-glow"></div>
-//                 </>
-//               )}
-//             </button>
-
-//             <div className="form-footer">
-//               <p className="switch-mode" onClick={() => navigate('/register')}>
-//                 Pas encore de compte ? <span className="highlight">S'inscrire</span>
-//               </p>
-              
-//               <p className="forgot-password">
-//                 <span className="link">Mot de passe oublié ?</span>
-//               </p>
-//             </div>
-//           </form>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default LoginForm;
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, {useState, useEffect} from 'react';
+import {useNavigate} from "react-router-dom";
 import axios from 'axios';
 import '../style/LoginForm.css';
 import logo from '../asset/pentakeys_logo.png';
 
-
-const LoginForm = () => {
+const LoginForm = ({ onLoginSuccess, onClose }) => {
     const navigate = useNavigate();
-    const [form, setForm] = useState({email: '', password: ''});
-    const [isLoading, setIsLoading] = useState(false);
-    const [focusedField, setFocusedField] = useState('');
-    const [error, setError] = useState('');
-    const [token, setToken] = useState(null); // Pour gérer le token
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [isLoading, setIsLoading] = useState(false);
+  const [focusedField, setFocusedField] = useState('');
+  const [error, setError] = useState('');
+  const [token, setToken] = useState(null);
 
-    // useEffect pour récupérer le token stocké à chaque chargement du composant
-    useEffect(() => {
-        const storedToken = localStorage.getItem('userToken');
-        setToken(storedToken);
-    }, []); // Cela ne se déclenche qu'une fois, au chargement du composant
 
-    const handleChange = e => {
-        setForm({...form, [e.target.name]: e.target.value});
-        setError('');
-    };
+  useEffect(() => {
+    const storedToken = localStorage.getItem('userToken');
+    setToken(storedToken);
+  }, []);
 
-    const handleSubmit = async e => {
-        e.preventDefault();
-        setIsLoading(true);
-        setError('');
+  const handleChange = e => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+    setError('');
+  };
 
-        try {
-            const response = await axios.post('http://localhost:8000/api/login', {
-                username: form.email,
-                password: form.password
-            }, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+  const handleSubmit = async e => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
 
-            console.log('Réponse de la connexion :', response.data);
+    try {
+      const response = await axios.post('http://localhost:8000/api/login', {
+        username: form.email,
+        password: form.password
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Réponse de la connexion :', response.data);
 
       if (response.data.token) {
-        // Enregistrer le token dans localStorage
+
         localStorage.setItem('userToken', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
-        localStorage.setItem('userId', JSON.stringify(response.data.id)); 
-        console.log('Connexion réussie !');
-        
+        localStorage.setItem('userId', JSON.stringify(response.data.id));
 
-        navigate('/'); 
+        console.log('Connexion réussie !');
+
+
+        if (onLoginSuccess) {
+          onLoginSuccess(response.data.user);
+        } else {
+
+          navigate('/');
+        }
       }
     } catch (err) {
-      const errorMessage = err.response?.data?.message || 'Une erreur est survenue lors de la connexion';
-      setError(errorMessage);
-      console.error("Erreur de connexion:", err);
+      setError(err.response?.data?.message || 'Une erreur est survenue lors de la connexion');
     } finally {
       setIsLoading(false);
     }
   };
-
-
 
     return (
         <div className="login-page">
