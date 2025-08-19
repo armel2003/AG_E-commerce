@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, {useState, useEffect} from 'react';
+import {useNavigate} from "react-router-dom";
 import axios from 'axios';
 import '../style/LoginForm.css';
 import logo from '../asset/pentakeys_logo.png';
@@ -80,70 +80,87 @@ const LoginForm = ({ onLoginSuccess, onClose }) => {
               </div>
             </div>
 
-            {error && <div className="error-message">{error}</div>}
-
-            <div className="input-group">
-              <div className={`input-wrapper ${focusedField === 'email' ? 'focused' : ''}`}>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Adresse email"
-                  value={form.email}
-                  onChange={handleChange}
-                  onFocus={() => setFocusedField('email')}
-                  onBlur={() => setFocusedField('')}
-                  required
-                />
-                <div className="input-line"></div>
-              </div>
-
-              <div className={`input-wrapper ${focusedField === 'password' ? 'focused' : ''}`}>
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Mot de passe"
-                  value={form.password}
-                  onChange={handleChange}
-                  onFocus={() => setFocusedField('password')}
-                  onBlur={() => setFocusedField('')}
-                  required
-                />
-                <div className="input-line"></div>
-              </div>
-            </div>
-
-            <button 
-              type="submit" 
-              className={`auth-btn ${isLoading ? 'loading' : ''}`}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <div className="loading-spinner">
-                  <div className="spinner"></div>
-                  <span>Connexion...</span>
+    return (
+        <div className="login-page">
+            <div className="login-header">
+                <div className="logo-container">
+                    <img src={logo} alt="PentaKeys Logo" className="logo-img"/>
                 </div>
-              ) : (
-                <>
-                  <span>Se connecter</span>
-                  <div className="btn-glow"></div>
-                </>
-              )}
-            </button>
 
-            <div className="form-footer">
-              <p className="switch-mode" onClick={() => navigate('/register')}>
-                Pas encore de compte ? <span className="highlight">S'inscrire</span>
-              </p>
-              
-              <p className="forgot-password">
-                <span className="link">Mot de passe oublié ?</span>
-              </p>
+                <div className="auth-form-container">
+                    <div className="form-background-effect"></div>
+                    <form className="auth-form login-mode" onSubmit={handleSubmit}>
+                        <div className="form-header">
+                            <h2>Connexion</h2>
+                            <div className="form-subtitle">
+                                Accédez à votre compte PentaKeys
+                            </div>
+                        </div>
+
+                        {error && <div className="error-message">{error}</div>}
+
+                        <div className="input-group">
+                            <div className={`input-wrapper ${focusedField === 'email' ? 'focused' : ''}`}>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    placeholder="Adresse email"
+                                    value={form.email}
+                                    onChange={handleChange}
+                                    onFocus={() => setFocusedField('email')}
+                                    onBlur={() => setFocusedField('')}
+                                    required
+                                />
+                                <div className="input-line"></div>
+                            </div>
+
+                            <div className={`input-wrapper ${focusedField === 'password' ? 'focused' : ''}`}>
+                                <input
+                                    type="password"
+                                    name="password"
+                                    placeholder="Mot de passe"
+                                    value={form.password}
+                                    onChange={handleChange}
+                                    onFocus={() => setFocusedField('password')}
+                                    onBlur={() => setFocusedField('')}
+                                    required
+                                />
+                                <div className="input-line"></div>
+                            </div>
+                        </div>
+
+                        <button
+                            type="submit"
+                            className={`auth-btn ${isLoading ? 'loading' : ''}`}
+                            disabled={isLoading}
+                        >
+                            {isLoading ? (
+                                <div className="loading-spinner">
+                                    <div className="spinner"></div>
+                                    <span>Connexion...</span>
+                                </div>
+                            ) : (
+                                <>
+                                    <span>Se connecter</span>
+                                    <div className="btn-glow"></div>
+                                </>
+                            )}
+                        </button>
+
+                        <div className="form-footer">
+                            <p className="switch-mode" onClick={() => navigate('/register')}>
+                                Pas encore de compte ? <span className="highlight">S'inscrire</span>
+                            </p>
+
+                            <p className="forgot-password">
+                                <span className="link">Mot de passe oublié ?</span>
+                            </p>
+                        </div>
+                    </form>
+                </div>
             </div>
-          </form>
         </div>
-      </div>
-    </div>
-  );
+    );
 }
 
 export default LoginForm;

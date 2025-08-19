@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { createPortal } from "react-dom";
+import {useState} from "react";
+import {useSelector} from "react-redux";
+import {createPortal} from "react-dom";
 import Cart from "./Cart";
 import "../style/cartmodal.css";
 
@@ -28,7 +28,7 @@ function FloatingCartButton() {
             </button>
 
             {showModal &&
-                createPortal(<Cart onClose={handleClose} />, document.body)}
+                createPortal(<Cart onClose={handleClose}/>, document.body)}
         </>
     );
 }

@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import '../style/AdminDashboard.css';
 import RecentProducts from '../components/RecentProductAdmin';
-import AllProducts from '../components/all_category';  
-import { useNavigate } from 'react-router-dom';
+import AllProducts from '../components/all_category';
+import {useNavigate} from 'react-router-dom';
 import RecentUsers from '../components/all_user';
 
-function AdminDashboard({ onEditArticle }) {
+function AdminDashboard({onEditArticle}) {
     const navigate = useNavigate();
     const [articles, setArticles] = useState([
-        { id: 1, name: 'Apex Legends - 1000 Coins', price: '€9.99', status: 'Actif', sales: 156 },
-        { id: 2, name: 'Valorant - VP Bundle', price: '€24.99', status: 'Actif', sales: 89 },
-        { id: 3, name: 'CS2 - Operation Pass', price: '€14.99', status: 'Épuisé', sales: 234 },
-        { id: 4, name: 'LoL - RP Premium Pack', price: '€49.99', status: 'Actif', sales: 67 }
+        {id: 1, name: 'Apex Legends - 1000 Coins', price: '€9.99', status: 'Actif', sales: 156},
+        {id: 2, name: 'Valorant - VP Bundle', price: '€24.99', status: 'Actif', sales: 89},
+        {id: 3, name: 'CS2 - Operation Pass', price: '€14.99', status: 'Épuisé', sales: 234},
+        {id: 4, name: 'LoL - RP Premium Pack', price: '€49.99', status: 'Actif', sales: 67}
     ]);
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [articleToDelete, setArticleToDelete] = useState(null);
-    const [message, setMessage] = useState({ type: '', text: '' });
+    const [message, setMessage] = useState({type: '', text: ''});
 
     const stats = {
         totalUsers: 1247,
@@ -26,10 +26,10 @@ function AdminDashboard({ onEditArticle }) {
     };
 
     const recentUsers = [
-        { id: 1, name: 'Alexandre Martin', email: 'alex.martin@email.com', role: 'User', joinDate: '2025-01-20' },
-        { id: 2, name: 'Sophie Dubois', email: 'sophie.d@email.com', role: 'User', joinDate: '2025-01-19' },
-        { id: 3, name: 'Lucas Bernard', email: 'l.bernard@email.com', role: 'User', joinDate: '2025-01-18' },
-        { id: 4, name: 'Emma Rousseau', email: 'emma.r@email.com', role: 'User', joinDate: '2025-01-17' }
+        {id: 1, name: 'Alexandre Martin', email: 'alex.martin@email.com', role: 'User', joinDate: '2025-01-20'},
+        {id: 2, name: 'Sophie Dubois', email: 'sophie.d@email.com', role: 'User', joinDate: '2025-01-19'},
+        {id: 3, name: 'Lucas Bernard', email: 'l.bernard@email.com', role: 'User', joinDate: '2025-01-18'},
+        {id: 4, name: 'Emma Rousseau', email: 'emma.r@email.com', role: 'User', joinDate: '2025-01-17'}
     ];
 
     const handleEditArticle = (articleId) => {
@@ -50,12 +50,12 @@ function AdminDashboard({ onEditArticle }) {
     const confirmDeleteArticle = () => {
         if (articleToDelete) {
             setArticles(prevArticles => prevArticles.filter(article => article.id !== articleToDelete.id));
-            setMessage({ type: 'success', text: `Article "${articleToDelete.name}" supprimé avec succès ! 🗑️` });
+            setMessage({type: 'success', text: `Article "${articleToDelete.name}" supprimé avec succès ! 🗑️`});
             setShowDeleteModal(false);
             setArticleToDelete(null);
-            
+
             setTimeout(() => {
-                setMessage({ type: '', text: '' });
+                setMessage({type: '', text: ''});
             }, 3000);
         }
     };
@@ -75,7 +75,7 @@ function AdminDashboard({ onEditArticle }) {
                         🗑️ Confirmer la suppression
                     </h3>
                     <p className="modal-message">
-                        Êtes-vous sûr de vouloir supprimer l'article <strong>"{articleToDelete.name}"</strong> ?<br />
+                        Êtes-vous sûr de vouloir supprimer l'article <strong>"{articleToDelete.name}"</strong> ?<br/>
                         Cette action est irréversible.
                     </p>
                     <div className="modal-actions">
@@ -94,7 +94,7 @@ function AdminDashboard({ onEditArticle }) {
     return (
         <div className="admin-container">
             {/* Modal de confirmation */}
-            <DeleteConfirmModal />
+            <DeleteConfirmModal/>
 
             {/* En-tête de page */}
             <div className="page-header">
@@ -110,8 +110,8 @@ function AdminDashboard({ onEditArticle }) {
             )}
 
             {/* Actions rapides */}
-            <div className="admin-card" style={{ marginBottom: '2rem' }}>
-                <h3 style={{ color: 'var(--neon-purple)', marginBottom: '1rem' }}>🚀 Actions rapides</h3>
+            <div className="admin-card" style={{marginBottom: '2rem'}}>
+                <h3 style={{color: 'var(--neon-purple)', marginBottom: '1rem'}}>🚀 Actions rapides</h3>
                 <div className="btn-group">
                     <button
                         className="btn btn-primary"
@@ -138,11 +138,11 @@ function AdminDashboard({ onEditArticle }) {
             <div className="grid grid-2">
                 <div className="admin-card">
                     <div className="">
-                        <RecentProducts /> 
+                        <RecentProducts/>
                     </div>
                     <button
                         className="btn btn-secondary btn-small"
-                        style={{ marginTop: '1rem', width: '100%' }}
+                        style={{marginTop: '1rem', width: '100%'}}
                         onClick={() => navigate('/create-article')}
                     >
                         Voir tous les articles
@@ -152,23 +152,23 @@ function AdminDashboard({ onEditArticle }) {
                 {/* Utilisateurs récents */}
                 <div className="admin-card">
                     <div className="">
-                        <RecentUsers /> 
+                        <RecentUsers/>
                     </div>
-                    <button 
-                        className="btn btn-secondary btn-small" 
-                        style={{ marginTop: '1rem', width: '100%' }}
+                    <button
+                        className="btn btn-secondary btn-small"
+                        style={{marginTop: '1rem', width: '100%'}}
                         onClick={() => navigate('/user-management')}
                     >
                         Gérer les utilisateurs
                     </button>
                 </div>
-                    
+
             </div>
 
             {/* Section des produits */}
-            <div className="admin-card" >
-                <h3 style={{ color: 'var(--neon-purple)', marginBottom: '1rem' }}>📦 Tous les category</h3>
-                <AllProducts />
+            <div className="admin-card">
+                <h3 style={{color: 'var(--neon-purple)', marginBottom: '1rem'}}>📦 Tous les category</h3>
+                <AllProducts/>
             </div>
 
         </div>
