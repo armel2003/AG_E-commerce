@@ -192,22 +192,14 @@ return (
                     <option value="popular">Tendances</option>
                 </select>
             </div>
-            <div className="filter-dropdown">
-                <select>
-                    <option>Plateforme</option>
-                    <option value="pc">PC</option>
-                    <option value="xbox">Xbox</option>
-                    <option value="ps">PlayStation</option>
-                </select>
-            </div>
-            <div className="filter-dropdown">
+            {/* <div className="filter-dropdown">
                 <select>
                     <option>Genre</option>
                     <option value="fps">FPS</option>
                     <option value="rpg">RPG</option>
                     <option value="strat">Stratégie</option>
                 </select>
-            </div>
+            </div> */}
         </div>
 
         <section className="boutique-products">
