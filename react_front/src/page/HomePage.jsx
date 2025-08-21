@@ -10,8 +10,8 @@ import logo from "../asset/logo.png";
 import { Link } from 'react-router-dom';
 
 const categories = [
-    { name: "Clés de jeux", active: true },
-    { name: "Cartes", active: false },
+    // { name: "Clés de jeux", active: true },
+    // { name: "Cartes", active: false },
     // { name: "Gamer Kits", active: false },
     // { name: "Offres Mystère", active: false },
 ];
@@ -71,7 +71,7 @@ export default function HomePage() {
                 </div>
 
                 <nav className="homepage-nav">
-                    <Link to="/" className="nav-link">Acceuil</Link>
+                    <Link to="/" className="nav-link">Accueil</Link>
                     <Link to="/boutique" className="nav-link">🛒 Clés de jeux</Link>
                     <Link to="/prepayes" className="nav-link">🎁 Cartes prépayées</Link>
                 </nav>
@@ -90,7 +90,7 @@ export default function HomePage() {
                             >
                                 Mon compte
                             </button>
-                            <button
+                            {/* <button
                                 className="logout-btn"
                                 style={{ marginLeft: 10 }}
                                 onClick={() => {
@@ -99,7 +99,7 @@ export default function HomePage() {
                                 }}
                             >
                                 Déconnexion
-                            </button>
+                            </button> */}
                         </>
                     )}
                     <button onClick={() => setShowCartModal(true)} className="cart-header-button">
@@ -130,7 +130,7 @@ export default function HomePage() {
             </div>
 
             {/* Games grid */}
-            <h2>🔥 Jeux en vedette</h2>
+            {/* <h2>🔥 Jeux en vedette</h2>
             <div className="homepage-grid">
                 {games.map((game) => (
                     <div className="homepage-card" key={game.name}>
@@ -143,7 +143,7 @@ export default function HomePage() {
                         <p>{game.name}</p>
                     </div>
                 ))}
-            </div>
+            </div> */}
 
             {/* Composant pour produits similaires */}
             <h2>🎯 Tous nos produits</h2>
@@ -152,9 +152,8 @@ export default function HomePage() {
             <h2>⚡ Nouvelles sorties</h2>
             <RecentProducts count={4} />
 
-            <h2>🏆 Top ventes</h2>
+            {/* <h2>🏆 Top ventes</h2> */}
 
-            <h2>🤝 Nos plateformes Partenaires</h2>
 
             {/* Modal du panier */}
             {showCartModal &&
