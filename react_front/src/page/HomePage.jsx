@@ -71,7 +71,7 @@ export default function HomePage() {
                 </div>
 
                 <nav className="homepage-nav">
-                    <Link to="/" className="nav-link">Accueil</Link>
+                    <Link to="/" className="nav-link">Accueil </Link>
                     <Link to="/boutique" className="nav-link">🛒 Clés de jeux</Link>
                     <Link to="/prepayes" className="nav-link">🎁 Cartes prépayées</Link>
                 </nav>
