@@ -125,8 +125,11 @@ function AdminDashboard({onEditArticle}) {
                     >
                         👥 Gérer les utilisateurs
                     </button>
-                    <button className="btn btn-secondary">
-                        📊 Voir les rapports
+                    <button 
+                    className="btn btn-secondary"
+                    onClick={() => navigate('/admin/promo')}
+                    >
+                        🎁Gérer les Promos
                     </button>
                     <button className="btn btn-secondary">
                         ⚙️ Paramètres
