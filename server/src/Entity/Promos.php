@@ -15,7 +15,7 @@ class Promos
 
     #[ORM\ManyToOne(inversedBy: 'promos')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?product $product_id = null;
+    private ?Product $product_id = null;
 
     #[ORM\Column(nullable: true)]
     private ?float $value = null;

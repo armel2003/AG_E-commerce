@@ -3,79 +3,114 @@
 namespace App\Controller;
 
 use App\Entity\Promos;
-use App\Form\PromosType;
+use App\Entity\Product;
 use App\Repository\PromosRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/promos')]
 final class PromosController extends AbstractController
 {
-    #[Route(name: 'app_promos_index', methods: ['GET'])]
-    public function index(PromosRepository $promosRepository): Response
+    //tous les promos 
+    #[Route('', name: 'promos_index', methods: ['GET'])]
+    public function index(PromosRepository $promosRepository): JsonResponse
     {
-        return $this->render('promos/index.html.twig', [
-            'promos' => $promosRepository->findAll(),
+        $promos = $promosRepository->findAll();
+
+        $data = [];
+        foreach ($promos as $promo) {
+            $data[] = [
+                'id' => $promo->getId(),
+                'value' => $promo->getValue(),
+                'product' => $promo->getProductId()?->getId(),
+                'product_name' => $promo->getProductId()?->getName()
+            ];
+        }
+
+        return new JsonResponse($data);
+    }
+    //detail promo 
+    #[Route('/show/{id}', name: 'promos_show', methods: ['GET'])]
+    public function show(Promos $promo): JsonResponse
+    {
+        return new JsonResponse([
+            'id' => $promo->getId(),
+            'value' => $promo->getValue(),
+            'product' => $promo->getProductId()?->getId(),
+            'product_name' => $promo->getProductId()?->getName()
         ]);
     }
-
-    #[Route('/new', name: 'app_promos_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    //create promos 
+    #[Route('/create', name: 'promos_create', methods: ['POST'])]
+    public function create(Request $request, EntityManagerInterface $em): JsonResponse
     {
+        $data = json_decode($request->getContent(), true);
+
+        if (!isset($data['value'], $data['product_id'])) {
+            return new JsonResponse(['error' => 'Valeur ou produit manquant'], 400);
+        }
+
+        $value = (float) $data['value'];
+        if ($value < 0 || $value > 1) {
+            return new JsonResponse(['error' => 'La réduction doit être comprise entre 0 et 1'], 400);
+        }
+
+        $product = $em->getRepository(Product::class)->find($data['product_id']);
+        if (!$product) {
+            return new JsonResponse(['error' => 'Produit non trouvé'], 404);
+        }
+
         $promo = new Promos();
-        $form = $this->createForm(PromosType::class, $promo);
-        $form->handleRequest($request);
+        $promo->setValue($value);
+        $promo->setProductId($product);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($promo);
-            $entityManager->flush();
+        $em->persist($promo);
+        $em->flush();
 
-            return $this->redirectToRoute('app_promos_index', [], Response::HTTP_SEE_OTHER);
+        return new JsonResponse([
+            'message' => 'Promo créée',
+            'promo' => [
+                'id' => $promo->getId(),
+                'value' => $promo->getValue(),
+                'product' => $product->getId(),
+            ]
+        ], 201);
+    }
+    //update promo
+    #[Route('/update/{id}', name: 'promos_update', methods: ['PATCH'])]
+    public function update(Request $request, Promos $promo, EntityManagerInterface $em): JsonResponse
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if (isset($data['value'])) {
+            $value = (float) $data['value'];
+            if ($value < 0 || $value > 1) {
+                return new JsonResponse(['error' => 'La réduction doit être entre 0 et 1'], 400);
+            }
+            $promo->setValue($value);
         }
 
-        return $this->render('promos/new.html.twig', [
-            'promo' => $promo,
-            'form' => $form,
+        $em->flush();
+
+        return new JsonResponse([
+            'message' => 'Promo mise à jour',
+            'promo' => [
+                'id' => $promo->getId(),
+                'value' => $promo->getValue(),
+                'product' => $promo->getProductId()?->getId()
+            ]
         ]);
     }
-
-    #[Route('/{id}', name: 'app_promos_show', methods: ['GET'])]
-    public function show(Promos $promo): Response
+    //supprimer promo
+    #[Route('/delete/{id}', name: 'promos_delete', methods: ['DELETE'])]
+    public function delete(Promos $promo, EntityManagerInterface $em): JsonResponse
     {
-        return $this->render('promos/show.html.twig', [
-            'promo' => $promo,
-        ]);
-    }
+        $em->remove($promo);
+        $em->flush();
 
-    #[Route('/{id}/edit', name: 'app_promos_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Promos $promo, EntityManagerInterface $entityManager): Response
-    {
-        $form = $this->createForm(PromosType::class, $promo);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_promos_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('promos/edit.html.twig', [
-            'promo' => $promo,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_promos_delete', methods: ['POST'])]
-    public function delete(Request $request, Promos $promo, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$promo->getId(), $request->getPayload()->getString('_token'))) {
-            $entityManager->remove($promo);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_promos_index', [], Response::HTTP_SEE_OTHER);
+        return new JsonResponse(null, 204);
     }
 }
