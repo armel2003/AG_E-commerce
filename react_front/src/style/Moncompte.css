@@ -134,6 +134,10 @@
   background: linear-gradient(45deg, var(--accent-orange), #fb923c);
 }
 
+.action-btn.orders {
+  background: linear-gradient(45deg, var(--accent-green), #34d399);
+}
+
 .action-btn.logout {
   background: linear-gradient(45deg, var(--accent-red), #f87171);
 }
@@ -145,6 +149,10 @@
 
 .action-btn.admin:hover {
   box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+}
+
+.action-btn.orders:hover {
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
 }
 
 .action-btn.logout:hover {

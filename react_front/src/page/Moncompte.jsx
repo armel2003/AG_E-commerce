@@ -227,6 +227,12 @@ function Moncompte() {
 
                 {/* Actions */}
                 <div className='account-actions'>
+                    <button
+                        onClick={() => navigate('/suivi-commandes')}
+                        className='action-btn orders'
+                    >
+                        📋 Mes Commandes
+                    </button>
                     {isAdmin && (
                         <button
                             onClick={() => navigate('/admin')}

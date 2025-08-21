@@ -6,6 +6,7 @@ import HomePage from './page/HomePage.jsx';
 import LoginForm from './page/LoginForm.jsx';
 import RegisterForm from './page/RegisterForm.jsx';
 import Moncompte from './page/Moncompte.jsx';
+import SuiviCommande from './page/SuiviCommande.jsx';
 import Boutique from './page/Boutique.jsx';
 import Commande from './page/commande.jsx';
 // admin
@@ -27,6 +28,7 @@ function App() {
             <Route path="/login" element={<LoginForm/>}/>
             <Route path="/register" element={<RegisterForm/>}/>
             <Route path="/account/:id" element={<Moncompte/>}/>
+            <Route path="/suivi-commandes" element={<SuiviCommande/>}/>
             <Route path="/boutique" element={<Boutique/>}/>
             <Route path="/prepayes" element={<CartePrepayées/>}/>
             <Route path="/product/:id" element={<ProductDetail/>}/>
