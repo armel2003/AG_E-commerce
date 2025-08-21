@@ -26,7 +26,9 @@ const RecentProducts = ({count = 4}) => {
         navigate(`${productId}/edit`);
     };
 
-
+//   const handleAddPromo = (productId) => {
+//         navigate(`${productId}/manager/promo`);
+//     };
     const handleDeleteProduct = async (productId) => {
         if (!window.confirm(" Êtes-vous sûr de vouloir supprimer ce produit ?")) {
             return;
@@ -112,6 +114,16 @@ const RecentProducts = ({count = 4}) => {
                                     >
                                         🗑️ Supprimer
                                     </button>
+                                     {/* <button
+                                        className="btn-edit"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleAddPromo(prod.id);
+                                        }}
+                                        title="Ajouter une promo"
+                                    >
+                                        🎁 Promo
+                                    </button> */}
                                 </div>
                             </div>
                         </div>

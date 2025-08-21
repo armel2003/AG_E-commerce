@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import '../style/AdminDashboard.css';
 import RecentProducts from '../components/RecentProductAdmin';
-import AllProducts from '../components/all_category';
+import Allcategory from '../components/all_category';
 import {useNavigate} from 'react-router-dom';
 import RecentUsers from '../components/all_user';
 
@@ -171,7 +171,7 @@ function AdminDashboard({onEditArticle}) {
             {/* Section des produits */}
             <div className="admin-card">
                 <h3 style={{color: 'var(--neon-purple)', marginBottom: '1rem'}}>📦 Tous les category</h3>
-                <AllProducts/>
+                <Allcategory/>
             </div>
 
         </div>

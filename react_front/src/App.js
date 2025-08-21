@@ -18,6 +18,7 @@ import EditCategory from './pageAdmin/EditCategorie.jsx';
 import CreatCategory from './pageAdmin/CreatCategory.jsx';
 import CartePrepayées from './page/Boutique2.jsx';
 import Promo from './pageAdmin/promos.jsx';
+import PromoManager from './pageAdmin/CreatePromo.jsx';
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
                 <Route path=":id/category/edit" element={<EditCategory/>}/>
                 <Route path="user-management" element={<UserManagement/>}/>
                 <Route path="promo" element={<Promo/>}/>
+                <Route path=":id/manager/promo" element={<PromoManager/>}/>
             </Route>
 
             {/* Redirections */}
