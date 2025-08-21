@@ -39,10 +39,17 @@ class Product
     #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: false)]
     private ?Category $category = null;
 
+    /**
+     * @var Collection<int, Promos>
+     */
+    #[ORM\OneToMany(targetEntity: Promos::class, mappedBy: 'product_id')]
+    private Collection $promos;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->created_at = new \DateTimeImmutable();
+        $this->promos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -135,6 +142,36 @@ class Product
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Promos>
+     */
+    public function getPromos(): Collection
+    {
+        return $this->promos;
+    }
+
+    public function addPromo(Promos $promo): static
+    {
+        if (!$this->promos->contains($promo)) {
+            $this->promos->add($promo);
+            $promo->setProductId($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromo(Promos $promo): static
+    {
+        if ($this->promos->removeElement($promo)) {
+            // set the owning side to null (unless already changed)
+            if ($promo->getProductId() === $this) {
+                $promo->setProductId(null);
+            }
+        }
 
         return $this;
     }
