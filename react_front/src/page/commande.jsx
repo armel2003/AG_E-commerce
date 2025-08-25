@@ -1,238 +1,220 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { clearCart } from '../redux/cart';
-import LoginForm from './LoginForm';
-import '../style/commande.css';
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { clearCart } from "../redux/cart";
+import LoginForm from "./LoginForm";
+import "../style/commande.css";
 
 export default function Commande() {
-  const cart = useSelector((state) => state.cart);
+  const cart = useSelector(s => s.cart);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showLoginForm, setShowLoginForm] = useState(false);
-  const [formData, setFormData] = useState({
-    email: '',
-    firstName: '',
-    lastName: '',
-    cardNumber: '',
-    expiryDate: '',
-    cvv: ''
-  });
-  const [orderProcessing, setOrderProcessing] = useState(false);
 
-  // Vérifier si l'utilisateur est connecté
+  const [isLogged, setIsLogged] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
+  const [showLogin, setShowLogin] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName]   = useState("");
+  const [address, setAddress]     = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
+  const [cvv, setCvv] = useState("");
+
+  const [errors, setErrors] = useState({});
+
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const user = localStorage.getItem('user');
-    if (token && user) {
-      setIsLoggedIn(true);
-      const userInfo = JSON.parse(user);
-      setFormData(prev => ({
-        ...prev,
-        email: userInfo.email || '',
-        firstName: userInfo.firstName || '',
-        lastName: userInfo.lastName || ''
-      }));
+    const token = localStorage.getItem("userToken");
+    let email = "";
+    try {
+      const raw = JSON.parse(localStorage.getItem("user") || "null");
+      email = typeof raw === "string" ? raw : raw?.email || "";
+    } catch {
+      const raw = localStorage.getItem("user");
+      if (raw && !raw.startsWith("{")) email = raw;
     }
+    if (token) { setIsLogged(true); setUserEmail(email || ""); }
   }, []);
 
-  // Rediriger si le panier est vide
-  useEffect(() => {
-    if (cart.items.length === 0) {
-      navigate('/boutique');
-    }
-  }, [cart.items, navigate]);
-
-  const handleOrder = async () => {
-    if (!formData.email || !formData.firstName || !formData.lastName) {
-      alert('Veuillez remplir tous les champs obligatoires');
-      return;
-    }
-    
-    setOrderProcessing(true);
-    
-    try {
-      // Simulation d'un appel API
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Vider le panier après commande réussie
-      dispatch(clearCart());
-      
-      alert('Commande confirmée ! Merci pour votre achat.');
-      navigate('/');
-    } catch (error) {
-      alert('Erreur lors du traitement de la commande');
-    } finally {
-      setOrderProcessing(false);
-    }
+  const validate = () => {
+    const e = {};
+    if (!firstName) e.firstName = "Prénom obligatoire.";
+    if (!lastName)  e.lastName  = "Nom obligatoire.";
+    if (!address)   e.address   = "Adresse obligatoire.";
+    if (!/^\d{16}$/.test(String(cardNumber).replace(/\s/g, ""))) e.cardNumber = "Numéro invalide.";
+    if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) e.expiryDate = "Format MM/AA.";
+    if (!/^\d{3,4}$/.test(cvv)) e.cvv = "CVV invalide.";
+    setErrors(e);
+    return Object.keys(e).length === 0;
   };
 
-  const handleInputChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const pay = async () => {
+    if (!validate()) return;
+    setLoading(true);
+    await new Promise(r => setTimeout(r, 600));
+    dispatch(clearCart());
+    setShowSuccess(true);
+    setTimeout(() => navigate("/"), 1500);
+    setLoading(false);
   };
 
-  const handleLoginSuccess = (userData) => {
-    setIsLoggedIn(true);
-    setShowLoginForm(false);
-    setFormData(prev => ({
-      ...prev,
-      email: userData.email || '',
-      firstName: userData.firstName || '',
-      lastName: userData.lastName || ''
-    }));
+  const onLoginSuccess = payload => {
+    const u = payload?.user ?? payload;
+    const email = typeof u === "string" ? u : u?.email || "";
+    setIsLogged(true); setUserEmail(email); setShowLogin(false);
   };
 
-  if (cart.items.length === 0) {
-    return null;
-  }
+  const total = Number(cart.totalPrice || 0);
+  const payable = (total * 1.02).toFixed(2);
 
   return (
     <div className="commande-container">
       <div className="commande-header">
         <h1 className="commande-title">Finaliser ma commande</h1>
       </div>
-      
+
       <div className="commande-content">
-        {/* Formulaire simple */}
         <div className="order-form">
-          {/* Option de connexion simple */}
-          {!isLoggedIn && (
+          {!isLogged ? (
             <div className="login-section">
-              <p>Vous avez un compte ?</p>
-              <button 
-                className="btn btn-secondary"
-                onClick={() => setShowLoginForm(true)}
-              >
+              <p>Connecte-toi pour commander :</p>
+              <button className="btn btn-secondary" onClick={() => setShowLogin(true)}>
                 Se connecter
+              </button>
+            </div>
+          ) : (
+            <div className="user-profile">
+              <h3 className="section-title">Profil connecté</h3>
+              <div>Email : {userEmail || "—"}</div>
+              <button
+                className="btn btn-secondary"
+                onClick={() => {
+                  localStorage.removeItem("userToken");
+                  localStorage.removeItem("user");
+                  setIsLogged(false);
+                  setUserEmail("");
+                  setFirstName(""); setLastName(""); setAddress("");
+                  setCardNumber(""); setExpiryDate(""); setCvv("");
+                }}
+              >
+                Se déconnecter
               </button>
             </div>
           )}
 
-          {/* Informations essentielles */}
           <div className="form-section">
-            <h2 className="section-title">Vos informations</h2>
-            
+            <h2 className="section-title">Informations de livraison</h2>
+            <div className="form-row">
+              <div>
+                <input
+                  className={`form-input${errors.firstName ? " error" : ""}`}
+                  placeholder="Prénom *"
+                  value={firstName}
+                  onChange={e=>setFirstName(e.target.value)}
+                />
+                {errors.firstName && <div className="error-text">{errors.firstName}</div>}
+              </div>
+              <div>
+                <input
+                  className={`form-input${errors.lastName ? " error" : ""}`}
+                  placeholder="Nom *"
+                  value={lastName}
+                  onChange={e=>setLastName(e.target.value)}
+                />
+                {errors.lastName && <div className="error-text">{errors.lastName}</div>}
+              </div>
+            </div>
             <div className="form-group">
               <input
-                type="email"
-                className="form-input"
-                placeholder="Email *"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
-                required
+                className={`form-input${errors.address ? " error" : ""}`}
+                placeholder="Adresse *"
+                value={address}
+                onChange={e=>setAddress(e.target.value)}
               />
-            </div>
-
-            <div className="form-row">
-              <input
-                type="text"
-                className="form-input"
-                placeholder="Prénom *"
-                value={formData.firstName}
-                onChange={(e) => handleInputChange('firstName', e.target.value)}
-                required
-              />
-              <input
-                type="text"
-                className="form-input"
-                placeholder="Nom *"
-                value={formData.lastName}
-                onChange={(e) => handleInputChange('lastName', e.target.value)}
-                required
-              />
+              {errors.address && <div className="error-text">{errors.address}</div>}
             </div>
           </div>
 
-          {/* Paiement simplifié */}
           <div className="form-section">
             <h2 className="section-title">Paiement</h2>
-            
             <div className="form-group">
               <input
-                type="text"
-                className="form-input"
+                className={`form-input${errors.cardNumber ? " error" : ""}`}
                 placeholder="Numéro de carte *"
-                value={formData.cardNumber}
-                onChange={(e) => handleInputChange('cardNumber', e.target.value)}
-                required
+                value={cardNumber}
+                onChange={e=>setCardNumber(e.target.value)}
               />
+              {errors.cardNumber && <div className="error-text">{errors.cardNumber}</div>}
             </div>
-
             <div className="form-row">
-              <input
-                type="text"
-                className="form-input"
-                placeholder="MM/AA *"
-                value={formData.expiryDate}
-                onChange={(e) => handleInputChange('expiryDate', e.target.value)}
-                required
-              />
-              <input
-                type="text"
-                className="form-input"
-                placeholder="CVV *"
-                value={formData.cvv}
-                onChange={(e) => handleInputChange('cvv', e.target.value)}
-                required
-              />
+              <div>
+                <input
+                  className={`form-input${errors.expiryDate ? " error" : ""}`}
+                  placeholder="MM/AA *"
+                  value={expiryDate}
+                  onChange={e=>setExpiryDate(e.target.value)}
+                />
+                {errors.expiryDate && <div className="error-text">{errors.expiryDate}</div>}
+              </div>
+              <div>
+                <input
+                  className={`form-input${errors.cvv ? " error" : ""}`}
+                  placeholder="CVV *"
+                  value={cvv}
+                  onChange={e=>setCvv(e.target.value)}
+                />
+                {errors.cvv && <div className="error-text">{errors.cvv}</div>}
+              </div>
             </div>
           </div>
-
-          <button 
-            className="btn order-button"
-            onClick={handleOrder}
-            disabled={orderProcessing}
-          >
-            {orderProcessing ? 'Traitement...' : `Commander - ${cart.totalPrice.toFixed(2)} €`}
-          </button>
         </div>
 
-        {/* Résumé du panier simple */}
         <div className="cart-summary">
           <h2 className="section-title">Ma commande</h2>
-          
           <div className="cart-items">
-            {cart.items.map((item) => (
-              <div key={item.id} className="cart-item">
-                <img 
-                  src={item.images?.[0] || '/placeholder.jpg'} 
-                  alt={item.name}
-                  className="item-image"
-                />
-                <div className="item-details">
-                  <div className="item-name">{item.name}</div>
-                  <div className="item-quantity">x{item.quantity}</div>
-                  <div className="item-price">{(item.price * item.quantity).toFixed(2)} €</div>
-                </div>
+            {cart.items?.length ? cart.items.map(it => (
+              <div key={it.id} className="cart-item">
+                <span className="item-name">{it.name}</span>
+                <span className="item-quantity">x{it.quantity}</span>
+                <span className="item-price">{(it.price * it.quantity).toFixed(2)} €</span>
               </div>
-            ))}
+            )) : <div className="cart-item">Panier vide</div>}
           </div>
-
           <div className="total-section">
-            <div className="total-final">
-              <span>Total:</span>
-              <span>{cart.totalPrice.toFixed(2)} €</span>
-            </div>
+            <div className="total-final"><span>Sous-total :</span><span>{total.toFixed(2)} €</span></div>
+            <div className="total-final"><span>Frais de transaction (2%) :</span><span>{(total*0.02).toFixed(2)} €</span></div>
+            <div className="total-final total-bold"><span>Total à payer :</span><span>{payable} €</span></div>
           </div>
+          <button
+            className="btn order-button"
+            onClick={pay}
+            disabled={loading || showSuccess || !cart.items?.length}
+          >
+            {loading ? "Traitement..." : `Payer - ${payable} €`}
+          </button>
         </div>
       </div>
 
-      {/* Formulaire de connexion complet */}
-      {showLoginForm && (
+      {showSuccess && (
+        <div className="auth-modal">
+          <div className="modal-content">
+            <div className="modal-header">
+              <div className="modal-title">Merci pour votre achat !</div>
+            </div>
+            <p style={{color:"var(--text-secondary)"}}>
+              Paiement validé. Redirection…
+            </p>
+          </div>
+        </div>
+      )}
+
+      {showLogin && (
         <div className="login-overlay">
           <div className="login-container">
-            <button 
-              className="close-login-btn"
-              onClick={() => setShowLoginForm(false)}
-            >
-              ✕
-            </button>
-            <LoginForm 
-              onLoginSuccess={handleLoginSuccess}
-              onClose={() => setShowLoginForm(false)}
-            />
+            <button className="close-login-btn" onClick={() => setShowLogin(false)}>✕</button>
+            <LoginForm onLoginSuccess={onLoginSuccess} onClose={() => setShowLogin(false)} />
           </div>
         </div>
       )}
