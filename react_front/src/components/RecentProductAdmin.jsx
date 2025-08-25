@@ -1,24 +1,52 @@
-import React, {useEffect, useState} from 'react';
-import {useNavigate} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const RecentProducts = ({count = 4}) => {
+const RecentProducts = ({ count = 4 }) => {
     const [loading, setLoading] = useState(true);
     const [products, setProducts] = useState([]);
+    const [promos, setPromos] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch('http://localhost:8000/product')
-            .then(response => response.json())
-            .then(data => {
-                console.log('✅ Tous les produits récupérés depuis l\'API :', data);
-                const sorted = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-                setProducts(sorted.slice(0, count));
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const [productsRes, promosRes] = await Promise.all([
+                    fetch('http://localhost:8000/product'),
+                    fetch('http://localhost:8000/promos')
+                ]);
+
+                const productsData = await productsRes.json();
+                const promosData = await promosRes.json();
+
+                const sorted = productsData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                // Appliquer les promotions
+                const enrichedProducts = sorted.map(prod => {
+                    const promo = promosData.find(p => p.product === prod.id);
+                    if (promo) {
+                        const originalPrice = parseFloat(prod.price);
+                        const discounted = (originalPrice * (1 - promo.value)).toFixed(2);
+                        return {
+                            ...prod,
+                            isPromo: true,
+                            discountedPrice: discounted,
+                            promoValue: promo.value
+                        };
+                    }
+                    return prod;
+                });
+
+                setProducts(enrichedProducts.slice(0, count));
+                setPromos(promosData);
+            } catch (error) {
+                console.error('Erreur lors du chargement des produits ou promotions :', error);
+            } finally {
                 setLoading(false);
-            })
-            .catch(error => {
-                console.error('Erreur lors du chargement des produits :', error);
-                setLoading(false);
-            });
+            }
+        };
+
+        fetchData();
     }, [count]);
 
     const handleEditProduct = (productId) => {
@@ -26,11 +54,8 @@ const RecentProducts = ({count = 4}) => {
         navigate(`${productId}/edit`);
     };
 
-//   const handleAddPromo = (productId) => {
-//         navigate(`${productId}/manager/promo`);
-//     };
     const handleDeleteProduct = async (productId) => {
-        if (!window.confirm(" Êtes-vous sûr de vouloir supprimer ce produit ?")) {
+        if (!window.confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
             return;
         }
 
@@ -49,23 +74,22 @@ const RecentProducts = ({count = 4}) => {
             }
 
             if (response.ok) {
-                alert(data?.message || " Produit supprimé avec succès !");
+                alert(data?.message || "Produit supprimé avec succès !");
                 window.location.reload();
             } else {
-                alert("  erreur.");
+                alert("Erreur lors de la suppression.");
             }
         } catch (error) {
-            alert(" Une erreur réseau .");
+            alert("Une erreur réseau est survenue.");
         }
     };
-
 
     if (loading) return <p>Chargement...</p>;
 
     return (
         <div className="">
             <div className="">
-                <h3 style={{color: 'var(--neon-purple)', marginBottom: '1rem'}}>🎮 Produits</h3>
+                <h3 style={{ color: 'var(--neon-purple)', marginBottom: '1rem' }}>🎮 Produits</h3>
                 <div className="table-container">
                     {products.map(prod => (
                         <div
@@ -80,19 +104,31 @@ const RecentProducts = ({count = 4}) => {
                             }}
                             onClick={() => navigate(`/product/${prod.id}`)}
                         >
-                            <div style={{flex: 1}}>
-                                <div style={{fontWeight: '500', marginBottom: '0.25rem'}}>
-                                    {prod.name}
+                            <div style={{ flex: 1 }}>
+                                <div style={{ fontWeight: '500', marginBottom: '0.25rem' }}>
+                                    {prod.name}{" "}
+                                    {prod.isPromo && <span title="En promotion">🎁</span>}
+                                    {prod.isNew && <span title="Nouveau produit" style={{ marginLeft: '5px' }}>🆕</span>}
                                 </div>
-                                <div style={{fontSize: '0.85rem', color: 'var(--text-secondary)'}}>
-                                    {prod.price} € • {prod.sales || 0} ventes
+                                <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                                    {prod.isPromo ? (
+                                        <>
+                                            <span style={{ textDecoration: 'line-through', color: 'gray' }}>
+                                                {prod.price} €
+                                            </span>{" "}
+                                            <span style={{ color: 'red', fontWeight: 'bold' }}>
+                                                {prod.discountedPrice} €
+                                            </span>
+                                        </>
+                                    ) : (
+                                        <>{prod.price} €</>
+                                    )}
                                 </div>
                             </div>
-
-                            <div style={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-        <span className={`badge ${prod.status === 'Actif' ? 'badge-user' : 'badge-pending'}`}>
-            {prod.stock > 0 ? prod.stock : 'Rupture de stock'}
-        </span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                                <span className={`badge ${prod.status === 'Actif' ? 'badge-user' : 'badge-pending'}`}>
+                                    {prod.stock > 0 ? prod.stock : 'Rupture de stock'}
+                                </span>
                                 <div className="article-actions">
                                     <button
                                         className="btn-edit"
@@ -114,16 +150,6 @@ const RecentProducts = ({count = 4}) => {
                                     >
                                         🗑️ Supprimer
                                     </button>
-                                     {/* <button
-                                        className="btn-edit"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleAddPromo(prod.id);
-                                        }}
-                                        title="Ajouter une promo"
-                                    >
-                                        🎁 Promo
-                                    </button> */}
                                 </div>
                             </div>
                         </div>

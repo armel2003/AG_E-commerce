@@ -219,13 +219,10 @@ function Moncompte() {
     return (
         <div className='account-page'>
             <div className='account-container'>
-                {/* Header */}
                 <div className='account-header'>
                     <h1 className='account-title'>🎮 Mon Compte</h1>
                     <p className='account-subtitle'>Gérez vos informations personnelles</p>
                 </div>
-
-                {/* Actions */}
                 <div className='account-actions'>
                     {isAdmin && (
                         <button
@@ -242,8 +239,6 @@ function Moncompte() {
                         Se déconnecter
                     </button>
                 </div>
-
-                {/* Messages d'erreur et de succès */}
                 {error && (
                     <div className='message error'>
                         ⚠️ {error}
@@ -255,10 +250,7 @@ function Moncompte() {
                         ✅ {successMessage}
                     </div>
                 )}
-
-                {/* Formulaire */}
                 <form onSubmit={handleUpdate} className='account-form'>
-                    {/* Informations personnelles */}
                     <div className='form-section'>
                         <h3 className='section-title'>
                             👤 Informations personnelles
@@ -278,7 +270,6 @@ function Moncompte() {
                                     required
                                 />
                             </div>
-
                             <div className='form-field'>
                                 <label className='form-label'>
                                     Nom <span className='required'>*</span>
@@ -293,7 +284,6 @@ function Moncompte() {
                                 />
                             </div>
                         </div>
-
                         <div className='form-grid single'>
                             <div className='form-field'>
                                 <label className='form-label'>
@@ -310,13 +300,10 @@ function Moncompte() {
                             </div>
                         </div>
                     </div>
-
-                    {/* Adresse */}
                     <div className='form-section'>
                         <h3 className='section-title'>
                             Adresse
                         </h3>
-
                         <div className='form-grid single'>
                             <div className='form-field'>
                                 <label className='form-label'>
@@ -331,7 +318,6 @@ function Moncompte() {
                                 />
                             </div>
                         </div>
-
                         <div className='form-grid'>
                             <div className='form-field'>
                                 <label className='form-label'>
@@ -345,7 +331,6 @@ function Moncompte() {
                                     placeholder="75001"
                                 />
                             </div>
-
                             <div className='form-field'>
                                 <label className='form-label'>
                                     Ville
@@ -359,7 +344,6 @@ function Moncompte() {
                                 />
                             </div>
                         </div>
-
                         <div className='form-grid single'>
                             <div className='form-field'>
                                 <label className='form-label'>
@@ -375,8 +359,6 @@ function Moncompte() {
                             </div>
                         </div>
                     </div>
-
-                    {/* Boutons d'action */}
                     <div className='form-buttons'>
                         <button
                             type="button"
@@ -385,7 +367,6 @@ function Moncompte() {
                         >
                             ← Retour
                         </button>
-
                         <button
                             type="submit"
                             disabled={saving}
@@ -402,8 +383,6 @@ function Moncompte() {
                         </button>
                     </div>
                 </form>
-
-                {/* Note sur les champs obligatoires */}
                 <p className='required-note'>
                     * Champs obligatoires
                 </p>

@@ -65,7 +65,7 @@ function AdminLayout() {
                 </div>
             </nav>
 
-            {/* Contenu principal */}
+
             <main className="fade-in">
                 <Outlet/>
             </main>

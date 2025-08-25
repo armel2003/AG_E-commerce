@@ -62,7 +62,7 @@ function EditCategory() {
                 return;
             }
 
-            setMessage('Catégorie mise à jour avec succès ✅');
+            setMessage('Catégorie mise à jour avec succès ');
             setTimeout(() => navigate('/admin/dashboard'), 1500);
         } catch (err) {
             setMessage('Erreur lors de la mise à jour.');

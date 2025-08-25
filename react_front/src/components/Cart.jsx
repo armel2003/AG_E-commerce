@@ -48,7 +48,6 @@ const handleClearCart = async () => {
                 Authorization: `Bearer ${token}`,
             },
         });
-        // Tu peux dispatch(setCartItems([])) ou recréer une action "clearCart"
         dispatch({ type: "CLEAR_CART" });
     } catch (error) {
         console.error("Erreur vidage panier :", error);
@@ -62,11 +61,7 @@ const handleClearCart = async () => {
                 <button onClick={onClose} className="cart-close-btn">
                     ✕
                 </button>
-
-
                 <h2 className="cart-title">🛒 Ton Panier</h2>
-
-                {/* Contenu du panier */}
                 {cart.items.length > 0 ? (
                     <>
                         <ul className="cart-items">
@@ -82,8 +77,6 @@ const handleClearCart = async () => {
                                         <p className="cart-item-price">{item.price} € × {item.quantity}</p>
                                         <p className="cart-item-total">Total: {(item.price * item.quantity).toFixed(2)} €</p>
                                     </div>
-
-                                    {/* Contrôles de quantité */}
                                     <div className="quantity-controls">
                                         <button
                                             onClick={() => dispatch(decreaseQuantity(item.id))}
@@ -99,25 +92,15 @@ const handleClearCart = async () => {
                                             +
                                         </button>
                                     </div>
-
-                                    {/* <button
-                                        onClick={() => dispatch(deleteFromCart(item.id))}
-                                        className="cart-remove-btn"
-                                    >
-                                        🗑️
-                                            </button> */}
                                     <button
                                     onClick={() => handleRemoveFromCart(item.id)}
                                     className="cart-remove-btn"
                                     >
                                     🗑️
                                     </button>
-
                                 </li>
                             ))}
                         </ul>
-
-
                         <div className="cart-total">
                             <p className="cart-total-price">
                                 Total : <strong>{cart.totalPrice.toFixed(2)} €</strong>

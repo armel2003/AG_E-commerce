@@ -56,7 +56,6 @@ function CreateCategory() {
                 <p className="page-subtitle">Ajoutez une nouvelle catégorie pour vos produits</p>
             </div>
 
-            {/* Affichage des messages d'alerte */}
             {message.text && (
                 <div className={`alert alert-${message.type}`}>
                     {message.text}
@@ -82,8 +81,6 @@ function CreateCategory() {
                             required
                         />
                     </div>
-
-                    {/* Boutons d'action */}
                     <div className="btn-group">
                         <button
                             type="submit"

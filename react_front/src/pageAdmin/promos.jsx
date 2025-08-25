@@ -7,44 +7,20 @@ import PromoManager from './CreatePromo';
 function Promo({onEditArticle}) {
     const navigate = useNavigate();
     const [articles, setArticles] = useState([
-        {id: 1, name: 'Apex Legends - 1000 Coins', price: '€9.99', status: 'Actif', sales: 156},
-        {id: 2, name: 'Valorant - VP Bundle', price: '€24.99', status: 'Actif', sales: 89},
-        {id: 3, name: 'CS2 - Operation Pass', price: '€14.99', status: 'Épuisé', sales: 234},
-        {id: 4, name: 'LoL - RP Premium Pack', price: '€49.99', status: 'Actif', sales: 67}
     ]);
 
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [articleToDelete, setArticleToDelete] = useState(null);
     const [message, setMessage] = useState({type: '', text: ''});
 
-    const stats = {
-        totalUsers: 1247,
-        totalArticles: articles.length,
-        pendingOrders: 23,
-        revenue: '€15,420'
-    };
-
-    const recentUsers = [
-        {id: 1, name: 'Alexandre Martin', email: 'alex.martin@email.com', role: 'User', joinDate: '2025-01-20'},
-        {id: 2, name: 'Sophie Dubois', email: 'sophie.d@email.com', role: 'User', joinDate: '2025-01-19'},
-        {id: 3, name: 'Lucas Bernard', email: 'l.bernard@email.com', role: 'User', joinDate: '2025-01-18'},
-        {id: 4, name: 'Emma Rousseau', email: 'emma.r@email.com', role: 'User', joinDate: '2025-01-17'}
-    ];
-
-    const handleEditArticle = (articleId) => {
-        if (onEditArticle) {
-            onEditArticle(articleId);
-        } else {
-            console.log('Modifier l\'article:', articleId);
-            navigate(`/edit-article/${articleId}`);
-        }
-    };
-
-    const handleDeleteArticle = (articleId) => {
-        const article = articles.find(a => a.id === articleId);
-        setArticleToDelete(article);
-        setShowDeleteModal(true);
-    };
+    // const handleEditArticle = (articleId) => {
+    //     if (onEditArticle) {
+    //         onEditArticle(articleId);
+    //     } else {
+    //         console.log('Modifier l\'article:', articleId);
+    //         navigate(`/edit-article/${articleId}`);
+    //     }
+    // };
 
     const confirmDeleteArticle = () => {
         if (articleToDelete) {
@@ -89,26 +65,18 @@ function Promo({onEditArticle}) {
             </div>
         );
     };
-
     return (
         <div className="admin-container">
-            {/* Modal de confirmation */}
             <DeleteConfirmModal/>
-
-            {/* En-tête de page */}
             <div className="page-header">
                 <h1 className="page-title">Tableau de bord</h1>
                 <p className="page-subtitle">Vue d'ensemble de votre plateforme e-commerce gaming</p>
             </div>
-
-            {/* Messages d'alerte */}
             {message.text && (
                 <div className={`alert alert-${message.type}`}>
                     {message.text}
                 </div>
             )}
-
-            {/* Actions rapides */}
             <div className="admin-card" style={{marginBottom: '2rem'}}>
                 <h3 style={{color: 'var(--neon-purple)', marginBottom: '1rem'}}>🚀 Actions rapides</h3>
                 <div className="btn-group">
@@ -140,7 +108,6 @@ function Promo({onEditArticle}) {
                 >
                     <div className=""
                     style={{width:'100%',height:'100%'}}>
-                        {/* <PromoList/> */}
                         <PromoManager/>
                     </div>
                 </div>

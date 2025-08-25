@@ -22,7 +22,6 @@ export default function Commande() {
   });
   const [orderProcessing, setOrderProcessing] = useState(false);
 
-  // Vérifier si l'utilisateur est connecté
   useEffect(() => {
     const token = localStorage.getItem('token');
     const user = localStorage.getItem('user');
@@ -54,10 +53,7 @@ export default function Commande() {
     setOrderProcessing(true);
     
     try {
-      // Simulation d'un appel API
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Vider le panier après commande réussie
       dispatch(clearCart());
       
       alert('Commande confirmée ! Merci pour votre achat.');
@@ -95,9 +91,7 @@ export default function Commande() {
       </div>
       
       <div className="commande-content">
-        {/* Formulaire simple */}
         <div className="order-form">
-          {/* Option de connexion simple */}
           {!isLoggedIn && (
             <div className="login-section">
               <p>Vous avez un compte ?</p>
@@ -109,8 +103,6 @@ export default function Commande() {
               </button>
             </div>
           )}
-
-          {/* Informations essentielles */}
           <div className="form-section">
             <h2 className="section-title">Vos informations</h2>
             
@@ -144,8 +136,6 @@ export default function Commande() {
               />
             </div>
           </div>
-
-          {/* Paiement simplifié */}
           <div className="form-section">
             <h2 className="section-title">Paiement</h2>
             
@@ -188,8 +178,6 @@ export default function Commande() {
             {orderProcessing ? 'Traitement...' : `Commander - ${cart.totalPrice.toFixed(2)} €`}
           </button>
         </div>
-
-        {/* Résumé du panier simple */}
         <div className="cart-summary">
           <h2 className="section-title">Ma commande</h2>
           
@@ -218,8 +206,6 @@ export default function Commande() {
           </div>
         </div>
       </div>
-
-      {/* Formulaire de connexion complet */}
       {showLoginForm && (
         <div className="login-overlay">
           <div className="login-container">

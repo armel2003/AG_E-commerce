@@ -7,7 +7,6 @@ const RecentCategory = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-// Récupère toutes les catégories
         fetch('http://localhost:8000/category')
             .then(response => response.json())
             .then(data => {

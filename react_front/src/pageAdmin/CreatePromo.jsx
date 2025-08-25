@@ -7,30 +7,24 @@ function PromoManager() {
     const [editId, setEditId] = useState(null);
     const [message, setMessage] = useState('');
     const [loading, setLoading] = useState(true);
-
     useEffect(() => {
         fetchAll();
     }, []);
+const fetchAll = async () => {
+    setLoading(true);
+    try {
+        const productsRes = await fetch('http://localhost:8000/product');
+        const productsData = await productsRes.json();
+        setProducts(productsData);
 
-    const fetchAll = async () => {
-        setLoading(true);
-        try {
-            const [productsRes, promosRes] = await Promise.all([
-                fetch('http://localhost:8000/product'),
-                fetch('http://localhost:8000/promos')
-            ]);
-
-            const productsData = await productsRes.json();
-            const promosData = await promosRes.json();
-
-            setProducts(productsData);
-            setPromos(promosData);
-        } catch (error) {
-            console.error('Erreur chargement des données:', error);
-        }
-        setLoading(false);
-    };
-
+        const promosRes = await fetch('http://localhost:8000/promos');
+        const promosData = await promosRes.json();
+        setPromos(promosData);
+    } catch (error) {
+        console.error('Erreur', error);
+    }
+    setLoading(false);
+};
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm(prev => ({ ...prev, [name]: value }));
@@ -44,21 +38,13 @@ function PromoManager() {
             const url = editId
                 ? `http://localhost:8000/promos/update/${editId}`
                 : 'http://localhost:8000/promos/create';
-
             const method = editId ? 'PATCH' : 'POST';
-
             const response = await fetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(form),
             });
-
             const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result.error || 'Erreur lors de l\'envoi');
-            }
-
             setMessage(editId ? 'Promo mise à jour' : 'Promo créée');
             setForm({ value: '', product_id: '' });
             setEditId(null);
@@ -134,35 +120,45 @@ function PromoManager() {
                             <th>ID Produit</th>
                             <th>Nom</th>
                             <th>Réduction</th>
+                            <th>Prix Avant</th>
+                            <th>Prix Apres</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {products.map(product => {
-                            const promo = getPromoByProductId(product.id);
-                            return (
-                                <tr key={product.id}>
-                                    <td>{product.name}</td>
-                                    <td>{promo ? `${(promo.value * 100).toFixed(0)}%` : '—'}</td>
-                                    <td>
-                                        {promo ? (
-                                            <>
-                                                <button onClick={() => handleEdit(promo)}>✏️ Modifier</button>
-                                                <button onClick={() => handleDelete(promo.id)}>🗑️ Supprimer</button>
-                                            </>
-                                        ) : (
-                                            <button onClick={() => {
-                                                setForm({ value: '', product_id: product.id });
-                                                setEditId(null);
-                                            }}>
-                                                ➕ Créer promo
-                                            </button>
-                                        )}
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+  {products.map(product => {
+    const promo = getPromoByProductId(product.id);
+    return (
+        <tr key={product.id}>
+        <td>{product.id}</td>
+        <td>{product.name}</td>
+        <td>{promo ? `${(promo.value * 100).toFixed(0)}%` : '—'}</td>
+        <td>{parseFloat(product.price).toFixed(2)} €</td>
+        <td>
+            {promo
+            ? (parseFloat(product.price) * (1 - promo.value)).toFixed(2) + ' €'
+            : '—'}
+        </td>
+        <td>
+            {promo ? (
+            <>
+                <button onClick={() => handleEdit(promo)}>✏️ Modifier</button>
+                <button onClick={() => handleDelete(promo.id)}>🗑️ Supprimer</button>
+            </>
+            ) : (
+            <button onClick={() => {
+                setForm({ value: '', product_id: product.id });
+                setEditId(null);
+            }}>
+                ➕ Créer promo
+            </button>
+            )}
+        </td>
+        </tr>
+    );
+    })}
+</tbody>
+            </table>
             )}
         </div>
     );

@@ -93,16 +93,15 @@ function AdminDashboard({onEditArticle}) {
 
     return (
         <div className="admin-container">
-            {/* Modal de confirmation */}
+
             <DeleteConfirmModal/>
 
-            {/* En-tête de page */}
             <div className="page-header">
                 <h1 className="page-title">Tableau de bord</h1>
                 <p className="page-subtitle">Vue d'ensemble de votre plateforme e-commerce gaming</p>
             </div>
 
-            {/* Messages d'alerte */}
+
             {message.text && (
                 <div className={`alert alert-${message.type}`}>
                     {message.text}
@@ -137,7 +136,7 @@ function AdminDashboard({onEditArticle}) {
                 </div>
             </div>
 
-            {/* Articles récents */}
+
             <div className="grid grid-2">
                 <div className="admin-card">
                     <div className="">
@@ -152,7 +151,7 @@ function AdminDashboard({onEditArticle}) {
                     </button>
                 </div>
 
-                {/* Utilisateurs récents */}
+
                 <div className="admin-card">
                     <div className="">
                         <RecentUsers/>
@@ -167,8 +166,6 @@ function AdminDashboard({onEditArticle}) {
                 </div>
 
             </div>
-
-            {/* Section des produits */}
             <div className="admin-card">
                 <h3 style={{color: 'var(--neon-purple)', marginBottom: '1rem'}}>📦 Tous les category</h3>
                 <Allcategory/>

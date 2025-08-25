@@ -28,13 +28,24 @@ class Product
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private bool $isPromo = false;
+
+    #[ORM\Column(type: 'boolean')]
+    private bool $isNew = false;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $promoStart = null;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private ?\DateTimeImmutable $promoEnd = null;
+
     /**
      * @var Collection<int, Images>
      */
     #[ORM\OneToMany(targetEntity: Images::class, mappedBy: 'product_id')]
     private Collection $images;
 
-    
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'products')]
     #[ORM\JoinColumn(name: 'category_id', referencedColumnName: 'id', nullable: false)]
     private ?Category $category = null;
@@ -65,7 +76,6 @@ class Product
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -77,7 +87,6 @@ class Product
     public function setDescriptions(string $descriptions): static
     {
         $this->descriptions = $descriptions;
-
         return $this;
     }
 
@@ -89,7 +98,6 @@ class Product
     public function setPrice(string $price): static
     {
         $this->price = $price;
-
         return $this;
     }
 
@@ -101,7 +109,50 @@ class Product
     public function setCreatedAt(\DateTimeImmutable $created_at): static
     {
         $this->created_at = $created_at;
+        return $this;
+    }
 
+    public function isPromo(): bool
+    {
+        return $this->isPromo;
+    }
+
+    public function setIsPromo(bool $isPromo): static
+    {
+        $this->isPromo = $isPromo;
+        return $this;
+    }
+
+    public function isNew(): bool
+    {
+        return $this->isNew;
+    }
+
+    public function setIsNew(bool $isNew): static
+    {
+        $this->isNew = $isNew;
+        return $this;
+    }
+
+    public function getPromoStart(): ?\DateTimeImmutable
+    {
+        return $this->promoStart;
+    }
+
+    public function setPromoStart(?\DateTimeImmutable $promoStart): static
+    {
+        $this->promoStart = $promoStart;
+        return $this;
+    }
+
+    public function getPromoEnd(): ?\DateTimeImmutable
+    {
+        return $this->promoEnd;
+    }
+
+    public function setPromoEnd(?\DateTimeImmutable $promoEnd): static
+    {
+        $this->promoEnd = $promoEnd;
         return $this;
     }
 
@@ -119,7 +170,6 @@ class Product
             $this->images->add($image);
             $image->setProductId($this);
         }
-
         return $this;
     }
 
@@ -130,7 +180,6 @@ class Product
                 $image->setProductId(null);
             }
         }
-
         return $this;
     }
 
@@ -142,7 +191,6 @@ class Product
     public function setCategory(?Category $category): static
     {
         $this->category = $category;
-
         return $this;
     }
 
@@ -160,19 +208,24 @@ class Product
             $this->promos->add($promo);
             $promo->setProductId($this);
         }
-
         return $this;
     }
 
     public function removePromo(Promos $promo): static
     {
         if ($this->promos->removeElement($promo)) {
-            // set the owning side to null (unless already changed)
             if ($promo->getProductId() === $this) {
                 $promo->setProductId(null);
             }
         }
-
         return $this;
+    }
+
+    // Bonus : méthode automatique
+    public function isCurrentlyInPromo(): bool
+    {
+        $now = new \DateTimeImmutable();
+        return $this->promoStart && $this->promoEnd &&
+               $now >= $this->promoStart && $now <= $this->promoEnd;
     }
 }
