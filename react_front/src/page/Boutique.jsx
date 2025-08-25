@@ -219,6 +219,7 @@ useEffect(() => {
                 <p onClick={() => navigate(`/product/${product.id}`)}>
                   {product.name}
                 </p>
+                {product.isPromo && <span title="En promotion">🎁 Promo</span>}
                 {product.isPromo ? (
                   <div>
                     <span style={{ textDecoration: "line-through", color: "gray" }}>
@@ -231,7 +232,7 @@ useEffect(() => {
                 ) : (
                   <span>{parseFloat(product.price).toFixed(2)} €</span>
                 )}
-                {product.isPromo && <span title="En promotion">🎁 Promo</span>}
+                
                 <button
                   onClick={() => handleAddToCart(product)}
                   className="add-product"
