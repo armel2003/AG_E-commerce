@@ -219,7 +219,11 @@ useEffect(() => {
                 <p onClick={() => navigate(`/product/${product.id}`)}>
                   {product.name}
                 </p>
-                {product.isPromo && <span title="En promotion">🎁 Promo</span>}
+                {product.isPromo && (
+                <span title="En promotion">
+                🎁 Promo {Math.round(product.promoValue * 100)}%
+                </span>
+                )}
                 {product.isPromo ? (
                   <div>
                     <span style={{ textDecoration: "line-through", color: "gray" }}>
