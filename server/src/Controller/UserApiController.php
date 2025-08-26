@@ -44,6 +44,7 @@ public function me(): JsonResponse
         'zipcode' => $user->getZipcode(),
         'city' => $user->getCity(),
         'country' => $user->getCountry(),
+        'cart_id' => $user->getCart()?->getId(),
     ], Response::HTTP_OK);
 }
 #[Route('', methods: ['GET'])]
