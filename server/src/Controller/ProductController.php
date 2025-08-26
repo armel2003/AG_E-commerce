@@ -6,73 +6,88 @@ use App\Entity\Category;
 use App\Entity\Images;
 use App\Entity\Product;
 use App\Entity\Stock;
-use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-
 
 #[Route('/product')]
 final class ProductController extends AbstractController
 {
     #[Route(name: 'app_product_index', methods: ['GET'])]
-//afficher tous les produits
     public function index(ProductRepository $productRepository, EntityManagerInterface $entityManager): Response
     {
         $products = $productRepository->findAll();
-
         $data = [];
+
         foreach ($products as $product) {
             $images = [];
             foreach ($product->getImages() as $image) {
                 $images[] = $image->getImagePath();
             }
+
             $stock = $entityManager->getRepository(Stock::class)->findOneBy(['product' => $product]);
+
             $data[] = [
                 'id' => $product->getId(),
                 'name' => $product->getName(),
                 'descriptions' => $product->getDescriptions(),
                 'price' => $product->getPrice(),
-                'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
+                'category' => $product->getCategory()?->getName(),
                 'images' => $images,
-                //'stock' => $stock->getQuantite()
-                'stock' => $stock ? $stock->getQuantite() : 0
-
+                'stock' => $stock?->getQuantite() ?? 0,
+                'isPromo' => $product->isPromo(),
+                'isNew' => $product->isNew(),
+                'promoStartDate' => $product->getPromoStart()?->format('Y-m-d H:i:s'),
+                'promoEndDate' => $product->getPromoEnd()?->format('Y-m-d H:i:s'),
+                'originalPrice' => $product->getOriginalPrice()
             ];
         }
+
         return $this->json($data);
     }
 
-
-    #[Route('/admin/new', name: 'app_product_new', methods: ['GET', 'POST'])]
+    #[Route('/admin/new', name: 'app_product_new', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
-        if ($data === null) {
+        if (!$data) {
             return new JsonResponse(['error' => 'Invalid JSON'], JsonResponse::HTTP_BAD_REQUEST);
         }
 
-        // Récup id
         $category = $entityManager->getRepository(Category::class)->find($data['category']);
 
         $product = new Product();
         $product->setName($data['name']);
         $product->setDescriptions($data['descriptions']);
         $product->setPrice($data['price']);
-
         $product->setCreatedAt(new \DateTimeImmutable());
         $product->setCategory($category);
 
+        $product->setIsPromo($data['isPromo'] ?? false);
+        $product->setIsNew($data['isNew'] ?? false);
+
+        if (!empty($data['promoStartDate'])) {
+            $product->setPromoStart(new \DateTimeImmutable($data['promoStartDate']));
+        }
+
+        if (!empty($data['promoEndDate'])) {
+            $product->setPromoEnd(new \DateTimeImmutable($data['promoEndDate']));
+        }
+
+        if (isset($data['originalPrice'])) {
+            $product->setOriginalPrice($data['originalPrice']);
+        }
+
         $entityManager->persist($product);
 
-        if (isset($data['images'])) {
+        if (!empty($data['images'])) {
             foreach ($data['images'] as $imageData) {
                 $image = new Images();
                 $image->setImagePath($imageData['url']);
@@ -82,7 +97,7 @@ final class ProductController extends AbstractController
             }
         }
 
-        $stock = new stock();
+        $stock = new Stock();
         if (isset($data['stock'])) {
             $stock->setQuantite($data['stock']);
         }
@@ -90,18 +105,9 @@ final class ProductController extends AbstractController
         $entityManager->persist($stock);
 
         $entityManager->flush();
-        $images = [];
-        // foreach($product->getImages() as $image){
-        //     $images[] = $image;
-        // }
-        foreach ($product->getImages() as $image) {
-            $images[] = [
-                'url' => $image->getImagePath()
-            ];
-        }
 
         return new JsonResponse([
-            'message' => 'Product created ',
+            'message' => 'Product created',
             'product' => [
                 'id' => $product->getId(),
                 'name' => $product->getName(),
@@ -109,41 +115,43 @@ final class ProductController extends AbstractController
                 'price' => $product->getPrice(),
                 'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
                 'category' => $product->getCategory()->getName(),
-                'image' => $images,
-                'stock' => $stock->getQuantite()
+                'images' => array_map(fn($img) => ['url' => $img->getImagePath()], $product->getImages()->toArray()),
+                'stock' => $stock->getQuantite(),
+                'isPromo' => $product->isPromo(),
+                'isNew' => $product->isNew(),
+                'promoStartDate' => $product->getPromoStart()?->format('Y-m-d H:i:s'),
+                'promoEndDate' => $product->getPromoEnd()?->format('Y-m-d H:i:s'),
+                'originalPrice' => $product->getOriginalPrice()
             ]
         ], JsonResponse::HTTP_CREATED);
     }
 
-//voir un produit en detail
     #[Route('/{id}', name: 'app_product_show', methods: ['GET'])]
     public function show(Product $product, EntityManagerInterface $entityManager): JsonResponse
     {
-        //recup image
         $images = [];
         foreach ($product->getImages() as $image) {
             $images[] = $image->getImagePath();
         }
+
         $stock = $entityManager->getRepository(Stock::class)->findOneBy(['product' => $product]);
 
-        $data = [
+        return new JsonResponse([
             'id' => $product->getId(),
             'name' => $product->getName(),
             'descriptions' => $product->getDescriptions(),
             'price' => $product->getPrice(),
             'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
-            'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
+            'category' => $product->getCategory()?->getName(),
             'images' => $images,
-            //'stock' => $stock->getQuantite()
-            'stock' => $stock ? $stock->getQuantite() : 0
-
-
-        ];
-
-        return new JsonResponse($data);
+            'stock' => $stock?->getQuantite() ?? 0,
+            'isPromo' => $product->isPromo(),
+            'isNew' => $product->isNew(),
+            'promoStartDate' => $product->getPromoStart()?->format('Y-m-d H:i:s'),
+            'promoEndDate' => $product->getPromoEnd()?->format('Y-m-d H:i:s'),
+            'originalPrice' => $product->getOriginalPrice()
+        ]);
     }
-
-//modifier un produit spécifique
 
     #[Route('/admin/{id}/edit', name: 'app_product_patch', methods: ['PATCH'])]
     #[IsGranted('ROLE_ADMIN')]
@@ -151,22 +159,24 @@ final class ProductController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        if (isset($data['name'])) {
-            $product->setName($data['name']);
-        }
-        if (isset($data['descriptions'])) {
-            $product->setDescriptions($data['descriptions']);
-        }
-        if (isset($data['price'])) {
-            $product->setPrice($data['price']);
-        }
-        if (isset($data['createdAt'])) {
-            $product->setCreatedAt(new \DateTimeImmutable($data['createdAt']));
-        }
+        if (isset($data['name'])) $product->setName($data['name']);
+        if (isset($data['descriptions'])) $product->setDescriptions($data['descriptions']);
+        if (isset($data['price'])) $product->setPrice($data['price']);
+        if (isset($data['createdAt'])) $product->setCreatedAt(new \DateTimeImmutable($data['createdAt']));
         if (isset($data['category'])) {
             $category = $entityManager->getRepository(Category::class)->find($data['category']);
             $product->setCategory($category);
         }
+
+        if (isset($data['isPromo'])) $product->setIsPromo($data['isPromo']);
+        if (isset($data['isNew'])) $product->setIsNew($data['isNew']);
+        if (!empty($data['promoStartDate'])) $product->setPromoStart(new \DateTimeImmutable($data['promoStartDate']));
+        if (!empty($data['promoEndDate'])) $product->setPromoEnd(new \DateTimeImmutable($data['promoEndDate']));
+
+        if (isset($data['originalPrice'])) {
+            $product->setOriginalPrice($data['originalPrice']);
+        }
+
         $stock = $entityManager->getRepository(Stock::class)->findOneBy(['product' => $product]);
         if (isset($data['stock'])) {
             if ($stock) {
@@ -178,26 +188,22 @@ final class ProductController extends AbstractController
                 $entityManager->persist($stock);
             }
         }
+
         if (isset($data['images'])) {
-            // delete
             foreach ($product->getImages() as $image) {
                 $entityManager->remove($image);
             }
             $entityManager->flush();
-            //add
+
             foreach ($data['images'] as $imageData) {
                 $image = new Images();
-                $image->setImagePath($imageData['url']); // ou 'imagePath' si tu changes le nom
+                $image->setImagePath($imageData['url']);
                 $image->setProductId($product);
                 $entityManager->persist($image);
             }
         }
+
         $entityManager->flush();
-        //recup image pour le renvoyer en json
-        $images = [];
-        foreach ($product->getImages() as $image) {
-            $images[] = $image->getImagePath();
-        }
 
         return new JsonResponse([
             'message' => 'Product updated',
@@ -207,15 +213,18 @@ final class ProductController extends AbstractController
                 'descriptions' => $product->getDescriptions(),
                 'price' => $product->getPrice(),
                 'createdAt' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
-                'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
-                'images' => $images,
-                //'stock' => $stock->getQuantite()
-                'stock' => $stock ? $stock->getQuantite() : 0
+                'category' => $product->getCategory()?->getName(),
+                'images' => array_map(fn($img) => $img->getImagePath(), $product->getImages()->toArray()),
+                'stock' => $stock?->getQuantite() ?? 0,
+                'isPromo' => $product->isPromo(),
+                'isNew' => $product->isNew(),
+                'promoStartDate' => $product->getPromoStart()?->format('Y-m-d H:i:s'),
+                'promoEndDate' => $product->getPromoEnd()?->format('Y-m-d H:i:s'),
+                'originalPrice' => $product->getOriginalPrice()
             ]
-        ], JsonResponse::HTTP_OK);
+        ]);
     }
 
-    //supprimer un produits
     #[Route('/admin/{id}/delete', name: 'app_product_delete', methods: ['POST', 'DELETE'])]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Product $product, EntityManagerInterface $entityManager): JsonResponse
@@ -231,32 +240,27 @@ final class ProductController extends AbstractController
 
         $entityManager->remove($product);
         $entityManager->flush();
+
         return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
     }
 
-    //filtre
     #[Route('/search', name: 'product_search', methods: ['POST'])]
     public function search(Request $request, ProductRepository $productRepository)
     {
-        // Récup json
         $data = json_decode($request->getContent(), true);
-
-
         $filtres = [
             'name' => $data['name'] ?? null,
             'category' => $data['category'] ?? null,
         ];
 
-        // grace au reposite chercher
         $products = $productRepository->findByFilters($filtres);
 
-        // donne en format json
         $result = [];
         foreach ($products as $product) {
             $result[] = [
                 'id' => $product->getId(),
                 'name' => $product->getName(),
-                'category' => $product->getCategory() ? $product->getCategory()->getName() : null,
+                'category' => $product->getCategory()?->getName(),
                 'price' => $product->getPrice(),
                 'created_at' => $product->getCreatedAt()->format('Y-m-d H:i:s'),
             ];

@@ -56,7 +56,6 @@ export default function HomePage() {
 
     return (
         <div className="homepage-root">
-            {/* Header */}
             <header className="homepage-header">
                 <div className="flex items-center gap-2">
                     <div className="logopentakeys">
@@ -68,9 +67,8 @@ export default function HomePage() {
                         </div>
                     )}
                 </div>
-
                 <nav className="homepage-nav">
-                    <Link to="/" className="nav-link">Accueil</Link>
+                    <Link to="/" className="nav-link">Accueil </Link>
                     <Link to="/boutique" className="nav-link">🛒 Clés de jeux</Link>
                     <Link to="/prepayes" className="nav-link">🎁 Cartes prépayées</Link>
                 </nav>
@@ -109,13 +107,9 @@ export default function HomePage() {
                     </button>
                 </div>
             </header>
-
-            {/* Banner */}
             <section className="homepage-banner">
                 <p>🎮 Paie Moins, Joue Plus 🎮</p>
             </section>
-
-            {/* Categories */}
             <div className="homepage-categories">
                 {categories.map((cat) => (
                     <a
@@ -127,34 +121,10 @@ export default function HomePage() {
                     </a>
                 ))}
             </div>
-
-            {/* Games grid */}
-            {/* <h2>🔥 Jeux en vedette</h2>
-            <div className="homepage-grid">
-                {games.map((game) => (
-                    <div className="homepage-card" key={game.name}>
-                        <div
-                            className="homepage-card-img"
-                            style={{
-                                backgroundImage: `url('${game.image}')`,
-                            }}
-                        ></div>
-                        <p>{game.name}</p>
-                    </div>
-                ))}
-            </div> */}
-
-            {/* Composant pour produits similaires */}
             <h2>🎯 Tous nos produits</h2>
             <Product />
-
             <h2>⚡ Nouvelles sorties</h2>
             <RecentProducts count={4} />
-
-            {/* <h2>🏆 Top ventes</h2> */}
-
-
-            {/* Modal du panier */}
             {showCartModal &&
                 createPortal(<Cart onClose={handleCartClose} />, document.body)}
         </div>

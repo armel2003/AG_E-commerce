@@ -39,8 +39,6 @@ const games = [
 export default function HomePage() {
     return (
         <div className="homepage-root">
-
-            {/* Header */}
             <header className="homepage-header">
                 <div className="flex items-center gap-2">
                     <div className="logopentakeys">
@@ -56,7 +54,7 @@ export default function HomePage() {
                 </nav>
                 <div className="homepage-actions">
                     <button><img src="https://www.svgrepo.com/show/453660/account.svg" alt="Account Icon" width="20"
-                                 height="20" color="white"/>
+                                height="20" color="white"/>
                     </button>
                     <button>
                         <svg
@@ -91,8 +89,6 @@ export default function HomePage() {
                     </a>
                 ))}
             </div>
-
-            {/* Games grid */}
             <h2>Jeux en vedette</h2>
             <div className="homepage-grid">
                 {games.map((game) => (
@@ -107,7 +103,6 @@ export default function HomePage() {
                     </div>
                 ))}
             </div>
-            {/* Composant pour produits similaires */}
             <h2>All product</h2>
             <Product/>
             <h2>Nouvelles sorties</h2>

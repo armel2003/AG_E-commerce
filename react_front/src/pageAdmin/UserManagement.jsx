@@ -74,13 +74,10 @@ function UserManagement() {
 
     return (
         <div className="user-management-container">
-            {/* En-tête de page */}
             <div className="user-management-header">
                 <h1 className="user-management-title">Gestion des utilisateurs</h1>
                 <p className="user-management-subtitle">Administrez les comptes utilisateurs de votre plateforme</p>
             </div>
-
-            {/* Statistiques rapides */}
             <div className="user-stats-grid">
                 <div className="user-stat-card">
                     <span className="user-stat-icon">👥</span>
@@ -103,7 +100,6 @@ function UserManagement() {
                 </div>
             </div>
 
-            {/* Filtres et recherche */}
             <div className="user-filters-card">
                 <h3 className="user-filters-title">🔍 Filtres et recherche</h3>
                 <div className="user-filters-grid">
@@ -152,8 +148,6 @@ function UserManagement() {
                     </div>
                 </div>
             </div>
-
-            {/* Tableau des utilisateurs */}
             <div className="users-table-card">
                 <div className="users-table-title">
                     <span>👥 Liste des utilisateurs</span>
@@ -256,7 +250,6 @@ function UserManagement() {
                 )}
             </div>
 
-            {/* Modal de confirmation */}
             {showModal && (
                 <div className="user-modal-overlay">
                     <div className="user-modal">

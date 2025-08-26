@@ -14,7 +14,7 @@ const RecentUsers = ({count = 4}) => {
                 setLoading(false);
             })
             .catch((error) => {
-                console.error("❌ Erreur lors du chargement des utilisateurs :", error);
+                console.error(" Erreur lors du chargement  :", error);
                 setLoading(false);
             });
     }, [count]);

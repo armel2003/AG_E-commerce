@@ -33,7 +33,7 @@ const Product = () => {
             <div className="product-grid">
                 {products.map(prod => (
                     <div key={prod.id} className="product-card" onClick={() => navigate(`/product/${prod.id}`)}
-                         style={{cursor: 'pointer'}}>
+                        style={{cursor: 'pointer'}}>
                         <img
                             src={prod.images?.[0] || 'placeholder.jpg'}
                             alt={prod.name}

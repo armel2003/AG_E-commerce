@@ -107,23 +107,18 @@ function CreateArticle() {
 
     return (
         <div className="admin-container">
-            {/* En-tête de page */}
             <div className="page-header">
                 <h1 className="page-title">Créer un article</h1>
                 <p className="page-subtitle">Ajoutez un nouveau produit gaming à votre catalogue</p>
             </div>
 
-            {/* Messages d'alerte */}
             {message.text && (
                 <div className={`alert alert-${message.type}`}>
                     {message.text}
                 </div>
             )}
-
-            {/* Formulaire */}
             <div className="admin-card">
                 <form onSubmit={handleSubmit}>
-                    {/* Informations de base */}
                     <h3 style={{color: 'var(--neon-purple)', marginBottom: '1.5rem'}}>
                         Informations de base
                     </h3>
@@ -196,8 +191,6 @@ function CreateArticle() {
                             rows="4"
                         />
                     </div>
-
-                    {/* Catégorisation */}
                     <h3 style={{color: 'var(--neon-purple)', marginBottom: '1.5rem', marginTop: '2rem'}}>
                         Catégorisation
                     </h3>
@@ -247,8 +240,6 @@ function CreateArticle() {
             </select>
           </div> */}
                     </div>
-
-                    {/* Détails produit */}
                     <h3 style={{color: 'var(--neon-purple)', marginBottom: '1.5rem', marginTop: '2rem'}}>
                         🎮 Détails du produit
                     </h3>
@@ -269,8 +260,6 @@ function CreateArticle() {
                             />
                         </div>
                     </div>
-
-                    {/* Boutons d'action */}
                     <div className="btn-group">
                         <button
                             type="submit"
@@ -303,8 +292,6 @@ function CreateArticle() {
                     </div>
                 </form>
             </div>
-
-            {/* Aperçu de l'article */}
             {formData.name && (
                 <div className="admin-card" style={{marginTop: '2rem'}}>
                     <h3 style={{color: 'var(--neon-purple)', marginBottom: '1rem'}}>
@@ -347,7 +334,7 @@ function CreateArticle() {
                                             color: 'var(--neon-purple)'
                                         }}>
                     {formData.price}€
-                  </span>
+                     </span>
                                     )}
                                     {formData.category && <span className="badge badge-user">{formData.category}</span>}
                                     {formData.game && <span className="badge badge-pending">{formData.game}</span>}

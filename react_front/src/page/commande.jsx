@@ -173,7 +173,6 @@ export default function Commande() {
               {errors.address && <div className="error-text">{errors.address}</div>}
             </div>
           </div>
-
           <div className="form-section">
             <h2 className="section-title">Paiement</h2>
             <div className="form-group">
@@ -207,7 +206,6 @@ export default function Commande() {
             </div>
           </div>
         </div>
-
         <div className="cart-summary">
           <h2 className="section-title">Ma commande</h2>
           <div className="cart-items">
@@ -233,7 +231,6 @@ export default function Commande() {
           </button>
         </div>
       </div>
-
       {showSuccess && (
         <div className="auth-modal">
           <div className="modal-content">
