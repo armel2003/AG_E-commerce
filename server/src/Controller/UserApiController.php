@@ -25,7 +25,28 @@ private UserPasswordHasherInterface $passwordHasher,
 private LoggerInterface $logger
 ) {
 }
-//all users
+
+// Récupère l'utilisateur connecté (pour préremplissage livraison)
+#[Route('/me', methods: ['GET'])]
+public function me(): JsonResponse
+{
+    $user = $this->getUser();
+    if (!$user) {
+        return $this->json(['error' => 'Utilisateur non authentifié'], Response::HTTP_UNAUTHORIZED);
+    }
+
+    return $this->json([
+        'id' => $user->getId(),
+        'email' => $user->getEmail(),
+        'firstName' => $user->getFirstName(),
+        'lastName' => $user->getLastName(),
+        'adress' => $user->getAdress(),
+        'zipcode' => $user->getZipcode(),
+        'city' => $user->getCity(),
+        'country' => $user->getCountry(),
+        'cart_id' => $user->getCart()?->getId(),
+    ], Response::HTTP_OK);
+}
 #[Route('', methods: ['GET'])]
 public function index(): JsonResponse
 {

@@ -43,7 +43,8 @@ export default function HomePage() {
     const navigate = useNavigate();
     const [showCartModal, setShowCartModal] = useState(false);
     const cart = useSelector((state) => state.cart);
-    const user = localStorage.getItem('user');
+    const userRaw = localStorage.getItem('user');
+    const user = userRaw ? JSON.parse(userRaw) : null;
     const role = localStorage.getItem("role");
 
     const handleCartClose = () => {
@@ -61,11 +62,9 @@ export default function HomePage() {
                         <img src={logo} alt="Logo PentaKeys" style={{ width: 90, height: 90 }} />
                     </div>
                     {user && (
-                        <>
-                            <div className="user-welcome" style={{ marginLeft: 20, fontWeight: 'bold' }}>
-                                Bonjour, {user} 🎮
-                            </div>
-                        </>
+                        <div className="user-welcome" style={{ marginLeft: 20, fontWeight: 'bold' }}>
+                            Bonjour, {user.firstName} 🎮
+                        </div>
                     )}
                 </div>
                 <nav className="homepage-nav">
