@@ -23,7 +23,7 @@ const RecentProducts = ({count = 4}) => {
         <div className="product-grid">
             {products.map(prod => (
                 <div key={prod.id} className="product-card" onClick={() => navigate(`/product/${prod.id}`)}
-                     style={{cursor: 'pointer'}}>
+                    style={{cursor: 'pointer'}}>
                     <img
                         src={prod.images?.[0] || 'placeholder.jpg'}
                         alt={prod.name}
@@ -32,6 +32,7 @@ const RecentProducts = ({count = 4}) => {
                     <div className="product-card-content">
                         <p className="product-title">{prod.name}</p>
                         <span className="product-price">{prod.price} €</span>
+                    
                     </div>
                 </div>
             ))}
