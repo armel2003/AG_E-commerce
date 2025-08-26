@@ -74,7 +74,7 @@ const handleClearCart = async () => {
                                     />
                                     <div className="cart-item-details">
                                         <h4 className="cart-item-name">{item.name}</h4>
-                                        <p className="cart-item-price">{item.price} € × {item.quantity}</p>
+                                        <p className="cart-item-price">  {item.quantity}  × {item.price} €</p>
                                         <p className="cart-item-total">Total: {(item.price * item.quantity).toFixed(2)} €</p>
                                     </div>
                                     <div className="quantity-controls">
