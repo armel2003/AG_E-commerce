@@ -32,6 +32,7 @@ final class PromosController extends AbstractController
 
         return new JsonResponse($data);
     }
+
     //detail promo 
     #[Route('/show/{id}', name: 'promos_show', methods: ['GET'])]
     public function show(Promos $promo): JsonResponse
@@ -43,32 +44,34 @@ final class PromosController extends AbstractController
             'product_name' => $promo->getProductId()?->getName()
         ]);
     }
+
     //create promos 
     #[Route('/create', name: 'promos_create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $em): JsonResponse
+    public function create(Request $request, EntityManagerInterface $entityManagerInterface): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
         if (!isset($data['value'], $data['product_id'])) {
-            return new JsonResponse(['error' => 'Valeur ou produit manquant'], 400);
+            return new JsonResponse(['error' => 'Donné manquante'], 400);
         }
 
         $value = (float) $data['value'];
         if ($value < 0 || $value > 1) {
-            return new JsonResponse(['error' => 'La réduction doit être comprise entre 0 et 1'], 400);
+            return new JsonResponse(['error' => 'valeur invalidde'], 400);
         }
 
-        $product = $em->getRepository(Product::class)->find($data['product_id']);
+        $product = $entityManagerInterface->getRepository(Product::class)->find($data['product_id']);
         if (!$product) {
-            return new JsonResponse(['error' => 'Produit non trouvé'], 404);
+            return new JsonResponse(['error' => 'produit non trouvé'], 404);
         }
-
         $promo = new Promos();
         $promo->setValue($value);
         $promo->setProductId($product);
 
-        $em->persist($promo);
-        $em->flush();
+        $entityManagerInterface->persist($promo);
+        $this->appliquerPromo($promo);
+
+        $entityManagerInterface->flush();
 
         return new JsonResponse([
             'message' => 'Promo créée',
@@ -79,24 +82,26 @@ final class PromosController extends AbstractController
             ]
         ], 201);
     }
-    //update promo
+
     #[Route('/update/{id}', name: 'promos_update', methods: ['PATCH'])]
-    public function update(Request $request, Promos $promo, EntityManagerInterface $em): JsonResponse
+    public function update(Request $request, Promos $promo, EntityManagerInterface $entityManagerInterface): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
         if (isset($data['value'])) {
             $value = (float) $data['value'];
             if ($value < 0 || $value > 1) {
-                return new JsonResponse(['error' => 'La réduction doit être entre 0 et 1'], 400);
+                return new JsonResponse(['error' => 'sup à 0 et inf 1'], 400);
             }
             $promo->setValue($value);
         }
 
-        $em->flush();
+        $this->appliquerPromo($promo);
+
+        $entityManagerInterface->flush();
 
         return new JsonResponse([
-            'message' => 'Promo mise à jour',
+            'message' => 'Promo update',
             'promo' => [
                 'id' => $promo->getId(),
                 'value' => $promo->getValue(),
@@ -104,13 +109,46 @@ final class PromosController extends AbstractController
             ]
         ]);
     }
-    //supprimer promo
+
     #[Route('/delete/{id}', name: 'promos_delete', methods: ['DELETE'])]
-    public function delete(Promos $promo, EntityManagerInterface $em): JsonResponse
+    public function delete(Promos $promo, EntityManagerInterface $entityManagerInterface): JsonResponse
     {
-        $em->remove($promo);
-        $em->flush();
+        // Remettre le prix 
+        $this->retirerPromo($promo);
+
+        $entityManagerInterface->remove($promo);
+        $entityManagerInterface->flush();
 
         return new JsonResponse(null, 204);
+    }
+
+
+    private function appliquerPromo(Promos $promo): void
+    {
+        $product = $promo->getProductId();
+        $value = $promo->getValue();
+
+        if ($product->getOriginalPrice() === null) {
+            // stocker prix original av la promo
+            $product->setOriginalPrice($product->getPrice());
+        }
+
+        $original = (float) $product->getOriginalPrice();
+        $newPrice = $original * (1 - $value);
+
+        $product->setPrice((string) $newPrice);
+        $product->setIsPromo(true);
+    }
+
+    private function retirerPromo(Promos $promo): void
+    {
+        $product = $promo->getProductId();
+
+        if ($product && $product->getOriginalPrice() !== null) {
+            //prend l'ancien prix
+            $product->setPrice($product->getOriginalPrice());
+            $product->setOriginalPrice(null);
+            $product->setIsPromo(false);
+        }
     }
 }

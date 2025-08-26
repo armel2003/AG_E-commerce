@@ -44,6 +44,7 @@ final class ProductController extends AbstractController
                 'isNew' => $product->isNew(),
                 'promoStartDate' => $product->getPromoStart()?->format('Y-m-d H:i:s'),
                 'promoEndDate' => $product->getPromoEnd()?->format('Y-m-d H:i:s'),
+                'originalPrice' => $product->getOriginalPrice()
             ];
         }
 
@@ -69,7 +70,6 @@ final class ProductController extends AbstractController
         $product->setCreatedAt(new \DateTimeImmutable());
         $product->setCategory($category);
 
-        // Nouveaux champs
         $product->setIsPromo($data['isPromo'] ?? false);
         $product->setIsNew($data['isNew'] ?? false);
 
@@ -79,6 +79,10 @@ final class ProductController extends AbstractController
 
         if (!empty($data['promoEndDate'])) {
             $product->setPromoEnd(new \DateTimeImmutable($data['promoEndDate']));
+        }
+
+        if (isset($data['originalPrice'])) {
+            $product->setOriginalPrice($data['originalPrice']);
         }
 
         $entityManager->persist($product);
@@ -117,6 +121,7 @@ final class ProductController extends AbstractController
                 'isNew' => $product->isNew(),
                 'promoStartDate' => $product->getPromoStart()?->format('Y-m-d H:i:s'),
                 'promoEndDate' => $product->getPromoEnd()?->format('Y-m-d H:i:s'),
+                'originalPrice' => $product->getOriginalPrice()
             ]
         ], JsonResponse::HTTP_CREATED);
     }
@@ -144,6 +149,7 @@ final class ProductController extends AbstractController
             'isNew' => $product->isNew(),
             'promoStartDate' => $product->getPromoStart()?->format('Y-m-d H:i:s'),
             'promoEndDate' => $product->getPromoEnd()?->format('Y-m-d H:i:s'),
+            'originalPrice' => $product->getOriginalPrice()
         ]);
     }
 
@@ -166,6 +172,10 @@ final class ProductController extends AbstractController
         if (isset($data['isNew'])) $product->setIsNew($data['isNew']);
         if (!empty($data['promoStartDate'])) $product->setPromoStart(new \DateTimeImmutable($data['promoStartDate']));
         if (!empty($data['promoEndDate'])) $product->setPromoEnd(new \DateTimeImmutable($data['promoEndDate']));
+
+        if (isset($data['originalPrice'])) {
+            $product->setOriginalPrice($data['originalPrice']);
+        }
 
         $stock = $entityManager->getRepository(Stock::class)->findOneBy(['product' => $product]);
         if (isset($data['stock'])) {
@@ -210,6 +220,7 @@ final class ProductController extends AbstractController
                 'isNew' => $product->isNew(),
                 'promoStartDate' => $product->getPromoStart()?->format('Y-m-d H:i:s'),
                 'promoEndDate' => $product->getPromoEnd()?->format('Y-m-d H:i:s'),
+                'originalPrice' => $product->getOriginalPrice()
             ]
         ]);
     }

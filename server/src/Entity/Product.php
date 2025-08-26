@@ -25,6 +25,9 @@ class Product
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0)]
     private ?string $price = null;
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0, nullable: true)]
+    private ?string $originalPrice = null;
+
     #[ORM\Column]
     private ?\DateTimeImmutable $created_at = null;
 
@@ -98,6 +101,17 @@ class Product
     public function setPrice(string $price): static
     {
         $this->price = $price;
+        return $this;
+    }
+
+    public function getOriginalPrice(): ?string
+    {
+        return $this->originalPrice;
+    }
+
+    public function setOriginalPrice(?string $originalPrice): static
+    {
+        $this->originalPrice = $originalPrice;
         return $this;
     }
 
@@ -221,11 +235,11 @@ class Product
         return $this;
     }
 
-    // Bonus : méthode automatique
+    // Bonus : méthode utile
     public function isCurrentlyInPromo(): bool
     {
         $now = new \DateTimeImmutable();
         return $this->promoStart && $this->promoEnd &&
-               $now >= $this->promoStart && $now <= $this->promoEnd;
+            $now >= $this->promoStart && $now <= $this->promoEnd;
     }
 }
