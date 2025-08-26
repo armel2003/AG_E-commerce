@@ -38,6 +38,43 @@ export default function Commande() {
     if (token) { setIsLogged(true); setUserEmail(email || ""); }
   }, []);
 
+  // Récupérer les infos du user connecté et pré-remplir le formulaire
+  useEffect(() => {
+    if (!isLogged) return;
+
+    let canceled = false;
+    const loadMe = async () => {
+      try {
+        const token = localStorage.getItem("userToken");
+        const base = process.env.REACT_APP_API_BASE_URL || "http://localhost:8000";
+        const res = await fetch(`${base}/user/me`, {
+          headers: {
+            Accept: "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
+          }
+        });
+
+        if (canceled) return;
+
+        if (res.status === 200) {
+          const data = await res.json();
+          setFirstName(data.firstName ?? "");
+          setLastName(data.lastName ?? "");
+          // Le backend renvoie "adress" (orthographe d'origine) -> on mappe vers address
+          setAddress((data.adress ?? data.address ?? "").toString());
+        } else if (res.status === 401) {
+          setIsLogged(false);
+          setShowLogin(true);
+        }
+      } catch {
+        // En cas d'erreur réseau, on ne bloque pas le formulaire
+      }
+    };
+
+    loadMe();
+    return () => { canceled = true; };
+  }, [isLogged]);
+
   const validate = () => {
     const e = {};
     if (!firstName) e.firstName = "Prénom obligatoire.";
