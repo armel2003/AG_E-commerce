@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class OrderController extends AbstractController
+final class OrdersController extends AbstractController
 {
     #[Route('/orders', name: 'app_orders_create', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $em): JsonResponse
