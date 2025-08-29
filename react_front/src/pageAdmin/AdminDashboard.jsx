@@ -65,6 +65,21 @@ function AdminDashboard({onEditArticle}) {
         setArticleToDelete(null);
     };
 
+    const getproductsexport = () => {
+        fetch("http://localhost:8000/admin/export" , {
+            headers: {
+                    Authorization: `Bearer ${localStorage.getItem('userToken')}`,
+                    'Accept': 'application/json',
+                }
+        })
+    .then((res) => res.blob())
+    .then(blob => {
+        let file = window.URL.createObjectURL(blob);
+        window.location.assign(file);
+    })
+    .catch((err) => console.error("Erreur produits :", err));
+    }
+
     const DeleteConfirmModal = () => {
         if (!showDeleteModal || !articleToDelete) return null;
 
@@ -148,6 +163,13 @@ function AdminDashboard({onEditArticle}) {
                         onClick={() => navigate('/create-article')}
                     >
                         Voir tous les articles
+                    </button>
+                   <button
+                        className="btn btn-secondary btn-small"
+                        style={{marginTop: '1rem', width: '100%'}}
+                        onClick={() => getproductsexport()}
+                    >
+                        telecharger les produits
                     </button>
                 </div>
 
