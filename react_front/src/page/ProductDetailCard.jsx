@@ -8,10 +8,12 @@ const ProductDetailCard = ({ product }) => {
 const dispatch = useDispatch();
 const navigate = useNavigate();
 
+const [promos, setPromos] = useState([]);
 const [promoInfo, setPromoInfo] = useState({
 isPromo: false,
 promoValue: 0,
 discountedPrice: null,
+originalPrice: null,
 });
 
 useEffect(() => {
@@ -20,6 +22,7 @@ if (!product) {
     isPromo: false,
     promoValue: 0,
     discountedPrice: null,
+    originalPrice: null,
     });
     return;
 }
@@ -27,29 +30,27 @@ if (!product) {
 fetch("http://localhost:8000/promos")
     .then((res) => res.json())
     .then((promosData) => {
+    setPromos(promosData);
+
     const promo = promosData.find((p) => p.product === product.id);
-    if (promo) {
+
+    if (promo && product.originalPrice) {
         setPromoInfo({
         isPromo: true,
         promoValue: promo.value,
-        discountedPrice: (product.price * (1 - promo.value)).toFixed(2),
+        discountedPrice: parseFloat(product.price).toFixed(2),
+        originalPrice: parseFloat(product.originalPrice).toFixed(2),
         });
     } else {
         setPromoInfo({
         isPromo: false,
         promoValue: 0,
         discountedPrice: null,
+        originalPrice: null,
         });
     }
     })
-    .catch((err) => {
-    console.error("Erreur récupération promos :", err);
-    setPromoInfo({
-        isPromo: false,
-        promoValue: 0,
-        discountedPrice: null,
-    });
-    });
+    .catch((err) => console.error("Erreur promos :", err));
 }, [product]);
 
 if (!product) {
@@ -110,14 +111,13 @@ return (
         <div className="info-item">
         <div className="info-label">Prix</div>
         <div className="info-value price">
-            {promoInfo.isPromo ? (
+            {promoInfo.isPromo && promoInfo.originalPrice ? (
             <>
-                <span style={{ textDecoration: "line-through", color: "red", marginRight: "8px" }}>
-                {parseFloat(product.price).toFixed(2)} €
-                </span> --
-                <span className="newprice">
-                {promoInfo.discountedPrice} €
-                </span>
+                <span>
+                {promoInfo.originalPrice} €
+                </span>{" "}
+                --{" "}
+                <span className="newprice">{promoInfo.discountedPrice} €</span>
             </>
             ) : (
             <span>{parseFloat(product.price).toFixed(2)} €</span>
