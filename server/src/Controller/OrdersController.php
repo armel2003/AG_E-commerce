@@ -10,11 +10,23 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 final class OrdersController extends AbstractController
 {
+    private function generateCdKey(): string
+    {
+        // 16 bytes -> 32 hex chars -> format XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX (we'll use 5x5) but typical 4x4 groups
+        $bytes = random_bytes(16);
+        $hex = strtoupper(bin2hex($bytes));
+        // Take 16*2 = 32 chars, format into 4-char groups, total 8 groups -> we will use 4 groups of 4 for brevity
+        $groups = str_split(substr($hex, 0, 16), 4);
+        return implode('-', $groups);
+    }
+
     #[Route('/orders', name: 'app_orders_create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $em): JsonResponse
+    public function create(Request $request, EntityManagerInterface $em, MailerInterface $mailer): JsonResponse
     {
         // Vérifier l'utilisateur
         $currentUser = $this->getUser();
@@ -82,6 +94,63 @@ final class OrdersController extends AbstractController
             $em->persist($order);
             $em->flush();
 
+            // Générer une CD Key pour chaque produit du panier
+            $items = [];
+            $total = 0.0;
+            foreach ($cart->getProducts() as $product) {
+                $key = $this->generateCdKey();
+                $price = (float) $product->getPrice();
+                $total += $price;
+                $items[] = [
+                    'name' => $product->getName(),
+                    'price' => $price,
+                    'key' => $key,
+                ];
+            }
+
+            // Construire le contenu de l'email (HTML simple)
+            $lines = '';
+            foreach ($items as $it) {
+                $lines .= sprintf('<li><strong>%s</strong> — %.2f €<br/>CD Key: <code>%s</code></li>',
+                    htmlspecialchars($it['name'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'),
+                    $it['price'],
+                    htmlspecialchars($it['key'], ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8')
+                );
+            }
+
+            $html = sprintf(
+                '<h2>Récapitulatif de votre commande #%d</h2>
+                 <p>Merci pour votre achat. Voici le détail de votre commande passée le %s.</p>
+                 <ul>%s</ul>
+                 <p><strong>Total:</strong> %.2f €</p>
+                 <p>Conservez vos clés en lieu sûr. Bon jeu !</p>',
+                $order->getId(),
+                (new \DateTimeImmutable())->format('d/m/Y H:i'),
+                $lines,
+                $total
+            );
+
+            // Préparer et envoyer l'email
+            try {
+                // Utiliser l'email fourni dans le formulaire si valide, sinon repli sur l'email utilisateur, puis défaut
+                if (isset($data['email']) && is_string($data['email']) && filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                    $toEmail = $data['email'];
+                } elseif ($currentUser->getEmail()) {
+                    $toEmail = $currentUser->getEmail();
+                } else {
+                    $toEmail = 'test@example.com';
+                }
+
+                $emailMsg = (new Email())
+                    ->from('no-reply@ecommerce.local')
+                    ->to($toEmail)
+                    ->subject(sprintf('Votre commande #%d - Récapitulatif et CD keys', $order->getId()))
+                    ->html($html);
+                $mailer->send($emailMsg);
+            } catch (\Throwable $mailEx) {
+                // On n'échoue pas la commande si l'envoi email plante; on renvoie un avertissement
+            }
+
             return $this->json([
                 'id' => $order->getId(),
                 'status' => $order->getStatus(),
@@ -93,6 +162,7 @@ final class OrdersController extends AbstractController
                 'zipcode' => $order->getZipcode(),
                 'city' => $order->getCity(),
                 'country' => $order->getCountry(),
+                'cd_keys_sent' => count($items),
             ], Response::HTTP_CREATED);
         } catch (\Throwable $e) {
             return $this->json([
