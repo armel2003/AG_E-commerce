@@ -38,7 +38,7 @@ export default function Commande() {
     if (token) { setIsLogged(true); setUserEmail(email || ""); }
   }, []);
 
-  // Récupérer les infos du user connecté et pré-remplir le formulaire
+
   useEffect(() => {
     if (!isLogged) return;
 
@@ -60,14 +60,13 @@ export default function Commande() {
           const data = await res.json();
           setFirstName(data.firstName ?? "");
           setLastName(data.lastName ?? "");
-          // Le backend renvoie "adress" (orthographe d'origine) -> on mappe vers address
           setAddress((data.adress ?? data.address ?? "").toString());
         } else if (res.status === 401) {
           setIsLogged(false);
           setShowLogin(true);
         }
       } catch {
-        // En cas d'erreur réseau, on ne bloque pas le formulaire
+        
       }
     };
 
