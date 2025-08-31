@@ -1,0 +1,245 @@
+.boutique-root {
+padding: 2rem;
+background: #1a1221;
+color: white;
+}
+
+.boutique-banner {
+text-align: center;
+margin-bottom: 2rem;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+
+.product-card {
+  background: rgba(26, 26, 26, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-color);
+  border-radius: 15px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: var(--transition);
+  position: relative;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.product-card:hover {
+  transform: scale(1.03);
+}
+
+.add-product {
+  background-color: #9947eb;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.7rem;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  font-size: 1rem;
+}
+
+.add-product:hover {
+  background-color: #b96dff;
+  transform: scale(1.05);
+}
+
+
+
+.homepage-nav {
+display: flex;
+justify-content:center; 
+align-items: center;
+gap: 2.1rem;
+flex-grow: 1;
+padding: 0 2rem;     
+}
+
+.nav-btn {
+background-color: #9947eb;
+color: white;
+padding: 0.6rem 1.2rem;
+border-radius: 0.7rem;
+text-decoration: none;
+font-weight: bold;
+transition: background-color 0.2s ease, transform 0.2s ease;
+font-size: 1rem;
+}
+
+.nav-btn:hover {
+background-color: #b96dff;
+transform: scale(1.05);
+}
+
+.homepage-actions {
+display: flex;
+gap: 1rem;
+align-items: center;
+}
+
+.icon-btn {
+background-color: transparent;
+border: none;
+cursor: pointer;
+padding: 0.3rem;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: transform 0.2s ease;
+}
+
+.icon-btn:hover {
+transform: scale(1.1);
+}
+
+.icon-btn img,
+.icon-btn svg {
+width: 24px;
+height: 24px;
+color: white;
+}
+@media (max-width: 600px) {
+.homepage-actions {
+gap: 0.5rem;
+}
+
+.icon-btn img,
+.icon-btn svg {
+width: 20px;
+height: 20px;
+}
+}
+
+
+.search-bar-container {
+margin-left: auto;
+margin-right: 2rem;
+}
+
+.search-input {
+padding: 0.5rem 1rem;
+border-radius: 0.5rem;
+border: none;
+font-size: 1rem;
+width: 220px;
+}
+
+@media (max-width: 768px) {
+.search-input {
+width: 100%;
+}
+}
+.filters-bar {
+display: flex;
+gap: 1rem;
+padding: 1rem 2rem;
+flex-wrap: wrap;
+}
+
+.filter-dropdown {
+position: relative;
+}
+
+.filter-dropdown select {
+background-color: #4e2e6a;
+color: white;
+border: none;
+padding: 0.6rem 1.2rem;
+border-radius: 10px;
+font-size: 1rem;
+appearance: none;
+-webkit-appearance: none;
+-moz-appearance: none;
+cursor: pointer;
+padding-right: 2rem;
+}
+
+.filter-dropdown::after {
+content: "▼";
+position: absolute;
+right: 1rem;
+top: 50%;
+transform: translateY(-50%);
+color: white;
+pointer-events: none;
+font-size: 0.7rem;
+}
+.boutique-banner {
+background: linear-gradient(0deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 25%), url('https://img.freepik.com/photos-premium/salon-jeu-joueur-video-personne-ne-moque-neeon-chill-chambre-jeu-confortable_916191-128316.jpg');
+background-size: cover;
+background-position: center;
+width: 100%;
+height: 300px;
+display: flex;
+align-items: flex-end;
+border-radius: 1rem;
+margin: 2rem 2rem 1rem 2rem;
+}
+.boutique-banner h1, .boutique-banner p {
+font-size: 2rem;
+font-weight: bold;
+padding: 1.5rem;
+margin: 0;
+color: #fff;
+text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+
+.boutique-root {
+background: #1a1221;
+color: white;
+padding: 0;
+min-height: 100vh;
+}
+search-bar-container {
+  margin-left: auto;
+  margin-right: 2rem;
+  position: relative;
+  width: 220px;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: 105%;
+  left: 0;
+  right: 0;
+  background-color: #2b1a3f;
+  border: 1px solid #5e3c80;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  max-height: 180px;
+  overflow-y: auto;
+  z-index: 20;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  font-size: 0.9rem;
+  color: white;
+}
+
+.dropdown-item:hover {
+  background-color: #3a2457;
+}
+
+.dropdown-thumb {
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+

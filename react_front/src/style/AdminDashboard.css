@@ -1,0 +1,320 @@
+/* Styles dédiés pour le tableau de bord admin */
+
+
+:root {
+  --dashboard-accent: #8b5cf6;
+  --dashboard-accent-light: #a78bfa;
+  --dashboard-bg: linear-gradient(135deg, #1e1e1e 0%, #4c1d95 50%, #1e1e1e 100%);
+  --dashboard-glow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+/*  CONTENEUR PRINCIPAL  */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  animation: slideInDown 0.6s ease-out;
+}
+
+.dashboard-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.dashboard-title {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--dashboard-accent), var(--dashboard-accent-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.dashboard-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 3px;
+  background: var(--dashboard-accent);
+  border-radius: 2px;
+  box-shadow: var(--dashboard-glow);
+}
+
+.dashboard-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+
+
+.dashboard-quick-actions {
+  background: var(--dashboard-bg);
+  border: 2px solid rgba(139, 92, 246, 0.2);
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin-bottom: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-quick-actions::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+}
+
+.dashboard-quick-actions-title {
+  font-size: 1.5rem;
+  color: var(--dashboard-accent);
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dashboard-actions-grid {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.dashboard-action-btn {
+  padding: 1rem 1.5rem;
+  background: rgba(139, 92, 246, 0.1);
+  border: 2px solid rgba(139, 92, 246, 0.3);
+  border-radius: 12px;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-action-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.dashboard-action-btn:hover::before {
+  left: 100%;
+}
+
+.dashboard-action-btn:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: var(--dashboard-glow);
+  transform: translateY(-2px);
+}
+
+/*  SECTIONS DE DONNÉES  */
+.dashboard-data-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.dashboard-data-card {
+  background: var(--dashboard-bg);
+  border: 2px solid rgba(139, 92, 246, 0.2);
+  border-radius: 16px;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-data-title {
+  font-size: 1.3rem;
+  color: var(--dashboard-accent);
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dashboard-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+  transition: all 0.3s ease;
+}
+
+.dashboard-item:hover {
+  background: rgba(139, 92, 246, 0.05);
+  padding-left: 1rem;
+  border-radius: 8px;
+}
+
+.dashboard-item:last-child {
+  border-bottom: none;
+}
+
+.dashboard-item-info {
+  flex: 1;
+}
+
+.dashboard-item-name {
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.dashboard-item-details {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.dashboard-item-meta {
+  text-align: right;
+}
+
+.dashboard-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dashboard-badge-active {
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--success-color);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.dashboard-badge-pending {
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--warning-color);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.dashboard-badge-user {
+  background: rgba(59, 130, 246, 0.2);
+  color: var(--info-color);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+.dashboard-view-all-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 8px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.dashboard-view-all-btn:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+/*  ANIMATIONS  */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/*  RESPONSIVE DESIGN  */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+  
+  .dashboard-title {
+    font-size: 2.5rem;
+  }
+  
+  .dashboard-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .dashboard-data-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .dashboard-actions-grid {
+    flex-direction: column;
+  }
+  
+  .dashboard-action-btn {
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-title {
+    font-size: 2rem;
+  }
+  
+  .dashboard-stat-card {
+    padding: 1.5rem;
+  }
+  
+  .dashboard-quick-actions {
+    padding: 1.5rem;
+  }
+  
+  .dashboard-data-card {
+    padding: 1.5rem;
+  }
+}
+

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+
+<title>New Promos</title>
+
+{% block body %}
+    <h1>Create new Promos</h1>
+
+    {{ include('promos/_form.html.twig') }}
+
+    <a href="{{ path('app_promos_index') }}">back to list</a>
+{% endblock %}
