@@ -516,12 +516,3 @@ body {
 .similar-products-section {
   animation: fadeInUp 1s ease-out;
 }
-.oldprice {
-  text-decoration: line-through !important;
-  color: red !important;
-  margin-right: 8px !important;
-}
-
-.newprice {
-  color: pink !important;
-}

@@ -268,4 +268,19 @@ final class ProductController extends AbstractController
 
         return new JsonResponse($result);
     }
+
+#[Route('/{id}/toggle-new', name: 'product_toggle_new', methods: ['PATCH'])]
+
+public function toggleNew(Product $product, EntityManagerInterface $entityManager): JsonResponse
+{
+    $product->setIsNew(!$product->isNew());
+    $entityManager->flush();
+
+    return new JsonResponse([
+        'success' => true,
+        'isNew' => $product->isNew(),
+        'id' => $product->getId(),
+    ]);
+}
+
 }

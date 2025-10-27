@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../style/promo.css';  
+import '../style/promo.css';
 
 function PromoManager() {
   const [products, setProducts] = useState([]);
@@ -40,24 +40,23 @@ function PromoManager() {
     setMessage('');
 
     try {
+      const body = {
+        value: parseFloat(form.value),
+        product_id: parseInt(form.product_id, 10),
+      };
+
       if (editId) {
         await fetch(`http://localhost:8000/promos/update/${editId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            value: parseFloat(form.value),
-            product_id: parseInt(form.product_id, 10),
-          }),
+          body: JSON.stringify(body),
         });
         setMessage('Promo mise à jour');
       } else {
         await fetch('http://localhost:8000/promos/create', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            value: parseFloat(form.value),
-            product_id: parseInt(form.product_id, 10),
-          }),
+          body: JSON.stringify(body),
         });
         setMessage('Promo créée');
       }
@@ -80,7 +79,9 @@ function PromoManager() {
     if (!window.confirm('Supprimer cette promo ?')) return;
 
     try {
-      const response = await fetch(`http://localhost:8000/promos/delete/${id}`, { method: 'DELETE' });
+      const response = await fetch(`http://localhost:8000/promos/delete/${id}`, {
+        method: 'DELETE',
+      });
       if (response.ok) {
         setMessage('Promo supprimée');
         fetchAll();
@@ -93,15 +94,50 @@ function PromoManager() {
     }
   };
 
-  const getPromoByProductId = (productId) => promos.find(promotion => promotion.product === productId);
+  const toggleNew = async (productId) => {
+    try {
+      const response = await fetch(`http://localhost:8000/product/${productId}/toggle-new`, {
+        method: 'PATCH',
+      });
+
+      if (response.ok) {
+        setMessage('Statut nouveauté mis à jour');
+        fetchAll();
+      } else {
+        setMessage("Erreur lors de l'actualisation du produit");
+      }
+    } catch (error) {
+      console.error('Erreur réseau', error);
+      setMessage('Erreur réseau');
+    }
+  };
+
+  const getPromoByProductId = (productId) =>
+    promos.find((promotion) => promotion.product === productId);
 
   return (
     <div className="container">
       <h2 className="title">🎁 Gestion des promotions</h2>
 
       {message && <p className="message">{message}</p>}
-
       <form onSubmit={handleSubmit} className="form">
+        <div className="form-group">
+          <label className="label">Produit :</label>
+          <select
+            name="product_id"
+            value={form.product_id}
+            onChange={handleChange}
+            required
+            className="select"
+          >
+            <option value="">-- Choisir un produit --</option>
+            {products.map((product) => (
+              <option key={product.id} value={product.id}>
+                {product.name}
+              </option>
+            ))}
+          </select>
+        </div>
         <div className="form-group">
           <label className="label">Valeur (entre 0 et 1) :</label>
           <input
@@ -115,24 +151,6 @@ function PromoManager() {
             required
             className="input"
           />
-        </div>
-
-        <div className="form-group">
-          <label className="label">Produit :</label>
-          <select
-            name="product_id"
-            value={form.product_id}
-            onChange={handleChange}
-            required
-            className="select"
-          >
-            <option value="">-- Choisir un produit --</option>
-            {products.map(product => (
-              <option key={product.id} value={product.id}>
-                {product.name}
-              </option>
-            ))}
-          </select>
         </div>
 
         <button type="submit" className="button">
@@ -151,19 +169,34 @@ function PromoManager() {
               <th className="th">Réduction</th>
               <th className="th">Prix Avant</th>
               <th className="th">Prix Après</th>
+              <th className="th">Nouveauté</th>
               <th className="th">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {products.map(product => {
+            {products.map((product) => {
               const promo = getPromoByProductId(product.id);
               return (
                 <tr key={product.id}>
                   <td className="td">{product.id}</td>
                   <td className="td">{product.name}</td>
-                  <td className="td">{promo ? `${(promo.value * 100).toFixed(0)}%` : '—'}</td>
-                  <td className="td">{product.originalPrice ? parseFloat(product.originalPrice).toFixed(2) : parseFloat(product.price).toFixed(2)} €</td>
-                  <td className="td">{promo ? (product.price * (1 - promo.value)).toFixed(2) + ' €' : '—'}</td>
+                  <td className="td">
+                    {promo ? `${(promo.value * 100).toFixed(0)}%` : '—'}
+                  </td>
+                  <td className="td">
+                    {product.originalPrice
+                      ? parseFloat(product.originalPrice).toFixed(2)
+                      : parseFloat(product.price).toFixed(2)}{' '}
+                    €
+                  </td>
+                  <td className="td">
+                    {promo
+                      ? (product.price * (1 - promo.value)).toFixed(2) + ' €'
+                      : '—'}
+                  </td>
+                  <td className="td">
+                    {product.isNew ? ' Oui' : 'Non'}
+                  </td>
                   <td className="td">
                     {promo ? (
                       <>
@@ -191,15 +224,23 @@ function PromoManager() {
                         ➕ Créer promo
                       </button>
                     )}
+                    <br />
+                    <button
+                      onClick={() => toggleNew(product.id)}
+                      className="button-create"
+                    >
+                      {product.isNew ? ' Enlever nouveauté' : ' Marquer comme nouveauté'}
+                    </button>
                   </td>
                 </tr>
               );
             })}
           </tbody>
-        </table>
+        </table> 
       )}
     </div>
   );
 }
 
 export default PromoManager;
+
